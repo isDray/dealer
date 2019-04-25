@@ -277,8 +277,13 @@ class PurchaseController extends Controller
      |
      */
     public function estimateDo( Request $request ){
+        
+        if( count(old()) >0 ){
 
-
+            var_dump($old());
+            
+        }
+        exit;
         // 表單驗證
         $errText = '';
 
@@ -328,9 +333,10 @@ class PurchaseController extends Controller
             // 取出所選經銷商資料
             $tmpDealer = User::find( $request->dealerId );
 
-            $dealerPhone   = $tmpDealer->phone;
-
-            $dealerAddress = $tmpDealer->address;            
+            $dealerName    = $tmpDealer->ship_name;
+            $dealerPhone   = $tmpDealer->ship_phone;
+            $dealerTel     = $tmpDealer->ship_tel;
+            $dealerAddress = $tmpDealer->ship_address;            
 
         }elseif( Auth::user()->hasRole('Dealer') ){
             
@@ -346,9 +352,10 @@ class PurchaseController extends Controller
             
             $DealerId = Auth::id();
 
-            $dealerPhone   = Auth::user()->phone;
-
-            $dealerAddress = Auth::user()->address;
+            $dealerName    = Auth::user()->ship_name;
+            $dealerPhone   = Auth::user()->ship_phone;
+            $dealerTel     = Auth::user()->ship_tel;
+            $dealerAddress = Auth::user()->ship_address;
 
         }
 
@@ -407,8 +414,10 @@ class PurchaseController extends Controller
         	                                    'needNum'    => $needNum,
         	                                    'reference'  => $reference,
         	                                    'safeDays'   => $safeDays,
-                                                'dealerPhone' => $dealerPhone,
-                                                'dealerAddress'=> $dealerAddress
+                                                'dealerPhone'   => $dealerPhone,
+                                                'dealerAddress' => $dealerAddress,
+                                                'dealerName'    => $dealerName,
+                                                'dealerTel'     => $dealerTel
 
         ]); 
         
@@ -464,7 +473,7 @@ class PurchaseController extends Controller
                 $errText .= "$message<br>";
             }
 
-            return redirect('/purchaseEstimate')->with('errorMsg', $errText );
+            return back()->with(['errorMsg'=> $errText , 'aa'=>13]);
         }
 
         // 根據是否為系統方管理員進行不同流程

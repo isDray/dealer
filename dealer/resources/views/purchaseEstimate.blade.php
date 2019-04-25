@@ -24,7 +24,7 @@
         <!-- 進貨單預估表單 -->
         <div class='card'>
 
-            <div class="header">
+            <div class="header bg-red">
                 <h2>進貨單預估表單</h2>
             </div>
 
@@ -85,7 +85,7 @@
         @if( isset($goodsId) && count($goodsId)>0 )
         <div class='card'>
 
-            <div class="header">
+            <div class="header bg-red">
                 <h2>進貨單預估表單</h2>
             </div>
             
@@ -123,13 +123,24 @@
                     <table class="table table-bordered" id='goodsAndNum'>
                         <thead>
                             <tr>
-                                <th class='bg-grey'>連絡手機</th>
+                                <th class='bg-grey'>收件人姓名</th>
+                                <th><input type='text' name='name' class="form-control" value="{{$dealerName}}" ></th>
+                                
+                                <th class='bg-grey'>收件人手機</th>
                                 <th><input type='text' name='phone' class="form-control" value="{{$dealerPhone}}" ></th>
 
-                                <th class='bg-grey'>收件地址</th>
-                                <th><input type='text' name='address' class="form-control" value="{{$dealerAddress}}" ></th>
+                                <th class='bg-grey'>收件人電話</th>
+                                <th><input type='text' name='phone' class="form-control" value="{{$dealerTel}}" ></th>
+
                             </tr>   
-                                                    
+                            <tr>
+                                <th class='bg-grey'>收件地址</th>
+                                <th colspan='5'><input type='text' name='address' class="form-control" value="{{$dealerAddress}}" ></th>
+                            </tr>
+                            <tr>
+                                <th class='bg-grey'>備註</th>
+                                <th colspan='5'><textarea  class="form-control" name='dealer_note' rows='6'></textarea></th>
+                            </tr>                                                    
                         </thead>                        
                         <tbody>
                             <tr>

@@ -16,15 +16,14 @@ class AddColumsToUsers extends Migration
         //
         Schema::table('users', function($table) {
             
-            $table->char('user_name',30)->comment('註冊人姓名');
-            $table->char('user_tel',20)->comment('連絡電話');
+            $table->char('user_name',30)->comment('會員姓名');
             $table->char('user_phone',20)->comment('連絡手機');
-            $table->text('ship_address')->comment('預設收貨地址');
-            $table->char('hostel_tel',20)->comment('旅館電話');
-            $table->char('hostel_phone',20)->comment('旅館手機');
-            $table->text('hostel_address')->comment('旅館地址');
-            $table->text('logo1')->comment('旅館地址');
-            $table->text('logo2')->comment('旅館地址');
+            $table->char('user_tel',20)->comment('連絡電話');
+
+            $table->char('ship_name',30)->comment('收貨人');
+            $table->char('ship_phone',20)->comment('收貨人手機');
+            $table->char('ship_tel',20)->comment('收貨人電話');
+            $table->text('ship_address')->comment('收貨地址');
 
         });
     }
@@ -39,14 +38,14 @@ class AddColumsToUsers extends Migration
         //
         Schema::table('users', function($table) {
 
-            $table->dropColumn('phone');
+            $table->dropColumn('user_name'); 
+            $table->dropColumn('user_phone'); 
+            $table->dropColumn('user_tel');
 
-            $table->dropColumn('address');
-
-            $table->dropColumn('user_name');
-
-            $table->dropColumn('tel');
-            
+            $table->dropColumn('ship_name'); 
+            $table->dropColumn('ship_phone'); 
+            $table->dropColumn('ship_tel');
+            $table->dropColumn('ship_address');  
         });         
     }
 }
