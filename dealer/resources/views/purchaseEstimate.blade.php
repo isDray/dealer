@@ -32,7 +32,7 @@
                 <div class="row clearfix">
                     <div class="col-md-6 col-xs-12 col-sm-12">
 
-                        <form action="{{url('/purchaseEstimateDo')}}" method='post'>
+                        <form action="{{url('/purchaseAjaxEstimateDo')}}" method='post' id='purchaseAjaxEstimateDo'>
                         {{ csrf_field() }}
 
                         @if( $isAdmin )
@@ -82,7 +82,6 @@
             </div>
         </div>
         
-        @if( isset($goodsId) && count($goodsId)>0 )
         <div class='card'>
 
             <div class="header bg-red">
@@ -105,17 +104,7 @@
                                 <th width='20%'>需補貨數量</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            @for ($i = 0; $i < count($goodsId); $i++)
-                            <input type='hidden' value='{{$goodsId[$i]}}' name='goodsId[]'>
-                            <tr>
-                                <th>{{$goodsSn[$i]}}</th>
-                                <td>{{$goodsName[$i]}}</td>
-                                <td>{{$salesNum[$i]}}</td>
-                                <td>0</td>
-                                <td><input type='number' name='needNum[]' value="{{$needNum[$i]}}" class="form-control" ></td>
-                            </tr>                            
-                            @endfor
+                        <tbody id='purchaseFormTable'>
                             
                         </tbody>
                     </table>
@@ -124,18 +113,18 @@
                         <thead>
                             <tr>
                                 <th class='bg-grey'>收件人姓名</th>
-                                <th><input type='text' name='name' class="form-control" value="{{$dealerName}}" ></th>
+                                <th><input type='text' name='name' class="form-control" value="" ></th>
                                 
                                 <th class='bg-grey'>收件人手機</th>
-                                <th><input type='text' name='phone' class="form-control" value="{{$dealerPhone}}" ></th>
+                                <th><input type='text' name='phone' class="form-control" value="" ></th>
 
                                 <th class='bg-grey'>收件人電話</th>
-                                <th><input type='text' name='phone' class="form-control" value="{{$dealerTel}}" ></th>
+                                <th><input type='text' name='phone' class="form-control" value="" ></th>
 
                             </tr>   
                             <tr>
                                 <th class='bg-grey'>收件地址</th>
-                                <th colspan='5'><input type='text' name='address' class="form-control" value="{{$dealerAddress}}" ></th>
+                                <th colspan='5'><input type='text' name='address' class="form-control" value="" ></th>
                             </tr>
                             <tr>
                                 <th class='bg-grey'>備註</th>
@@ -155,7 +144,7 @@
             </div>
 
         </div>
-        @elseif( isset($goodsId) && count($goodsId)<=0 )
+
         <div class='card'>
 
             <div class="header">
@@ -167,7 +156,7 @@
             </div>
 
         </div>        
-        @endif
+
         <!-- /進貨單預估表單 -->
     
     </div>
@@ -176,6 +165,102 @@
 <!-- 專屬js -->
 <script type="text/javascript">
 
+$(function(){
+    
+    $("#purchaseAjaxEstimateDo").submit(function(e) {
+
+    e.preventDefault(); // 避免真實表單送出
+
+    var form = $(this);
+    var url = form.attr('action');
+
+    $.ajax({
+            type: "POST",
+            url: url,
+            data: form.serialize(),
+            dataType:'json',
+            success: function( returnData )
+            {   
+                console.log( returnData['res'] );
+
+                if( returnData['res'] == true ){
+                    
+                    estimateGenerator( returnData['datas'] );
+
+                }else if( returnData['res'] == false ){
+
+                    estimateErr( returnData['msg'] );
+                }
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) { 
+                console.log("Status: " + textStatus); 
+                console.log("Error: " + errorThrown); 
+            }            
+         });
+
+
+    });    
+
+
+
+
+    /*----------------------------------------------------------------
+     | ajax 取回訂貨單諮詢後 , 動態產生表單
+     |----------------------------------------------------------------
+     |
+     */
+    function estimateGenerator( _datas ){
+        
+        // 使用商品id的陣列長度來計算總共有多少筆商品
+        totalNeedNum = _datas['goodsId'].length;
+        
+        // 如果商品id有一個以上才需要產生表單
+        if( totalNeedNum > 0 ){
+            
+            // 表單html設為空字串
+            formHtml = '';
+
+            for (var i = 0 ; i < totalNeedNum ; i++) {
+                formHtml += "<input type='hidden' value='"+_datas['goodsId'][i]+"' name='goodsId[]' />";
+                formHtml += "<tr>";
+                formHtml += "<td>"+_datas['goodsSn'][i]+"</td>";
+                formHtml += "<td>"+_datas['goodsName'][i]+"</td>";
+                formHtml += "<td>"+_datas['salesNum'][i]+"</td>";
+                formHtml += "<td>0</td>";
+                formHtml += "<td><input type='number' name='needNum[]' value='"+_datas['needNum'][i]+"' class='form-control' /></td>";
+                formHtml += "</tr>";
+
+            };
+            
+            $('#purchaseFormTable').empty();
+
+            $('#purchaseFormTable').append( formHtml );
+
+        }else{
+
+        }
+
+    }
+
+
+
+
+    /*----------------------------------------------------------------
+     | 呈現錯誤訊息
+     |----------------------------------------------------------------
+     |
+     */
+    function estimateErr( _msg ){
+        
+        swal.fire({
+            
+            title: "執行失誤",
+            html: _msg,
+            type:'error'
+
+        });
+    }
+}) 
 </script>
 <!-- /專屬js -->
 

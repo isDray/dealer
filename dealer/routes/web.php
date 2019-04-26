@@ -119,5 +119,6 @@ Route::group(['middleware' => ['auth','role:Admin|Dealer'] ], function () {
     Route::get('/purchaseList','PurchaseController@index');
     Route::post('/purchaseQuery','PurchaseController@query');
     Route::get('/purchaseInfo/{id}','PurchaseController@info');
+    Route::post('/purchaseAjaxEstimateDo','PurchaseController@ajaxEstimateDo');
     
 });    

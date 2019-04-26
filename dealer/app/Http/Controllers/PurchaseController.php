@@ -278,12 +278,6 @@ class PurchaseController extends Controller
      */
     public function estimateDo( Request $request ){
         
-        if( count(old()) >0 ){
-
-            var_dump($old());
-            
-        }
-        exit;
         // 表單驗證
         $errText = '';
 
@@ -423,8 +417,103 @@ class PurchaseController extends Controller
         
     
     }
+    
 
 
+
+
+    /*----------------------------------------------------------------
+     | ajax 產生進貨單
+     |----------------------------------------------------------------
+     |
+     */
+    public function ajaxEstimateDo( Request $request ){
+
+        $validator = Validator::make($request->all(), [
+
+            'dealerId' => 'required|min:0|exists:users,id',
+
+        ],[
+            'dealerId.required'=> '缺少經銷商編號',
+            'dealerId.min'     => '尚未選擇經銷商',
+            'dealerId.exists'  => '經銷商不存在',
+            
+        ]);
+        
+        $errText = '';
+
+        if ($validator->fails()) {
+
+            $errors = $validator->errors();
+                
+            foreach( $errors->all() as $message ){
+                    
+                $errText .= "$message<br>";
+            
+            }
+            //return back()->with('$errors', $errText );
+            echo json_encode(['res'=>false,'msg'=>$errText]);
+            exit;
+        }
+
+        if( Auth::user()->hasRole('Admin') ){
+
+        }elseif( Auth::user()->hasRole('Dealer') ){
+
+        }
+
+        $dealerId = $request->dealerId;
+        
+        $reference = (empty( $request->dayNum )  || $request->dayNum < 0 )?  30 : $request->dayNum;
+        $safeDays  = (empty( $request->average ) || $request->average < 0 )? 30 : $request->average;
+        
+        $limitDate = date('Y-m-d ',strtotime("-$reference days"));
+
+        // 取出時間內所有經銷商會員的訂單
+        $saleDatas  =   Order::select('order_goods.gid',DB::raw('SUM(order_goods.num) as total_sales') , 'goods.name','goods.goods_sn')
+                    ->leftJoin('order_goods', function($join) {
+                        
+                        $join->on('order.id', '=', 'order_goods.oid');
+                    })
+                    ->leftJoin('goods', function($join) {
+                        
+                        $join->on('order_goods.gid', '=', 'goods.id');
+                    })
+                    ->where('dealer_id',$dealerId)
+                    ->where('order.status','3')
+                    ->where('order.created_at','>=',$limitDate)
+                    ->groupBy('order_goods.gid')
+                    ->get();
+        
+
+        $saleDatas  = $saleDatas->toArray();
+
+
+        $goodsId    = [];
+        $goodsName  = [];
+        $goodsSn    = [];
+        $salesNum   = [];
+        $needNum    = [];
+
+        foreach ($saleDatas as $saleDatak => $saleData ) {
+        
+            $goodsId[]     = $saleData['gid'];
+            $goodsName[]   = $saleData['name'];
+            $goodsSn[]     = $saleData['goods_sn'];
+            $salesNum[]    = $saleData['total_sales'];
+            $tmpNeed       = round($saleData['total_sales'] / $reference * $safeDays  );
+            $needNum[]     = $tmpNeed;
+        }
+        $tmpDatas = [ 'goodsId'   => $goodsId,
+                      'goodsName' => $goodsName,
+                      'goodsSn'   => $goodsSn,
+                      'salesNum'  => $salesNum, 
+                      'needNum'   => $needNum 
+                    ];
+        echo json_encode(['res'=>true,'msg'=>'進貨單預估完成','datas'=>$tmpDatas]);
+        exit;
+
+    }
 
 
     /*----------------------------------------------------------------
