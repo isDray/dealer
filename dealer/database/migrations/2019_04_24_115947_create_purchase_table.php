@@ -27,6 +27,11 @@ class CreatePurchaseTable extends Migration
             $table->timestamp('shipdate')->nullable()->comment('出貨時間');
             $table->integer('amount')->comment('進貨單總金額');
             $table->tinyInteger('status')->comment('狀態');
+            $table->char('tel',20)->nullable()->comment('連絡電話');
+            $table->char('phone',20)->comment('連絡手機');
+            $table->text('address')->comment('地址');
+            $table->text('admin_note')->nullable()->comment('系統方備註');
+            $table->text('dealer_note')->nullable()->comment('經銷商備註');            
             $table->timestamps();
 
         });
@@ -66,11 +71,20 @@ class CreatePurchaseTable extends Migration
             $table->foreign('dealer_id')->references('id')->on('users')->onDelete('cascade');
 
             $table->integer('goods_id')->unsigned()->comment('商品id');
-
+            
             $table->integer('goods_num')->comment('商品數量');
+
+            $table->timestamps();
             $table->primary(['dealer_id', 'goods_id']);
 
         });
+
+
+
+        /*----------------------------------------------------------------
+         | 進貨單操作紀錄
+         |
+         */
     }
 
 

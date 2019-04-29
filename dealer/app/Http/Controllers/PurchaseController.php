@@ -337,7 +337,7 @@ class PurchaseController extends Controller
             // 如果當下操作者是經銷商身分 , 則需要判斷要產生的是否為自己的進貨單
             if( !$this->chkDealer( $request->dealerId ) ){
 
-                $errText .= "要產生進貨單的帳戶與目前使用者不同 , 請勿嘗試非法操作<br>";
+                $errText .= "要產生進貨單的帳號與目前使用者不同 , 請勿嘗試非法操作<br>";
             }
             if( !empty($errText) ){
 
@@ -423,7 +423,7 @@ class PurchaseController extends Controller
 
 
     /*----------------------------------------------------------------
-     | ajax 產生進貨單
+     | ajax 估算進貨單
      |----------------------------------------------------------------
      |
      */
@@ -431,12 +431,11 @@ class PurchaseController extends Controller
 
         $validator = Validator::make($request->all(), [
 
-            'dealerId' => 'required|min:0|exists:users,id',
+            'dealerId' => 'required|exists:users,id',
 
         ],[
             'dealerId.required'=> '缺少經銷商編號',
-            'dealerId.min'     => '尚未選擇經銷商',
-            'dealerId.exists'  => '經銷商不存在',
+            'dealerId.exists'  => '尚未選擇經銷商或者經銷商不存在',
             
         ]);
         
@@ -455,11 +454,17 @@ class PurchaseController extends Controller
             echo json_encode(['res'=>false,'msg'=>$errText]);
             exit;
         }
-
+        
+        // 判斷權限
         if( Auth::user()->hasRole('Admin') ){
 
         }elseif( Auth::user()->hasRole('Dealer') ){
+            
+            if( !$this->chkDealer( $request->dealerId ) ){
 
+                echo json_encode(['res'=>false,'msg'=>'要預估的帳號與目前使用者不同 , 請勿嘗試非法操作']);
+                exit;
+            }
         }
 
         $dealerId = $request->dealerId;
@@ -470,7 +475,7 @@ class PurchaseController extends Controller
         $limitDate = date('Y-m-d ',strtotime("-$reference days"));
 
         // 取出時間內所有經銷商會員的訂單
-        $saleDatas  =   Order::select('order_goods.gid',DB::raw('SUM(order_goods.num) as total_sales') , 'goods.name','goods.goods_sn')
+        $saleDatas  =   Order::select('order_goods.gid',DB::raw('SUM(order_goods.num) as total_sales') , 'goods.name','goods.goods_sn' , 'goods.w_price')
                     ->leftJoin('order_goods', function($join) {
                         
                         $join->on('order.id', '=', 'order_goods.oid');
@@ -494,6 +499,7 @@ class PurchaseController extends Controller
         $goodsSn    = [];
         $salesNum   = [];
         $needNum    = [];
+        $w_price    = [];
 
         foreach ($saleDatas as $saleDatak => $saleData ) {
         
@@ -503,17 +509,285 @@ class PurchaseController extends Controller
             $salesNum[]    = $saleData['total_sales'];
             $tmpNeed       = round($saleData['total_sales'] / $reference * $safeDays  );
             $needNum[]     = $tmpNeed;
+            $w_price[]     = $saleData['w_price'];
         }
+
         $tmpDatas = [ 'goodsId'   => $goodsId,
                       'goodsName' => $goodsName,
                       'goodsSn'   => $goodsSn,
                       'salesNum'  => $salesNum, 
-                      'needNum'   => $needNum 
+                      'needNum'   => $needNum,
+                      'w_price'   => $w_price
                     ];
+
+        // 取出經銷會員的預設配送資料
+        $shipData = User::find( $dealerId );  
+        $shipData = $shipData->toArray();                 
+        
+        $tmpDatas['ship'] = $shipData;
+
         echo json_encode(['res'=>true,'msg'=>'進貨單預估完成','datas'=>$tmpDatas]);
         exit;
 
     }
+    
+
+
+    /*----------------------------------------------------------------
+     | ajax 添加商品
+     |----------------------------------------------------------------
+     |
+     */
+    public function ajaxAddPurchaseGoods( Request $request ){
+        
+        $validator = Validator::make($request->all(), [
+
+            'dealerId' => 'required|exists:users,id',
+
+        ],[
+            'dealerId.required'=> '缺少經銷商編號',
+            'dealerId.exists'  => '經銷商不存在',
+            
+        ]);
+        
+        $errText = '';
+
+        if ($validator->fails()) {
+
+            $errors = $validator->errors();
+                
+            foreach( $errors->all() as $message ){
+                    
+                $errText .= "$message<br>";
+            
+            }
+        }
+        
+        if( !empty( $errText ) ){
+
+            echo json_encode(['res'=>false,'msg'=>$errText]);
+            exit;
+        }
+        // 權限驗證
+        if( Auth::user()->hasRole('Admin') ){
+
+            if( !Auth::user()->can('purchaseEdit') ){
+
+                echo json_encode( ['res'=>false ,'msg'=>'帳號無此操作權限 , 如有需要請切換帳號或聯絡管理員增加權限'] );
+
+                exit;
+            }
+
+        }else{
+            
+            if( ! $this->chkDealer( $request->dealerId ) ){
+
+                echo json_encode( ['res'=>false ,'msg'=>'要操作的帳號與目前使用者不同 , 請勿嘗試非法操作'] );
+
+                exit;                
+            }
+
+        }
+
+        $goodsText  = trim($request->goodsText);
+        $goodsDatas = explode("\n", $goodsText);
+        
+        $tmpDatas = [];
+        
+        $msgTxt = '';
+
+        foreach ( $goodsDatas as $goodsData ) {
+
+            $tmpAdds  = explode('_', $goodsData);
+
+            $tmpGoods = Goods::where('goods_sn',$tmpAdds[0])->first();
+            
+            $tmpGoods = $tmpGoods->toArray();
+
+            $tmpGoods['addNum'] = $tmpAdds[1];
+
+            if( count($tmpGoods) == 0 ){
+                
+                $msgTxt .= $tmpAdds[0].'不存在<br>';
+            }
+
+            array_push($tmpDatas, ['goodsData'=>$tmpGoods]);
+        }
+
+        echo json_encode( [ 'res'=>true , 'msg' => '添加商品完成<br>'.$msgTxt , 'datas' => $tmpDatas] );
+        exit;
+    }
+
+
+
+
+    /*----------------------------------------------------------------
+     | ajax 存入進貨單
+     |----------------------------------------------------------------
+     |
+     */
+    public function ajaxNewPurchaseOrder( Request $request ){
+        
+        $totalGoods = count($request->goodsId);
+        
+        $moreMsg    = [];
+        
+        for ($i=0; $i < $totalGoods ; $i++) { 
+
+            $goodssort = $i+1;
+            $moreMsg["goodsId.$i.exists"] = "第{$goodssort}個商品不存在";
+
+        }
+        
+        $validator = Validator::make($request->all(), [
+
+            'dealerId'   => 'required|min:0|exists:users,id',
+            'goodsId.*'  => 'exists:goods,id',
+            'phone'      => 'required|regex:/^09[0-9]{8}$/',
+            'tel'        => 'nullable|regex:/^[0-9]{9,12}$/',
+            'address'    => 'required'
+  
+        ],[
+            'dealerId.required'=> '缺少經銷商編號',
+            'dealerId.min'     => '尚未選擇經銷商',
+            'dealerId.exists'  => '經銷商不存在',
+            'phone.required'   => '連絡手機為必填',
+            'phone.regex'      => '連絡手機格式錯誤',
+            'address.required' => '收件地址為必填',
+            'tel.regex'        => '連絡電話格式錯誤',
+        ]+$moreMsg  );
+        
+        $errText = '';
+        
+        if ($validator->fails()) {
+                
+            $errors = $validator->errors();
+                
+            foreach( $errors->all() as $message ){
+                    
+                $errText .= "$message<br>";
+            }
+
+        }   
+
+        if( $totalGoods == 0 ){
+
+            $errText .= "進貨單中無任何商品<br>";
+        }
+
+        if( !empty($errText)){
+
+            echo json_encode(['res'=>false , 'msg'=>$errText ]);
+
+            exit; 
+        }
+        
+        // 判斷權限
+        if( Auth::user()->hasRole('Admin') ){
+
+            if( !Auth::user()->can('purchaseNew') ){
+
+                echo json_encode( ['res'=>false , 'msg'=>'帳號無此操作權限 , 如有需要請切換帳號或聯絡管理員增加權限' ]);
+
+                exit;
+            }
+
+        }elseif( Auth::user()->hasRole('Dealer') ){
+
+            // 確認是否為自己的進貨單
+            if( !$this->chkDealer( $request->dealerId ) ){
+
+                echo json_encode( ['res'=>false , 'msg'=>'要產生進貨單的帳戶與目前使用者不同 , 請勿嘗試非法操作' ]);
+
+                exit;                
+            }
+        }
+        
+        // 通過認證後開始寫入進貨單
+
+        DB::beginTransaction();
+
+        try {
+                
+            $loopTime = count( $request->goodsId );
+                
+            // 進貨單總金額
+            $purchaseAmount = 0;
+
+            // 迴圈找出商品資料
+            for ($i=0; $i <$loopTime ; $i++) { 
+
+                // 如果數量大於0 , 就開始取出商品相關資料
+                if( $request->needNum[$i] > 0 ){
+                        
+                    $tmpGoods = Goods::find( $request->goodsId[$i]);
+                        
+                    $purchaseAmount += intval( $tmpGoods->w_price * $request->needNum[$i] );
+
+                }
+                    
+            }
+
+            $dealerData = User::find( $request->dealerId );
+
+            $radmonNUm = rand(0,999999);
+            $radmonNUm = str_pad($radmonNUm,6,'0',STR_PAD_LEFT);
+            $Purchase  = new Purchase;
+
+            $Purchase->purchase_sn  = date("Ymd").$radmonNUm;
+            $Purchase->dealer_id    = $request->dealerId;
+            $Purchase->dealer_name  = $dealerData->name;
+            $Purchase->amount       = $purchaseAmount;
+            $Purchase->status       = 1; // 1.待處理 2.已確認 3.已出貨 4.取消
+            $Purchase->phone        = $request->phone;
+            $Purchase->tel          = $request->tel;
+            $Purchase->address      = $request->address;
+            $Purchase->dealer_note  = $request->dealer_note;            
+            $Purchase->save();
+
+            for ($i=0; $i <$loopTime ; $i++) { 
+
+                // 如果數量大於0 , 就開始取出商品相關資料
+                if( $request->needNum[$i] > 0 ){
+                        
+                    $tmpGoods = Goods::find( $request->goodsId[$i]);
+                        
+                    $purchaseAmount += intval($tmpGoods->w_price * $request->needNum[$i]);
+
+                    $PurchaseGoods = new PurchaseGoods;
+                    $PurchaseGoods->goods_id    = $tmpGoods->id;
+                    $PurchaseGoods->goods_sn    = $tmpGoods->goods_sn;
+                    $PurchaseGoods->goods_name  = $tmpGoods->name;
+                    $PurchaseGoods->w_price     = $tmpGoods->w_price;
+                    $PurchaseGoods->num         = intval( $request->needNum[$i] );
+                    $PurchaseGoods->subtotal    = intval( $tmpGoods->w_price * $request->needNum[$i]);
+                    $PurchaseGoods->purchase_sn = $Purchase->id;
+                    $PurchaseGoods->save();
+
+                }
+                
+            }                
+            
+            DB::commit();
+                
+            echo json_encode( ['res'=>true , 'msg'=>'進貨單新增成功' ]);
+
+        } catch (Exception $e) {
+
+            DB::rollback();
+            //$e->getMessage();
+
+            // 寫入錯誤代碼後轉跳
+            
+            logger("{$e->getMessage()} \n\n-----------------------------------------------\n\n"); 
+            
+            echo json_encode( ['res'=>false , 'msg'=>'進貨單新增失敗 , 請稍後再嘗試' ]);       
+        }          
+
+
+    }
+
+
 
 
     /*----------------------------------------------------------------

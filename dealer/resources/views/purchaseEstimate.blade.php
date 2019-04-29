@@ -76,8 +76,34 @@
                             </span>
                            
                         </div>
+
                         </form>
                     </div>
+
+                    <div class="col-md-12 col-xs-12 col-sm-12">
+
+                        <button class="btn btn-primary waves-effect" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false"
+                                    aria-controls="collapseExample">
+                        追加商品
+                        </button>  
+
+                        <div class="collapse" id="collapseExample">
+
+                            <div class="well">
+                            輸入格式 : <span class='bg-teal'>商品編號</span>_<span class='bg-deep-orange'>數量</span><br>
+                            例如:<br>
+                            <span class='bg-teal'>941688</span>_<span class='bg-deep-orange'>2</span><br>
+                            <span class='bg-teal'>511688</span>_<span class='bg-deep-orange'>8</span><br>
+                            則會添加2個編號為941688的商品及8個511688的商品
+                            <textarea  class="form-control" id='goodsText' rows='4'></textarea>
+
+                            <button class="btn btn-primary waves-effect" id='addGoods'>追加</button> 
+                            </div>
+
+                        </div>                            
+
+                    </div> 
+
                 </div>
             </div>
         </div>
@@ -90,11 +116,11 @@
             
             <div class='body'>
 
-                <form action="{{url('/purchaseOrder')}}" method='POST' >
+                <form action="{{url('/purchaseAjaxOrder')}}" method='POST' id='purchaseAjaxNew'>
                     {{ csrf_field() }}
 
-                    <input type='hidden' name='dealerId' value="{{$DealerId}}"> 
-                    <table class="table table-bordered" id='goodsAndNum'>
+                    <input type='hidden' name='dealerId' value="" id='purchaseDealerId'> 
+                    <table class="table table-bordered" id='goodsAndNum' style='display:none;'>
                         <thead>
                             <tr class='bg-grey'>
                                 <th>貨號</th>
@@ -102,6 +128,7 @@
                                 <th>銷售數量</th>
                                 <th>庫存</th>
                                 <th width='20%'>需補貨數量</th>
+                                <th>小計</th>
                             </tr>
                         </thead>
                         <tbody id='purchaseFormTable'>
@@ -109,22 +136,22 @@
                         </tbody>
                     </table>
 
-                    <table class="table table-bordered" id='goodsAndNum'>
+                    <table class="table table-bordered" id='purchaseData' style='display:none;'>
                         <thead>
                             <tr>
                                 <th class='bg-grey'>收件人姓名</th>
-                                <th><input type='text' name='name' class="form-control" value="" ></th>
+                                <th><input type='text' name='name' class="form-control" value="" id="shipName"></th>
                                 
                                 <th class='bg-grey'>收件人手機</th>
-                                <th><input type='text' name='phone' class="form-control" value="" ></th>
+                                <th><input type='text' name='phone' class="form-control" value="" id="shipPhone"></th>
 
                                 <th class='bg-grey'>收件人電話</th>
-                                <th><input type='text' name='phone' class="form-control" value="" ></th>
+                                <th><input type='text' name='tel' class="form-control" value="" id="shipTel"></th>
 
                             </tr>   
                             <tr>
                                 <th class='bg-grey'>收件地址</th>
-                                <th colspan='5'><input type='text' name='address' class="form-control" value="" ></th>
+                                <th colspan='5'><input type='text' name='address' class="form-control" value="" id="shipAddress"></th>
                             </tr>
                             <tr>
                                 <th class='bg-grey'>備註</th>
@@ -144,19 +171,7 @@
             </div>
 
         </div>
-
-        <div class='card'>
-
-            <div class="header">
-                <h2>無銷售資料</h2>
-            </div>
-            
-            <div class='body'>
-
-            </div>
-
-        </div>        
-
+       
         <!-- /進貨單預估表單 -->
     
     </div>
@@ -196,7 +211,7 @@ $(function(){
                 console.log("Status: " + textStatus); 
                 console.log("Error: " + errorThrown); 
             }            
-         });
+    });
 
 
     });    
@@ -214,33 +229,73 @@ $(function(){
         // 使用商品id的陣列長度來計算總共有多少筆商品
         totalNeedNum = _datas['goodsId'].length;
         
+        // 表單html設為空字串
+        formHtml = '';
+
         // 如果商品id有一個以上才需要產生表單
         if( totalNeedNum > 0 ){
             
-            // 表單html設為空字串
-            formHtml = '';
-
             for (var i = 0 ; i < totalNeedNum ; i++) {
-                formHtml += "<input type='hidden' value='"+_datas['goodsId'][i]+"' name='goodsId[]' />";
+
                 formHtml += "<tr>";
+                formHtml += "<input type='hidden' value='"+_datas['goodsId'][i]+"' name='goodsId[]' class='goodsId' />";
                 formHtml += "<td>"+_datas['goodsSn'][i]+"</td>";
                 formHtml += "<td>"+_datas['goodsName'][i]+"</td>";
                 formHtml += "<td>"+_datas['salesNum'][i]+"</td>";
                 formHtml += "<td>0</td>";
                 formHtml += "<td><input type='number' name='needNum[]' value='"+_datas['needNum'][i]+"' class='form-control' /></td>";
+                formHtml += "<td>"+ _datas['needNum'][i] * _datas['w_price'][i] +"</td>";
                 formHtml += "</tr>";
 
             };
             
+            // 清空所有form
             $('#purchaseFormTable').empty();
-
+            
+            // 將取回資料產生form
             $('#purchaseFormTable').append( formHtml );
 
         }else{
+            
+            // 如果沒有商品則呈現無商品訊息
+            formHtml += "<tr>";
+            formHtml += "<td colspan='5'> 無銷售紀錄 </td>";
+            formHtml += "</tr>";
+            // 清空所有form
+            $('#purchaseFormTable').empty();
+            
+            // 將取回資料產生form
+            $('#purchaseFormTable').append( formHtml );            
+        } 
 
-        }
+        // 填寫預設配送資訊
+        $("#shipName").val( $.trim(_datas['ship']['ship_name']) );
+        $("#shipTel").val( $.trim(_datas['ship']['ship_tel']) );
+        $("#shipPhone").val( $.trim(_datas['ship']['ship_phone']) );
+        $("#shipAddress").val( $.trim(_datas['ship']['ship_address']) );
+        $("#purchaseDealerId").val( $.trim(_datas['ship']['id']) );
 
+
+        $("#purchaseData").show();
+        $("#goodsAndNum").show();
+     
     }
+
+
+
+    /*----------------------------------------------------------------
+     | 呈現成功訊息
+     |----------------------------------------------------------------
+     */
+     function estimateSuccess( _msg ){
+        swal.fire({
+            
+            title: "成功",
+            html: _msg,
+            type:'success'
+
+        });
+     }
 
 
 
@@ -259,6 +314,142 @@ $(function(){
             type:'error'
 
         });
+    }
+
+
+
+    /*----------------------------------------------------------------
+     | 新增表單送出
+     |----------------------------------------------------------------
+     |
+     */
+    $("#purchaseAjaxNew").submit(function(e) {
+
+        e.preventDefault(); // 避免真實表單送出
+        
+        var form = $(this);
+        var url = form.attr('action');
+
+        $.ajax({
+                type: "POST",
+                url: url,
+                data: form.serialize(),
+                dataType:'json',
+                success: function( returnData )
+                {   
+                    //console.log( returnData );
+                    
+                    
+                    if( returnData['res'] == true ){
+
+                        estimateSuccess( returnData['msg'] );
+                        
+    
+                    }else if( returnData['res'] == false ){
+                   
+                        estimateErr( returnData['msg'] );
+                    }
+                    
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) { 
+
+                    console.log("Status: " + textStatus); 
+
+                    console.log("Error: " + errorThrown); 
+                }            
+        });  
+              
+    });
+
+
+
+
+    /*----------------------------------------------------------------
+     | 新增商品到預估單
+     |----------------------------------------------------------------
+     |
+     */
+    $("#addGoods").click(function(){
+        
+        if( !$("#purchaseDealerId").val() ){
+
+            estimateErr('請先產生需補貨數');
+            return;
+        }
+
+        $.ajax({
+                type: "POST",
+                url: "{{url('/purchaseAjaxAddGoods')}}",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "goodsText": $('#goodsText').val(),
+                    'dealerId':$("#purchaseDealerId").val(),
+                },
+                dataType:'json',
+                success: function( returnData )
+                {   
+                    
+                    if( returnData['res'] == true ){
+
+                        estimateSuccess( returnData['msg'] );
+
+                        var existGoods = new Array();
+                        
+                        // 將表單內所有的商品id 整理成array用於後續判斷
+                        $.each( $(".goodsId") , function() {
+
+                            existGoods.push( parseInt($(this).val()) );
+                        });
+                        
+
+                        $.each( returnData['datas'] , function(index,detail){
+
+                            if( $.inArray(detail['goodsData']['id'],existGoods) < 0 ){
+
+                                addRow( detail['goodsData'] );
+                            
+                            }
+                        });
+                        
+                    }else if( returnData['res'] == false ){
+                   
+                        estimateErr( returnData['msg'] );
+                    }
+                    
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) { 
+
+                    /*
+                    console.log("Status: " + textStatus); 
+
+                    console.log("Error: " + errorThrown);
+                    */
+                }            
+        });        
+    });
+
+
+
+
+    /*----------------------------------------------------------------
+     | 添加一欄位
+     |----------------------------------------------------------------
+     | 
+     */
+    function addRow( _datas ){
+        
+        var formHtml  = '';
+        formHtml += "<tr>";
+        formHtml += "<input type='hidden' value='"+_datas['id']+"' name='goodsId[]' class='goodsId' />";
+        formHtml += "<td>"+_datas['goods_sn']+"</td>";
+        formHtml += "<td>"+_datas['name']+"</td>";
+        formHtml += "<td>"+0+"</td>";
+        formHtml += "<td>0</td>";
+        formHtml += "<td><input type='number' name='needNum[]' value='"+_datas['addNum']+"' class='form-control' /></td>";
+        formHtml += "<td>"+ _datas['addNum'] * _datas['w_price']+"</td>";
+        formHtml += "</tr>";
+
+        $('#purchaseFormTable').append( formHtml );
     }
 }) 
 </script>

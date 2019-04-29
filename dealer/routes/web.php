@@ -114,11 +114,13 @@ Route::group(['middleware' => ['auth','role:Admin|Dealer'] ], function () {
 
     // 進貨單管理
     Route::get('/purchaseEstimate','PurchaseController@estimate');
-    Route::post('/purchaseEstimateDo','PurchaseController@estimateDo');
-    Route::post('/purchaseOrder','PurchaseController@newPurchaseOrder');
+    Route::post('/purchaseEstimateDo','PurchaseController@estimateDo');  // 棄用
+    Route::post('/purchaseOrder','PurchaseController@newPurchaseOrder'); // 棄用
     Route::get('/purchaseList','PurchaseController@index');
     Route::post('/purchaseQuery','PurchaseController@query');
     Route::get('/purchaseInfo/{id}','PurchaseController@info');
     Route::post('/purchaseAjaxEstimateDo','PurchaseController@ajaxEstimateDo');
+    Route::post('/purchaseAjaxOrder','PurchaseController@ajaxNewPurchaseOrder');
+    Route::post('/purchaseAjaxAddGoods','PurchaseController@ajaxAddPurchaseGoods');
     
 });    
