@@ -17,6 +17,7 @@ use App\OrderGoods;
 use App\Purchase;
 use App\PurchaseGoods;
 use App\GoodsStock;
+use App\PurchaseLog;
 
 use \Exception;
 class PurchaseController extends Controller
@@ -218,7 +219,40 @@ class PurchaseController extends Controller
             }
         }
         
-        return view('purchaseInfo')->with(['title' => $pageTitle]);
+        // 取出訂貨單資訊
+        $purchaseData = Purchase::find( $request->id );
+        $purchaseData = $purchaseData->toArray();
+
+        // 狀態代碼以文字呈現
+        switch ( $purchaseData['status'] ) {
+            case '1':
+                $purchaseData['statusTxt'] = '待處理';
+                break;
+            case '2':
+                $purchaseData['statusTxt'] = '已確認';
+                break;
+            case '3':
+                $purchaseData['statusTxt'] = '已出貨';
+                break;
+            case '4':
+                $purchaseData['statusTxt'] = '取消';
+                break;                                                
+            
+        }
+        
+        // 取出進貨單明細資料
+        $purchaseDetail = PurchaseGoods::where('purchase_id',$request->id)->get();
+        $purchaseDetail = $purchaseDetail->toArray();
+        
+        // 取出操作紀錄
+        $purchaseLogs = PurchaseLog::where('purchase_id' , $request->id)->orderBy('created_at', 'desc')->get();
+        $purchaseLogs = $purchaseLogs->toArray();
+
+        return view('purchaseInfo')->with(['title'           => $pageTitle,
+                                           'purchaseData'    => $purchaseData,
+                                           'purchaseDetails' => $purchaseDetail,
+                                           'purchaseLogs'    => $purchaseLogs
+                                         ]);
     }
 
 
@@ -691,6 +725,8 @@ class PurchaseController extends Controller
 
                 exit;
             }
+            
+            $roleName = 'Admin';
 
         }elseif( Auth::user()->hasRole('Dealer') ){
 
@@ -701,6 +737,8 @@ class PurchaseController extends Controller
 
                 exit;                
             }
+
+            $roleName = 'Dealer';
         }
         
         // 通過認證後開始寫入進貨單
@@ -739,6 +777,7 @@ class PurchaseController extends Controller
             $Purchase->dealer_name  = $dealerData->name;
             $Purchase->amount       = $purchaseAmount;
             $Purchase->status       = 1; // 1.待處理 2.已確認 3.已出貨 4.取消
+            $Purchase->consignee    = $request->name;
             $Purchase->phone        = $request->phone;
             $Purchase->tel          = $request->tel;
             $Purchase->address      = $request->address;
@@ -761,13 +800,32 @@ class PurchaseController extends Controller
                     $PurchaseGoods->w_price     = $tmpGoods->w_price;
                     $PurchaseGoods->num         = intval( $request->needNum[$i] );
                     $PurchaseGoods->subtotal    = intval( $tmpGoods->w_price * $request->needNum[$i]);
-                    $PurchaseGoods->purchase_sn = $Purchase->id;
+                    $PurchaseGoods->purchase_id = $Purchase->id;
                     $PurchaseGoods->save();
 
                 }
                 
             }                
             
+            // 寫入log
+            $PurchaseLog = new PurchaseLog;
+
+            $PurchaseLog->user_id    = Auth::id();
+
+            $PurchaseLog->user_name  = Auth::user()->name;
+
+            $PurchaseLog->user_role  = $roleName;
+
+            $PurchaseLog->purchase_id  = $Purchase->id;
+
+            $PurchaseLog->purchase_status = 1;
+
+            $PurchaseLog->purchase_status_text  = '待處理';
+            
+            $PurchaseLog->desc  = '新增進貨單';
+
+            $PurchaseLog->save();
+
             DB::commit();
                 
             echo json_encode( ['res'=>true , 'msg'=>'進貨單新增成功' ]);
@@ -1017,6 +1075,206 @@ class PurchaseController extends Controller
         }
     }
     
+
+
+
+    /*----------------------------------------------------------------
+     | 更變進貨單狀態
+     |----------------------------------------------------------------
+     |
+     */
+    public function updateStatus( Request $request ){
+        
+        $validator = Validator::make($request->all(), [
+            'purchaseId'   => 'required|exists:purchase,id',
+        ],[
+            'purchaseId.required'=> '缺少進貨單編號',
+            'purchaseId.exists'  => '進貨單不存在',
+        ] );
+
+        if ($validator->fails()) {
+                
+            $errText = '';
+
+            $errors = $validator->errors();
+                
+            foreach( $errors->all() as $message ){
+                    
+                $errText .= "$message<br>";
+            }
+
+            return back()->with(['errorMsg'=> $errText]);
+        }
+
+        // 只有系統方可以對進貨單狀態做變更
+        if( Auth::user()->hasRole('Admin') ){
+            
+            if( !Auth::user()->can('purchaseEdit') ){
+                
+                return back()->with(['errorMsg'=> '帳號無此操作權限 , 如有需要請切換帳號或聯絡管理員增加權限']);
+            }
+
+        }else{
+            
+            return back()->with(['errorMsg'=> '帳號無此操作權限 , 請勿嘗試非法操作']);
+        }
+        
+        $tmpStatus = 0; 
+
+        // 轉換狀態為代碼
+        if( isset( $request->pending ) ){
+            
+            $tmpStatus = 1;
+            $tmpStatusText = '待處理';
+        }
+        if( isset( $request->checked ) ){
+            
+            $tmpStatus = 2;
+            $tmpStatusText = '已確認';
+        }
+        if( isset( $request->shipped ) ){
+            
+            $tmpStatus = 3;
+            $tmpStatusText = '已出貨';
+        }
+        if( isset( $request->cancel ) ){
+            
+            $tmpStatus = 4;
+            $tmpStatusText = '取消';
+        } 
+
+        if( $tmpStatus == 0 ){
+
+            return back()->with(['errorMsg'=> '進貨單無此狀態 , 請勿嘗試非法操作']);
+        }
+        
+        // 取出進貨單目前狀態
+        $purchase = Purchase::find( $request->purchaseId );
+        $purchase = $purchase->toArray();
+
+        if( $purchase['status'] == $tmpStatus ){
+
+            return back()->with(['successMsg'=> '狀態一致 , 不需進行操作']);
+        }
+        
+        // 新增至進貨單
+        DB::beginTransaction();
+
+        try {
+            
+
+            
+            $Purchase = Purchase::find( $request->purchaseId );
+            
+            // 如果是由已出貨到取消則要退回庫存
+            if( $tmpStatus == 4 && $Purchase->status == 3){
+                
+                $allPurchaseGoods = PurchaseGoods::where('purchase_id',$request->purchaseId)->get();
+                $allPurchaseGoods = $allPurchaseGoods->toArray();  
+
+                foreach ($allPurchaseGoods as $allPurchaseGood ) {
+                    
+                    $goodsStock = GoodsStock::where('dealer_id', $Purchase->dealer_id )->where('goods_id', $allPurchaseGood['goods_id'] )->first();
+                    
+                    /*$goodsStock->goods_num = $goodsStock->goods_num - $allPurchaseGood['num'];
+                    $goodsStock->save();*/
+                    
+                    if( $goodsStock->goods_num - $allPurchaseGood['num'] < 0){
+                    
+                        $tmpNum = 0;
+                    
+                    }else{
+
+                        $tmpNum = $goodsStock->goods_num - $allPurchaseGood['num'];
+                    }
+                    DB::table('goods_stock')
+                    ->where('dealer_id', $Purchase->dealer_id)
+                    ->where('goods_id', $allPurchaseGood['goods_id'] )
+                    ->update(['goods_num' => $tmpNum ]);
+                     
+                }          
+            }
+
+            $Purchase->status = $tmpStatus;
+            
+            if( $tmpStatus == 3){
+
+                $Purchase->shipdate = now()->timestamp;
+
+            }else{
+
+                $Purchase->shipdate = NULL;
+            }
+        
+            $Purchase->save();
+
+            // 修改庫存
+            if( $tmpStatus == 3){
+                
+                $allPurchaseGoods = PurchaseGoods::where('purchase_id',$request->purchaseId)->get();
+                $allPurchaseGoods = $allPurchaseGoods->toArray();
+
+                foreach ($allPurchaseGoods as $allPurchaseGood ) {
+
+                    $goodsStock = GoodsStock::where('dealer_id', $Purchase->dealer_id )->where('goods_id', $allPurchaseGood['goods_id'] )->first();
+
+                    if( empty($goodsStock) ){
+
+                        $GoodsStock = new GoodsStock;
+                        $GoodsStock->dealer_id = $Purchase->dealer_id;
+                        $GoodsStock->goods_id  = $allPurchaseGood['goods_id'];
+                        $GoodsStock->goods_num = $allPurchaseGood['num'];
+                        $GoodsStock->save();
+
+                    }else{
+
+                        if( $goodsStock->goods_num + $allPurchaseGood['num'] < 0){
+                        
+                            $tmpNum = 0;
+                        
+                        }else{
+                            
+                            $tmpNum = $goodsStock->goods_num + $allPurchaseGood['num'];
+                        }
+
+                        DB::table('goods_stock')
+                        ->where('dealer_id', $Purchase->dealer_id)
+                        ->where('goods_id', $allPurchaseGood['goods_id'] )
+                        ->update(['goods_num' => $tmpNum ]);
+                    }
+                }
+            }
+
+
+            //GoodsStock::where()
+            // 寫入記錄檔
+            $PurchaseLog =  new PurchaseLog;
+            $PurchaseLog->user_id   = Auth::id();
+            $PurchaseLog->user_name = Auth::user()->name;
+            $PurchaseLog->user_role = 'Admin';
+            $PurchaseLog->purchase_id = $request->purchaseId;
+            $PurchaseLog->purchase_status = $tmpStatus;
+            $PurchaseLog->purchase_status_text = $tmpStatusText;        
+            $PurchaseLog->desc = '修改進貨單狀態';            
+            $PurchaseLog->save();
+            DB::commit();
+            return back()->with('successMsg', '進貨單操作成功');
+
+        }catch (Exception $e) {
+
+            DB::rollback();
+            //$e->getMessage();
+
+            // 寫入錯誤代碼後轉跳
+            
+            logger("{$e->getMessage()} \n\n-----------------------------------------------\n\n"); 
+            
+            return back()->with('errorMsg', '進貨單操作失敗 , 請稍後再嘗試');          
+        }            
+    
+    }
+
+
 
 
     /*----------------------------------------------------------------

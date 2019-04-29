@@ -23,8 +23,8 @@
         
         <div class='card'>
 
-            <!-- 訂單基本資料 -->
-            <div class="header">
+            <!-- 進貨單基本資料 -->
+            <div class="header bg-red">
                 <h2>訂單基本資料</h2>
             </div>
 
@@ -33,80 +33,187 @@
                     <tbody>
                         <tr>
                             <td class='bg-grey' width='10%'>進貨單編號</td>
-                            <td></td>
+                            <td>{{$purchaseData['purchase_sn']}}</td>
                             <td class='bg-grey' width='10%'>下單時間</td>
-                            <td></td> 
+                            <td>{{$purchaseData['created_at']}}</td> 
                             <td class='bg-grey' width='10%'>進貨狀態</td>
-                            <td></td>                            
+                            <td>{{$purchaseData['statusTxt']}}</td>                            
                         </tr>
 
                         <tr>
                             <td class='bg-grey' width='10%'>出貨時間</td>
-                            <td></td>
+                            <td>
+                            @if( !empty( $purchaseData['shipdate'] ) )
+                            {{$purchaseData['shipdate']}}
+                            @else
+                            尚未出貨
+                            @endif
+                            </td>
                             <td class='bg-grey' width='10%'>經銷商編號</td>
-                            <td></td> 
+                            <td>{{$purchaseData['dealer_id']}}</td> 
                             <td class='bg-grey' width='10%'>收件人</td>
-                            <td></td>                            
+                            <td>{{$purchaseData['consignee']}}</td>                            
                         </tr>
 
                         <tr>
                             <td class='bg-grey' width='10%'>收件人地址</td>
-                            <td></td>
+                            <td>{{$purchaseData['address']}}</td>
+                            <td class='bg-grey' width='10%'>連絡手機</td>
+                            <td>{{$purchaseData['phone']}}</td> 
                             <td class='bg-grey' width='10%'>連絡電話</td>
-                            <td></td> 
-                            <td class='bg-grey' width='10%'>備註</td>
-                            <td></td>                            
+                            <td>{{$purchaseData['tel']}}</td>                            
                         </tr>
-
+                        <tr>
+                            <td class='bg-grey' width='10%'>管理員備註</td>
+                            <td colspan='5'>{{$purchaseData['admin_note']}}</td>                          
+                        </tr>                        
+                        <tr>
+                            <td class='bg-grey' width='10%'>買家備註</td>
+                            <td colspan='5'>{{$purchaseData['dealer_note']}}</td>                          
+                        </tr>                        
+                        <!--
                         <tr>
                             <td colspan='6' class='align-center'>
-                                <a href="{{url('/orderEditBasic/edit/'.$order['id'])}}">
+                                <a href="{{url('/')}}">
                                 <span class='btn btn-primary waves-effect'>編輯訂單基本資料</span>
                                 </a>
                             </td>
                         </tr> 
+                        -->
 
                     </tbody>
                 </table>                
             </div>
-            <!-- /訂單基本資料 -->
-        
+            <!-- /進貨單基本資料 -->
+
+        </div>
 
 
-            <!-- 訂單操作紀錄 -->
-            <div class="header ">
-                <h2>訂單操作紀錄</h2>
+        <div class='card'>
+
+            <!-- 進貨單基本資料 -->
+            <div class="header bg-red">
+                <h2>進貨單明細</h2>
             </div>
-         
+
             <div class='body'>
-                @if(isset($orderLogs))
-                <table class="table table-bordered">
                 
+                <table class="table table-bordered">
                     <thead>
                         <tr>
-                            <th>操作人</th>
-                            <th>訂單狀態</th>
-                            <th>操作描述</th>
-                            <th>時間</th>
+                            <th class='bg-grey' >商品貨號</th>
+                            <th class='bg-grey' >商品名稱</th>
+                            <th class='bg-grey' >批發價</th>
+                            <th class='bg-grey' >數量</th>
+                            <th class='bg-grey' >小計</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach( $orderLogs as $orderLog)
+                    @php
+                    $total = 0;
+                    @endphp
+
+                    @foreach( $purchaseDetails as $purchaseDetail)
+                    <tr>
+
+                        <td>{{$purchaseDetail['goods_sn']}}</td>
+
+                        <td>{{$purchaseDetail['goods_name']}}</td>
+
+                        <td>{{$purchaseDetail['w_price']}}</td> 
+
+                        <td>{{$purchaseDetail['num']}}</td>                                                                 
+
+                        <td>{{$purchaseDetail['w_price'] * $purchaseDetail['num']}}</td>                        
+                    </tr>
+
+                    @php
+                    $total += $purchaseDetail['w_price'] * $purchaseDetail['num'];
+                    @endphp
+
+                    @endforeach
+
+                    <tr>
+                        <td colspan='4' class='align-right'>總金額</td>
+                        <td>{{$total}}</td>
+                    </tr>
+
+                    </tbody>
+
+
+                </table>
+
+            </div>
+
+        </div>
+
+        <!-- 操作區塊 -->
+        @role('Admin')
+        @permission('purchaseEdit')
+        <div class='card'>
+
+            
+            <div class="header bg-red">
+                <h2>操作</h2>
+            </div>
+
+            <div class='body'>
+                
+                <form action="{{url('/puchaseStatus')}}" method="POST">
+
+                    <input type="hidden" name="_token" value="qAJCqYuevkVyj7cY8tMm81u4pQsa42Firl5xw6sM">
+
+                    <div class="align-left">
+                        <input type="hidden" name="purchaseId" value="{{$purchaseData['id']}}">
+                        <input type="submit" name="pending" class="btn btn-primary waves-effect" value="待處理">
+                        <input type="submit" name="checked" class="btn btn-primary waves-effect" value="已確認">
+                        <input type="submit" name="shipped" class="btn btn-primary waves-effect" value="已出貨">
+                        <input type="submit" name="cancel" class="btn btn-primary waves-effect" value="取消">
+                    </div>
+
+                </form>
+            </div>
+
+        </div>
+        @endpermission
+        @endrole
+        <!-- /操作區塊 -->
+
+
+
+        
+        <!-- 操作紀錄表 -->
+        <div class='card'>
+
+            <div class="header bg-red">
+                <h2>進貨單操作紀錄</h2>
+            </div>
+
+            <div class='body'>
+                <table class="table table-bordered">
+                    <thead>
                         <tr>
-                            <td>{{$orderLog['user_name']}}</td>
-                            <td>{{$orderLog['order_status']}}</td>
-                            <td>{{$orderLog['desc']}}</td>
-                            <td>{{$orderLog['created_at']}}</td>
+                            <th class='bg-grey'>操作人</th>
+                            <th class='bg-grey'>狀態</th>
+                            <th class='bg-grey'>操作描述</th>
+                            <th class='bg-grey'>時間</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach( $purchaseLogs as $purchaseLogs )
+                        <tr>
+                            <td>{{ $purchaseLogs['user_name'] }}</td>
+                            <td>{{ $purchaseLogs['purchase_status_text'] }}</td>
+                            <td>{{ $purchaseLogs['desc'] }}</td>
+                            <td>{{ $purchaseLogs['created_at'] }}</td>
                         </tr>
                         @endforeach
                     </tbody>
-
                 </table>
-                @endif
+            </div>
 
-            </div>            
-            <!-- /訂單操作紀錄 -->
-        </div>
+        </div>        
+        <!-- /操作紀錄表 -->
 
 
 </div>

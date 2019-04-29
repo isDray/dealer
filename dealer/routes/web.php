@@ -122,5 +122,6 @@ Route::group(['middleware' => ['auth','role:Admin|Dealer'] ], function () {
     Route::post('/purchaseAjaxEstimateDo','PurchaseController@ajaxEstimateDo');
     Route::post('/purchaseAjaxOrder','PurchaseController@ajaxNewPurchaseOrder');
     Route::post('/purchaseAjaxAddGoods','PurchaseController@ajaxAddPurchaseGoods');
+    Route::post('/puchaseStatus','PurchaseController@updateStatus');
     
 });    

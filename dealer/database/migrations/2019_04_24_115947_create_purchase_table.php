@@ -27,6 +27,7 @@ class CreatePurchaseTable extends Migration
             $table->timestamp('shipdate')->nullable()->comment('出貨時間');
             $table->integer('amount')->comment('進貨單總金額');
             $table->tinyInteger('status')->comment('狀態');
+            $table->char('consignee',100)->comment('收件人名稱');
             $table->char('tel',20)->nullable()->comment('連絡電話');
             $table->char('phone',20)->comment('連絡手機');
             $table->text('address')->comment('地址');
@@ -53,7 +54,7 @@ class CreatePurchaseTable extends Migration
             $table->integer('w_price')->comment('商品批發價');
             $table->integer('num')->comment('數量');
             $table->integer('subtotal')->comment('小計');
-            $table->char('purchase_sn',100)->index()->comment('進貨單編號');
+            $table->char('purchase_id',100)->index()->comment('進貨單編號');
             $table->timestamps();
 
         });
@@ -85,6 +86,19 @@ class CreatePurchaseTable extends Migration
          | 進貨單操作紀錄
          |
          */
+        Schema::create('purchase_log', function (Blueprint $table) {
+
+            $table->increments('id')->comment('logId');
+            $table->integer('user_id')->index()->comment('操作人員id');
+            $table->char('user_name', 30)->comment('操作人員姓名');
+            $table->char('user_role', 30)->comment('操作人員腳色');
+            $table->integer('purchase_id')->index()->comment('操作訂單id');
+            $table->tinyInteger('purchase_status')->comment('狀態代碼紀錄');
+            $table->char('purchase_status_text')->comment('狀態紀錄');
+            $table->text('desc')->nullable()->comment('操作描述');
+            $table->timestamps();            
+
+        });
     }
 
 
