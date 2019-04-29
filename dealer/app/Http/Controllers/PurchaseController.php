@@ -55,6 +55,9 @@ class PurchaseController extends Controller
 
         }elseif( Auth::user()->hasRole('Dealer') ){
 
+            return view('purchaseList')->with([ 'title'   => $pageTitle,
+                                
+                                               ]); 
         }
 
     }
@@ -76,15 +79,24 @@ class PurchaseController extends Controller
         
         }
 
-        $query = DB::table('purchase');
+        $query    = DB::table('purchase');
         $querynum = DB::table('purchase');
         
         // 過濾經銷商
-        if( !empty($request->dealer ) ){
+        if( Auth::user()->hasRole('Admin') ){
+            
+            if( !empty($request->dealer ) ){
     
-            $query->where( 'dealer_id', $request->dealer );
-            $querynum->where( 'dealer_id', $request->dealer );
-        } 
+                $query->where( 'dealer_id', $request->dealer );
+                $querynum->where( 'dealer_id', $request->dealer );
+            
+            }
+
+        }elseif( Auth::user()->hasRole('Dealer') ){
+                $query->where( 'dealer_id', Auth::id() );
+                $querynum->where( 'dealer_id', Auth::id() );        
+        }        
+ 
         
         // 過濾狀態
         if( !empty($request->status ) ){
@@ -1167,6 +1179,7 @@ class PurchaseController extends Controller
             $Purchase = Purchase::find( $request->purchaseId );
             
             // 如果是由已出貨到取消則要退回庫存
+            /*
             if( $tmpStatus == 4 && $Purchase->status == 3){
                 
                 $allPurchaseGoods = PurchaseGoods::where('purchase_id',$request->purchaseId)->get();
@@ -1176,8 +1189,8 @@ class PurchaseController extends Controller
                     
                     $goodsStock = GoodsStock::where('dealer_id', $Purchase->dealer_id )->where('goods_id', $allPurchaseGood['goods_id'] )->first();
                     
-                    /*$goodsStock->goods_num = $goodsStock->goods_num - $allPurchaseGood['num'];
-                    $goodsStock->save();*/
+                    //$goodsStock->goods_num = $goodsStock->goods_num - $allPurchaseGood['num'];
+                    //$goodsStock->save();
                     
                     if( $goodsStock->goods_num - $allPurchaseGood['num'] < 0){
                     
@@ -1194,7 +1207,8 @@ class PurchaseController extends Controller
                      
                 }          
             }
-
+            */
+            
             $Purchase->status = $tmpStatus;
             
             if( $tmpStatus == 3){
@@ -1209,6 +1223,7 @@ class PurchaseController extends Controller
             $Purchase->save();
 
             // 修改庫存
+            /*
             if( $tmpStatus == 3){
                 
                 $allPurchaseGoods = PurchaseGoods::where('purchase_id',$request->purchaseId)->get();
@@ -1244,6 +1259,7 @@ class PurchaseController extends Controller
                     }
                 }
             }
+            */
 
 
             //GoodsStock::where()

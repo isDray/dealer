@@ -49,7 +49,7 @@ a{
                                 <div class='col-xs-12 col-sm-12 col-md-12'>
                                     <p><b>進階搜尋</b></p>
                                 </div>
-                                
+                                @role('Admin')
                                 <div class="col-sm-2">
                                     <p>經銷商</p>
                                     <select class="form-control show-tick" id='dealer'>
@@ -59,6 +59,7 @@ a{
                                     @endforeach
                                     </select>
                                 </div>
+                                @endrole
                                 
                                 <div class="col-sm-2">
                                     <p>進貨單狀態</p>
