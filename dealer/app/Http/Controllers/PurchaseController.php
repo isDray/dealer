@@ -1128,7 +1128,16 @@ class PurchaseController extends Controller
 
         }else{
             
-            return back()->with(['errorMsg'=> '帳號無此操作權限 , 請勿嘗試非法操作']);
+            if( isset( $request->pending ) || isset( $request->checked ) || isset( $request->shipped ) ){
+
+                return back()->with(['errorMsg'=> '帳號無此操作權限 , 請勿嘗試非法操作']);
+            }
+
+            if( !chkPurchase( $request->purchaseId ) ){
+
+                return back()->with(['errorMsg'=> '進貨單不屬於此帳號 , 請勿嘗試非法操作']);
+            }
+            //return back()->with(['errorMsg'=> '帳號無此操作權限 , 請勿嘗試非法操作']);
         }
         
         $tmpStatus = 0; 
@@ -1208,7 +1217,6 @@ class PurchaseController extends Controller
                 }          
             }
             */
-            
             $Purchase->status = $tmpStatus;
             
             if( $tmpStatus == 3){

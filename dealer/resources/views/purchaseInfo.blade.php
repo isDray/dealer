@@ -162,8 +162,9 @@
                     {{ csrf_field() }}
 
                     <div class="align-left">
-                        @role('Admin')
                         <input type="hidden" name="purchaseId" value="{{$purchaseData['id']}}">
+                        @role('Admin')
+                       
                         <input type="submit" name="pending" class="btn btn-primary waves-effect" value="待處理">
                         <input type="submit" name="checked" class="btn btn-primary waves-effect" value="已確認">
                         <input type="submit" name="shipped" class="btn btn-primary waves-effect" value="已出貨">
