@@ -249,6 +249,9 @@ class PurchaseController extends Controller
             case '4':
                 $purchaseData['statusTxt'] = '取消';
                 break;                                                
+            case '5':
+                $purchaseData['statusTxt'] = '已出貨 , 且加入庫存';
+                break;                 
             
         }
         
@@ -257,8 +260,16 @@ class PurchaseController extends Controller
         $purchaseDetail = $purchaseDetail->toArray();
         
         // 取出操作紀錄
-        $purchaseLogs = PurchaseLog::where('purchase_id' , $request->id)->orderBy('created_at', 'desc')->get();
-        $purchaseLogs = $purchaseLogs->toArray();
+        if( Auth::user()->hasRole('Admin') ){
+            
+            $purchaseLogs = PurchaseLog::where('purchase_id' , $request->id)->orderBy('created_at', 'desc')->get();
+            $purchaseLogs = $purchaseLogs->toArray();
+
+        }elseif( Auth::user()->hasRole('Dealer') ) {
+
+            $purchaseLogs = PurchaseLog::where('purchase_id' , $request->id)->where('user_id' , Auth::id() )->orderBy('created_at', 'desc')->get();
+            $purchaseLogs = $purchaseLogs->toArray();
+        }
 
         return view('purchaseInfo')->with(['title'           => $pageTitle,
                                            'purchaseData'    => $purchaseData,
@@ -1118,7 +1129,10 @@ class PurchaseController extends Controller
             return back()->with(['errorMsg'=> $errText]);
         }
 
-        // 只有系統方可以對進貨單狀態做變更
+        // 取出進貨單目前狀態
+        $purchase = Purchase::find( $request->purchaseId );
+        $purchase = $purchase->toArray();
+        
         if( Auth::user()->hasRole('Admin') ){
             
             if( !Auth::user()->can('purchaseEdit') ){
@@ -1126,17 +1140,34 @@ class PurchaseController extends Controller
                 return back()->with(['errorMsg'=> '帳號無此操作權限 , 如有需要請切換帳號或聯絡管理員增加權限']);
             }
 
+            if( isset( $request->addStock ) ){
+
+                return back()->with(['errorMsg'=> '帳號無此操作權限 , 如有需要請切換帳號或聯絡管理員增加權限']);
+            }
+            
+            $user_role = 'Admin';
+
         }else{
             
+            // 確認要轉變的進貨單為當前的經銷商所有 
+            if( !$this->chkPurchase( $request->purchaseId ) ){
+
+                return back()->with(['errorMsg'=> '進貨單不屬於此帳號 , 請勿嘗試非法操作']);
+            }
+
+            // 進貨單產生後 , 經銷商不可以將進貨單轉換為 待處理,已確認,已出貨
             if( isset( $request->pending ) || isset( $request->checked ) || isset( $request->shipped ) ){
 
                 return back()->with(['errorMsg'=> '帳號無此操作權限 , 請勿嘗試非法操作']);
             }
+            
+            // 如果是要轉換為取消 , 則要先判斷訂單是否為待處理狀態
+            if( isset( $request->cancel ) && $purchase['status'] != 1 ){
 
-            if( !chkPurchase( $request->purchaseId ) ){
-
-                return back()->with(['errorMsg'=> '進貨單不屬於此帳號 , 請勿嘗試非法操作']);
-            }
+                return back()->with(['errorMsg'=> '此進貨單已確認 , 無法進行取消']);
+            } 
+            
+            $user_role = 'Dealer';
             //return back()->with(['errorMsg'=> '帳號無此操作權限 , 請勿嘗試非法操作']);
         }
         
@@ -1163,16 +1194,17 @@ class PurchaseController extends Controller
             $tmpStatus = 4;
             $tmpStatusText = '取消';
         } 
+        if( isset( $request->addStock ) ){
 
-        if( $tmpStatus == 0 ){
+            $tmpStatus = 5;
+            $tmpStatusText = '商品入庫';
+
+        }
+        if( $tmpStatus == 0 && !isset($request->addStock) ){
 
             return back()->with(['errorMsg'=> '進貨單無此狀態 , 請勿嘗試非法操作']);
         }
         
-        // 取出進貨單目前狀態
-        $purchase = Purchase::find( $request->purchaseId );
-        $purchase = $purchase->toArray();
-
         if( $purchase['status'] == $tmpStatus ){
 
             return back()->with(['successMsg'=> '狀態一致 , 不需進行操作']);
@@ -1217,7 +1249,12 @@ class PurchaseController extends Controller
                 }          
             }
             */
-            $Purchase->status = $tmpStatus;
+            if( $tmpStatus!= 0 ){
+
+                $Purchase->status = $tmpStatus;
+
+            }
+            
             
             if( $tmpStatus == 3){
 
@@ -1231,8 +1268,8 @@ class PurchaseController extends Controller
             $Purchase->save();
 
             // 修改庫存
-            /*
-            if( $tmpStatus == 3){
+            
+            if( $request->addStock ){
                 
                 $allPurchaseGoods = PurchaseGoods::where('purchase_id',$request->purchaseId)->get();
                 $allPurchaseGoods = $allPurchaseGoods->toArray();
@@ -1240,7 +1277,7 @@ class PurchaseController extends Controller
                 foreach ($allPurchaseGoods as $allPurchaseGood ) {
 
                     $goodsStock = GoodsStock::where('dealer_id', $Purchase->dealer_id )->where('goods_id', $allPurchaseGood['goods_id'] )->first();
-
+                    
                     if( empty($goodsStock) ){
 
                         $GoodsStock = new GoodsStock;
@@ -1267,7 +1304,7 @@ class PurchaseController extends Controller
                     }
                 }
             }
-            */
+            
 
 
             //GoodsStock::where()
@@ -1275,7 +1312,7 @@ class PurchaseController extends Controller
             $PurchaseLog =  new PurchaseLog;
             $PurchaseLog->user_id   = Auth::id();
             $PurchaseLog->user_name = Auth::user()->name;
-            $PurchaseLog->user_role = 'Admin';
+            $PurchaseLog->user_role = $user_role;
             $PurchaseLog->purchase_id = $request->purchaseId;
             $PurchaseLog->purchase_status = $tmpStatus;
             $PurchaseLog->purchase_status_text = $tmpStatusText;        
