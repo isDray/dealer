@@ -37,6 +37,7 @@
                     <!-- /權限管理 -->
 
                     <!-- 網站設置 -->
+                    @role('Admin')
                     <li class="@if($controller == 'testController' ) active @endif">
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">settings_applications</i>
@@ -47,7 +48,8 @@
                                 <a href="{{url('/permissions')}}">網站資料設定</a>
                             </li>
                         </ul>
-                    </li>                     
+                    </li>
+                    @endrole              
                     <!-- /網站設置 -->
 
                     <!-- 商品管理 -->
@@ -100,7 +102,10 @@
                             <li>
                                 <a href="{{url('/purchaseList')}}">進貨單管理</a>
                             </li>                              
-                           
+
+                            <li>
+                                <a href="{{url('/purchaseList')}}">商品庫存管理</a>
+                            </li>                             
                           
                         </ul>
                     </li>                    

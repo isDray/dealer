@@ -1107,7 +1107,7 @@ class PurchaseController extends Controller
      |
      */
     public function updateStatus( Request $request ){
-        
+
         $validator = Validator::make($request->all(), [
             'purchaseId'   => 'required|exists:purchase,id',
         ],[
@@ -1185,7 +1185,7 @@ class PurchaseController extends Controller
             $tmpStatusText = '已確認';
         }
         if( isset( $request->shipped ) ){
-            
+
             $tmpStatus = 3;
             $tmpStatusText = '已出貨';
         }
@@ -1200,6 +1200,7 @@ class PurchaseController extends Controller
             $tmpStatusText = '商品入庫';
 
         }
+
         if( $tmpStatus == 0 && !isset($request->addStock) ){
 
             return back()->with(['errorMsg'=> '進貨單無此狀態 , 請勿嘗試非法操作']);
@@ -1212,6 +1213,7 @@ class PurchaseController extends Controller
         
         // 新增至進貨單
         DB::beginTransaction();
+        
 
         try {
             
@@ -1254,17 +1256,15 @@ class PurchaseController extends Controller
                 $Purchase->status = $tmpStatus;
 
             }
-            
+
             
             if( $tmpStatus == 3){
 
                 $Purchase->shipdate = now()->timestamp;
 
-            }else{
-
-                $Purchase->shipdate = NULL;
+                
             }
-        
+
             $Purchase->save();
 
             // 修改庫存
