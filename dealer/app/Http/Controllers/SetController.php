@@ -367,8 +367,7 @@ class SetController extends Controller
             $tmpStatus = 1;
         }
 
-         var_dump($request->all());
-        // exit;
+
         if( intval($request->sort) <= 0){
 
             $tmpSort = 0;
@@ -394,6 +393,47 @@ class SetController extends Controller
             return back()->with('errorMsg', '文章編輯失敗 , 請稍後再試' );
         }
      }
+
+
+
+     
+    /*----------------------------------------------------------------
+     | 刪除文章
+     |----------------------------------------------------------------
+     |
+     */
+    public function setDelete( Request $request ){
+        
+
+        // 如果沒有權限直接跳回
+        if( !Auth::user()->hasRole('Admin') ){
+
+            return back()->with('errorMsg', '帳號無此操作權限 , 如有需要請切換帳號或聯絡管理員增加權限' );
+        }
+
+        if( !Auth::user()->can('setDelete') ){
+
+            return back()->with('errorMsg', '帳號無此操作權限 , 如有需要請切換帳號或聯絡管理員增加權限' );
+            
+        }
+
+        if( !isset($request->id) || !$this->chkArticleExist($request->id) ){
+
+            return back()->with('errorMsg', '文章不存在 , 無法進行刪除' );
+        } 
+        
+        $article = Article::find( $request->id );
+
+        if( $article->delete() ){
+            
+            return redirect("/articleList")->with('successMsg', '文章刪除成功');
+
+        }else{
+            
+            return back()->with('errorMsg', '文章刪除失敗 , 請稍後再試' );
+        }
+
+    }
 
 
 

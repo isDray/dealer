@@ -83,6 +83,7 @@ Route::group(['middleware' => ['auth','role:Admin'] ], function () {
     Route::post('/articleNewDo','SetController@articleNewDo');
     Route::get('/articleEdit/{id}','SetController@articleEdit');
     Route::post('/articleEditDo','SetController@articleEditDo');
+    Route::post('/setDelete','SetController@setDelete');
     Route::get('/announcementList','SetController@announcementList');
 
 

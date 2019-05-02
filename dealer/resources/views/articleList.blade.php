@@ -83,7 +83,7 @@ a{
                                                 </a>
 
                                                 
-                                                <button type="button" class="btn btn-danger waves-effect permissionsDelete" pid="" pname="">
+                                                <button type="button" class="btn btn-danger waves-effect permissionsDelete" aid="{{$article->id}}" articleName="{{$article->name}}">
                                                 <i class="material-icons">cancel</i>
                                                 <span>刪除</span>
                                                 </button>
@@ -102,7 +102,7 @@ a{
                     </div>
                 </div>
 
-                <form action="{{url('')}}" method="POST" id='deleteForm'>
+                <form action="{{url('/setDelete')}}" method="POST" id='deleteForm'>
                     {{ csrf_field() }}
                     <input type='hidden' id='deleteInput' name='id'>
                 </form>
@@ -150,7 +150,7 @@ $(function(){
         
         Swal.fire({
             title: '刪除確認',
-            text: "即將刪除權限:"+$(this).attr('pname')+",確定要刪除?",
+            text: "即將刪除文章:"+$(this).attr('articleName')+",確定要刪除?",
             type: 'warning',
             showCancelButton: true,
             confirmButtonText: '確定刪除',
@@ -158,7 +158,7 @@ $(function(){
         }).then((result) => {
             if (result.value) {
 
-                $("#deleteInput").val($(this).attr('pid'));
+                $("#deleteInput").val($(this).attr('aid'));
                 $("#deleteForm").submit();
             }
         })
