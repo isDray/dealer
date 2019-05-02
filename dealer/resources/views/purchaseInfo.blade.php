@@ -148,8 +148,6 @@
         </div>
 
         <!-- 操作區塊 -->
-        @role('Admin')
-        @permission('purchaseEdit')
         <div class='card'>
 
             
@@ -161,22 +159,34 @@
                 
                 <form action="{{url('/puchaseStatus')}}" method="POST">
 
-                    <input type="hidden" name="_token" value="qAJCqYuevkVyj7cY8tMm81u4pQsa42Firl5xw6sM">
+                    {{ csrf_field() }}
 
                     <div class="align-left">
                         <input type="hidden" name="purchaseId" value="{{$purchaseData['id']}}">
+                        @role('Admin')
+                       
                         <input type="submit" name="pending" class="btn btn-primary waves-effect" value="待處理">
                         <input type="submit" name="checked" class="btn btn-primary waves-effect" value="已確認">
                         <input type="submit" name="shipped" class="btn btn-primary waves-effect" value="已出貨">
                         <input type="submit" name="cancel" class="btn btn-primary waves-effect" value="取消">
+                        @endrole
+
+                        @role('Dealer')
+                            @if($purchaseData['status'] == 1)
+                            <input type="submit" name="cancel" class="btn btn-primary waves-effect" value="取消">
+                            @endif
+
+                            @if($purchaseData['status'] == 3)
+                            <input type="submit" name="addStock" class="btn btn-primary waves-effect" value="加入庫存">
+                            @endif
+                        @endrole
                     </div>
 
                 </form>
             </div>
 
         </div>
-        @endpermission
-        @endrole
+        
         <!-- /操作區塊 -->
 
 
