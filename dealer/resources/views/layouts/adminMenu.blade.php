@@ -45,8 +45,14 @@
                         </a>
                         <ul class="ml-menu">
                             <li>
-                                <a href="{{url('/permissions')}}">網站資料設定</a>
+                                <a href="{{url('/set')}}">網站資料設定</a>
                             </li>
+                            <li>
+                                <a href="{{url('/setArticle')}}">文章管理</a>
+                            </li>
+                            <li>
+                                <a href="{{url('/setAnnouncement')}}">文章管理</a>
+                            </li>                            
                         </ul>
                     </li>
                     @endrole              

@@ -74,14 +74,11 @@ Route::group(['middleware' => ['auth','role:Admin'] ], function () {
     Route::post('goodsAjaxPic','GoodsController@ajaxPic');
     Route::post('goodsAjaxPicDelete','GoodsController@ajaxPicDelete');
     Route::post('goodsAjaxPicSort','GoodsController@ajaxPicSort');
-
-    /*
-    Route::get('/aGoods','AGoodsController@index');
-    Route::get('/aGoodsNew','AccountController@new');
-    Route::post('/aGoodsNewDo','AccountController@newDo');
-    */
-
     
+    // 網站設置
+    Route::get('/set','SetController@set');
+    Route::post('/setDo','SetController@setDo');
+
 });
 
 
@@ -127,4 +124,9 @@ Route::group(['middleware' => ['auth','role:Admin|Dealer'] ], function () {
     Route::post('ajaxAddStockGoods','PurchaseController@ajaxAddStockGoods'); // ajax撈出要加入庫存之商品
     Route::post('addToStock','PurchaseController@addStockExceptionDo'); // 特殊狀況入庫實作
     
+
+    // 報表管理
+    Route::get('reportOrder','ReportController@order');
+    Route::get('reportPurchase','ReportController@purchase');
+    Route::get('reportGoodsSale','ReportController@goodsSale');
 });    
