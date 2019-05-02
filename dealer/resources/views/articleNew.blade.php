@@ -52,7 +52,7 @@
                             <b>是否啟用:</b>
                             <div class="form-group">
                             <div>
-                                <input name="status" type="checkbox" id="status" class="with-gap radio-col-teal adminChildRole" value="" >
+                                <input name="status" type="checkbox" id="status" class="with-gap radio-col-teal adminChildRole" value="1" >
                                 <label for="status">勾選啟用</label>
                             </div>
                             </div>

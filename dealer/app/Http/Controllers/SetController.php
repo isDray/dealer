@@ -207,6 +207,7 @@ class SetController extends Controller
      |
      */
     public function articleNewDo( Request $request){
+
         // 如果沒有權限直接跳回
         if( !Auth::user()->can('setNew') ){
 
@@ -252,6 +253,7 @@ class SetController extends Controller
 
             $tmpStatus = 1;
         }
+
 
         $article = new Article;
         
@@ -303,6 +305,95 @@ class SetController extends Controller
     		                             'article' => $article
     		                             ]);   
     }
+
+
+
+
+    /*----------------------------------------------------------------
+     | 文章編輯
+     |----------------------------------------------------------------
+     |
+     */
+    public function articleEditDo( Request $request ){
+
+
+        // 如果沒有權限直接跳回
+        if( !Auth::user()->can('setNew') ){
+
+            return back()->with('errorMsg', '帳號無此操作權限 , 如有需要請切換帳號或聯絡管理員增加權限' );
+            
+        }
+        if( !isset($request->articleId) || !$this->chkArticleExist($request->articleId) ){
+
+            return back()->with('errorMsg', '文章不存在 , 無法進行編輯' );
+        }        
+        // 表單驗證
+        $errText = '';
+
+        $validator = Validator::make($request->all(), [
+
+            'name'     => 'required',
+            'sort'     => 'required',
+            'content'  => 'required',
+
+        ],[
+            'name.required'    => '文章名稱為必填',
+            'sort.required'    => '排序為必填',
+            'content.required' => '文章內容為必填',
+            
+        ]);
+
+        if ($validator->fails()) {
+
+            $errors = $validator->errors();
+                
+            foreach( $errors->all() as $message ){
+                    
+                $errText .= "$message<br>";
+            
+            }
+            
+        }        
+
+        if( !empty( $errText ) ){
+
+            return back()->with('errorMsg', $errText );
+        }
+        
+        $tmpStatus = 0;
+        
+        if( isset( $request->status) ){
+
+            $tmpStatus = 1;
+        }
+
+         var_dump($request->all());
+        // exit;
+        if( intval($request->sort) <= 0){
+
+            $tmpSort = 0;
+
+        }else{
+            $tmpSort = intval($request->sort);
+        }
+        
+
+        $article = Article::find( $request->articleId );
+        
+        $article->name    = $request->name;
+        $article->content = $request->content;
+        $article->status  = $tmpStatus;
+        $article->sort    = $tmpSort;
+
+        if(  $article->save() ){
+
+            return redirect("/articleEdit/{$request->articleId}")->with('successMsg', '文章編輯成功');
+
+        }else{
+
+            return back()->with('errorMsg', '文章編輯失敗 , 請稍後再試' );
+        }
+     }
 
 
 

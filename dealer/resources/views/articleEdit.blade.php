@@ -32,9 +32,10 @@
 
         <div class="body">
         
-            <form action="{{url('/articleNewDo')}}" method="POST" enctype="multipart/form-data">
+            <form action="{{url('/articleEditDo')}}" method="POST" enctype="multipart/form-data">
 
                 {{ csrf_field() }} 
+                <input type='hidden' name='articleId' value="{{$article['id']}}">
                 <div class='col-sm-12'>
                     <div class="row clearfix">
                         <div class="col-md-3 col-sm-12 col-xs-12">
@@ -52,7 +53,7 @@
                             <b>是否啟用:</b>
                             <div class="form-group">
                             <div>
-                                <input name="status" type="checkbox" id="status" class="with-gap radio-col-teal adminChildRole" value="" 
+                                <input name="status" type="checkbox" id="status" class="with-gap radio-col-teal adminChildRole" value="1" 
                                 @if( $article['status'] == 1)
                                 checked
                                 @endif
@@ -68,7 +69,7 @@
                             <b>排序:</b>
                             <div class="form-group">
                             <div class="form-line">
-                                <input type="number" class="form-control myborder" min='0' name="sort" placeholder="" value='5' />
+                                <input type="text" class="form-control myborder" name="sort" placeholder="" value="{{$article['sort']}}" />
                             </div>
                             </div>
                         </div>
@@ -80,7 +81,7 @@
                             <div class="form-group">
                             <div class="demo-checkbox">
                                                                    
-                                <textarea id="ckeditor" name='content'></textarea>
+                                <textarea id="ckeditor" name='content'>{{$article['content']}}</textarea>
 
                             </div>              
                             </div>                  
@@ -88,7 +89,7 @@
                     </div>
                 </div>
 
-                <button class="btn btn-primary waves-effect" type="submit">新增</button>
+                <button class="btn btn-primary waves-effect" type="submit">編輯</button>
 
             </form>
 
