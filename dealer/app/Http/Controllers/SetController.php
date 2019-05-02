@@ -14,6 +14,7 @@ use App\Role;
 use App\Order;
 use App\OrderGoods;
 use App\Article;
+use App\Announcement;
 /*
 use App\Purchase;
 use App\PurchaseGoods;
@@ -437,6 +438,284 @@ class SetController extends Controller
 
 
 
+    
+    /*----------------------------------------------------------------
+     | 公告列表
+     |----------------------------------------------------------------
+     |
+     */
+     public function announcementList( Request $request ){
+        
+        $pageTitle = '公告列表';
+
+        // 如果沒有權限直接跳回
+        if( !Auth::user()->can('setList') ){
+
+            return back()->with('errorMsg', '帳號無此操作權限 , 如有需要請切換帳號或聯絡管理員增加權限' );
+            
+        }        
+        
+        // 撈出全部文章
+        $announcement  = DB::table('announcement')->get();
+        $announcements = $announcement->toArray();
+
+        return view('announcementsList')->with(['title'         => $pageTitle,
+                                          'announcements' => $announcements]);
+     }
+
+
+
+    
+    /*----------------------------------------------------------------
+     | 公告新增頁面
+     |----------------------------------------------------------------
+     |
+     */
+    public function announcementNew( Request $request ){
+        
+        $pageTitle = '公告新增';
+
+        // 如果沒有權限直接跳回
+        if( !Auth::user()->can('setNew') ){
+
+            return back()->with('errorMsg', '帳號無此操作權限 , 如有需要請切換帳號或聯絡管理員增加權限' );
+            
+        } 
+        return view('announcementNew')->with(['title'   => $pageTitle,
+                                         ]);  
+    }
+
+
+
+
+    /*----------------------------------------------------------------
+     | 公告新增實作
+     |----------------------------------------------------------------
+     |
+     */
+    public function announcementNewDo( Request $request ){
+        
+        // 如果沒有權限直接跳回
+        if( !Auth::user()->can('setNew') ){
+
+            return back()->with('errorMsg', '帳號無此操作權限 , 如有需要請切換帳號或聯絡管理員增加權限' );
+            
+        }
+        // 表單驗證
+        $errText = '';
+
+        $validator = Validator::make($request->all(), [
+
+            'name'     => 'required',
+            'content'  => 'required',
+
+        ],[
+            'name.required'    => '文章名稱為必填',
+            'content.required' => '文章內容為必填',
+            
+        ]);
+
+        if ($validator->fails()) {
+
+            $errors = $validator->errors();
+                
+            foreach( $errors->all() as $message ){
+                    
+                $errText .= "$message<br>";
+            
+            }
+            
+        }        
+
+        if( !empty( $errText ) ){
+
+            return back()->with('errorMsg', $errText );
+        }
+        
+        $tmpStatus = 0;
+        
+        if( isset( $request->status) ){
+
+            $tmpStatus = 1;
+        }
+
+
+        $announcement = new Announcement;
+        
+        $announcement->name    = $request->name;
+        $announcement->content = $request->content;
+        $announcement->status  = $tmpStatus;
+        $announcement->sort    = 1;
+
+        if(  $announcement->save() ){
+
+            return redirect('/announcementList')->with('successMsg', '公告新增成功');
+
+        }else{
+
+            return back()->with('errorMsg', '公告文章失敗 , 請稍後再試' );
+        }    
+
+    }
+
+
+
+
+    /*----------------------------------------------------------------
+     | 公告編輯頁面
+     |----------------------------------------------------------------
+     |
+     */
+    public function announcementEdit( Request $request ){
+        
+        $pageTitle = '公告編輯';
+
+        // 如果沒有權限直接跳回
+        if( !Auth::user()->can('setEdit') ){
+
+            return back()->with('errorMsg', '帳號無此操作權限 , 如有需要請切換帳號或聯絡管理員增加權限' );
+            
+        }
+
+        if( !isset($request->id) || !$this->chkAnnouncementExist($request->id) ){
+
+            return back()->with('errorMsg', '公告不存在 , 無法進行編輯' );
+        }
+        
+        $announcement = Announcement::find( $request->id );
+
+        $announcement = $announcement->toArray();
+
+        return view('announcementEdit')->with(['title'   => $pageTitle,
+                                          'announcement' => $announcement
+                                         ]); 
+    }
+
+
+
+
+    /*----------------------------------------------------------------
+     | 檢查文章存在
+     |----------------------------------------------------------------
+     |
+     */
+    public function announcementEditDo( Request $request ){
+
+        // 如果沒有權限直接跳回
+        if( !Auth::user()->can('setNew') ){
+
+            return back()->with('errorMsg', '帳號無此操作權限 , 如有需要請切換帳號或聯絡管理員增加權限' );
+            
+        }
+        if( !isset($request->announcementId) || !$this->chkAnnouncementExist($request->announcementId) ){
+
+            return back()->with('errorMsg', '公告不存在 , 無法進行編輯' );
+        }        
+        // 表單驗證
+        $errText = '';
+
+        $validator = Validator::make($request->all(), [
+
+            'name'     => 'required',
+            'content'  => 'required',
+
+        ],[
+            'name.required'    => '文章名稱為必填',
+            'content.required' => '文章內容為必填',
+            
+        ]);
+
+        if ($validator->fails()) {
+
+            $errors = $validator->errors();
+                
+            foreach( $errors->all() as $message ){
+                    
+                $errText .= "$message<br>";
+            
+            }
+            
+        }        
+
+        if( !empty( $errText ) ){
+
+            return back()->with('errorMsg', $errText );
+        }
+        
+        $tmpStatus = 0;
+        
+        if( isset( $request->status) ){
+
+            $tmpStatus = 1;
+        }
+
+        
+        // if( intval($request->sort) <= 0){
+
+        //     $tmpSort = 0;
+
+        // }else{
+        //     $tmpSort = intval($request->sort);
+        // }
+        
+
+        $announcement = Announcement::find( $request->announcementId );
+        
+        $announcement->name    = $request->name;
+        $announcement->content = $request->content;
+        $announcement->status  = $tmpStatus;
+        $announcement->sort    = 1;
+
+        if(  $announcement->save() ){
+
+            return redirect("/announcementEdit/{$request->announcementId}")->with('successMsg', '公告編輯成功');
+
+        }else{
+
+            return back()->with('errorMsg', '公告編輯失敗 , 請稍後再試' );
+        }
+    }
+
+
+
+
+    /*----------------------------------------------------------------
+     | 公告刪除
+     |----------------------------------------------------------------
+     |
+     */
+    public function announcementDelete( Request $request ){
+        // 如果沒有權限直接跳回
+        if( !Auth::user()->hasRole('Admin') ){
+
+            return back()->with('errorMsg', '帳號無此操作權限 , 如有需要請切換帳號或聯絡管理員增加權限' );
+        }
+
+        if( !Auth::user()->can('setDelete') ){
+
+            return back()->with('errorMsg', '帳號無此操作權限 , 如有需要請切換帳號或聯絡管理員增加權限' );
+            
+        }
+
+        if( !isset($request->id) || !$this->chkAnnouncementExist($request->id) ){
+
+            return back()->with('errorMsg', '公告不存在 , 無法進行刪除' );
+        } 
+        
+        $announcement = Announcement::find( $request->id );
+
+        if( $announcement->delete() ){
+            
+            return redirect("/announcementList")->with('successMsg', '公告刪除成功');
+
+        }else{
+            
+            return back()->with('errorMsg', '公告刪除失敗 , 請稍後再試' );
+        }
+    }
+
+
+
 
     /*----------------------------------------------------------------
      | 檢查文章存在
@@ -447,4 +726,15 @@ class SetController extends Controller
         
         return Article::where('id',$_articleId)->exists() ;
     }
+
+
+
+
+    /*
+    */
+    public function chkAnnouncementExist( $_announcementId){
+        
+        return Announcement::where('id',$_announcementId)->exists() ;
+    }
+
 }
