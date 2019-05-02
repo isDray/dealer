@@ -32,12 +32,15 @@ a{
                                     </ul>
                                 </li>
                     -->
-
+                    
+                    <!--
                     <a href="{{url('/orderNew')}}">
                         <span type="button" class="btn btn-primary waves-effect">
                         新增訂單
                         </span>
                     </a>
+
+                    -->
                 </ul>
                         </div>
                         <div class="body">
@@ -259,6 +262,10 @@ $(function(){
                     }else if( full[7] == 4 ){
 
                         return '<span class="label bg-teal">取消</span>';
+                    }
+                    else if( full[7] == 5 ){
+
+                        return '<span class="label bg-teal">已出貨且加入庫存</span>';
                     }
                 }
         

@@ -1264,11 +1264,10 @@ class PurchaseController extends Controller
             
             if( $tmpStatus == 3){
 
-                $Purchase->shipdate = now()->timestamp;
-
-                
+                $Purchase->shipdate = date('Y-m-d H:i:s');
             }
 
+            
             $Purchase->save();
 
             // 修改庫存
