@@ -55,6 +55,12 @@ class PurchaseController extends Controller
 
         }elseif( Auth::user()->hasRole('Dealer') ){
 
+            $dealers = User::find( Auth::id() );
+            $dealers = $dealers->toArray();
+
+            return view('purchaseList')->with([ 'title'   => $pageTitle,
+                                                'dealers' => $dealers
+                                               ]); 
         }
 
     }
