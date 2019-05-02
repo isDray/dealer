@@ -38,7 +38,8 @@
 
     <!--<link href="{{asset('adminbsb-materialdesign/plugins/sweetalert/sweetalert.css')}}" rel="stylesheet" />-->
 
-<link href="{{asset('/sweetalert2/dist/sweetalert2.css')}}" rel="stylesheet" />
+    <link href="{{asset('/sweetalert2/dist/sweetalert2.css')}}" rel="stylesheet" />
+
 </head>
 
 <body class="theme-red">

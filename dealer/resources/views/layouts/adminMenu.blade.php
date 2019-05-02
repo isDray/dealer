@@ -48,10 +48,10 @@
                                 <a href="{{url('/set')}}">網站資料設定</a>
                             </li>
                             <li>
-                                <a href="{{url('/setArticle')}}">文章管理</a>
+                                <a href="{{url('/articleList')}}">文章管理</a>
                             </li>
                             <li>
-                                <a href="{{url('/setAnnouncement')}}">文章管理</a>
+                                <a href="{{url('/announcementList')}}">公告管理</a>
                             </li>                            
                         </ul>
                     </li>
