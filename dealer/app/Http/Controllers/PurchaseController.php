@@ -1198,14 +1198,15 @@ class PurchaseController extends Controller
             $tmpStatus = 4;
             $tmpStatusText = '取消';
         } 
-        if( isset( $request->addStock ) ){
+        /*if( isset( $request->addStock ) ){
 
             $tmpStatus = 5;
-            $tmpStatusText = '商品入庫';
+            $tmpStatusText = '確認收貨 , 商品入庫';
 
         }
+        */
 
-        if( $tmpStatus == 0 && !isset($request->addStock) ){
+        if( $tmpStatus == 0 ){
 
             return back()->with(['errorMsg'=> '進貨單無此狀態 , 請勿嘗試非法操作']);
         }
@@ -1271,7 +1272,7 @@ class PurchaseController extends Controller
             $Purchase->save();
 
             // 修改庫存
-            
+            /*
             if( $request->addStock ){
                 
                 $allPurchaseGoods = PurchaseGoods::where('purchase_id',$request->purchaseId)->get();
@@ -1307,7 +1308,7 @@ class PurchaseController extends Controller
                     }
                 }
             }
-            
+            */
 
 
             //GoodsStock::where()
@@ -1336,6 +1337,173 @@ class PurchaseController extends Controller
             return back()->with('errorMsg', '進貨單操作失敗 , 請稍後再嘗試');          
         }            
     
+    }
+
+
+
+
+    /*----------------------------------------------------------------
+     | 特例加入庫存
+     |----------------------------------------------------------------
+     | 如果經銷商發現進貨單配送的商品有誤 , 則可以藉由此項目完成特例
+     | 入庫動作
+     |
+     */
+    public function addStockException( Request $request ){
+        
+        $pageTitle = '特殊狀況入庫';
+
+        // 確認是經銷商
+        if( !Auth::user()->hasRole('Dealer') ){
+
+            return back()->with('errorMsg', '此操作只有經銷商會員可以執行');
+        }
+
+        // 確認訂單為當下經銷商擁有
+        if( !$this->chkPurchase( $request->id) ){
+
+            return back()->with('errorMsg', '進貨單不屬於此帳號 , 請勿嘗試非法操作');
+        }
+        
+        //
+        // 取出該商品所有細項
+        $puchaseGoods = PurchaseGoods::where('purchase_id' , $request->id)->get();
+        $puchaseGoods = $puchaseGoods->toArray();
+
+        return view('purchaseAddStockException')->with([ 'title'        => $pageTitle,
+                                                         'puchaseGoods' => $puchaseGoods,
+                                                         'puchaseId'    => $request->id
+                                                       ]);         
+    }
+    
+
+
+    
+    /*----------------------------------------------------------------
+     | 特例加入庫存實作
+     |----------------------------------------------------------------
+     |
+     */
+    public function addStockExceptionDo( Request $request ){
+        
+        // 確認是經銷商
+        if( !Auth::user()->hasRole('Dealer') ){
+
+            return back()->with('errorMsg', '此操作只有經銷商會員可以執行');
+        }
+
+        // 確認訂單為當下經銷商擁有
+        if( !$this->chkPurchase( $request->purchaseId) ){
+
+            return back()->with('errorMsg', '進貨單不屬於此帳號 , 請勿嘗試非法操作');
+        }        
+        
+        $totalNum = count(  $request->goodsId );
+        
+        
+        DB::beginTransaction();
+        
+        try {
+            
+            // 改變出貨狀態
+            $Purchase = Purchase::find( $request->purchaseId );
+            $Purchase->status  = 5;
+            $Purchase->save();
+
+            for ($i=0; $i < $totalNum ; $i++) { 
+                
+                // 如果商品不存在 , 直接跳過
+                if( !$this->chkGoodsExist( $request->goodsId[$i] ) ){
+
+                    continue;
+                }
+
+                // 如果沒有數量 , 或者數量小於1 就直接跳過
+                if( !isset($request->stockNum[$i]) || $request->stockNum[$i] <= 0 ){
+                    continue;
+                }
+                
+                // 檢查該商品的庫存是否已經存在了
+                $goodsStock = GoodsStock::where('dealer_id',Auth::id())->where('goods_id',$request->goodsId[$i])->first();
+                
+                // 已有庫存就累加 , 無庫存則新增庫存
+                if( count($goodsStock) > 0){
+
+                    if( $goodsStock->goods_num + $request->stockNum[$i] < 0){
+                    
+                        $tmpNum = 0;
+                    
+                    }else{
+                        
+                        $tmpNum = $goodsStock->goods_num + $request->stockNum[$i];
+                    }
+
+                    DB::table('goods_stock')
+                    ->where('dealer_id', Auth::id())
+                    ->where('goods_id', $request->goodsId[$i] )
+                    ->update(['goods_num' => $tmpNum ]);
+
+                }else{
+
+                    $GoodsStock = new GoodsStock;
+                    $GoodsStock->dealer_id = Auth::id();
+                    $GoodsStock->goods_id  = $request->goodsId[$i];
+                    $GoodsStock->goods_num = $request->stockNum[$i];
+                    $GoodsStock->save();
+                }
+
+
+            }
+            
+            DB::commit();
+            return redirect('/purchaseList')->with('successMsg', '加入庫存成功');
+
+        }catch (Exception $e) {
+
+            DB::rollback();
+            //$e->getMessage();
+
+            // 寫入錯誤代碼後轉跳
+            
+            logger("{$e->getMessage()} \n\n-----------------------------------------------\n\n"); 
+            
+            return back()->with('errorMsg', '進貨單操作失敗 , 請稍後再嘗試');          
+        }            
+        
+    }
+
+
+
+
+    /*----------------------------------------------------------------
+     | ajax 撈出要加入入庫的商品
+     |----------------------------------------------------------------
+     |
+     */
+    public function ajaxAddStockGoods( Request $request ){
+        
+
+        //只有經銷商可以進行此交易
+        if( !Auth::user()->hasRole('Dealer') ){
+
+            echo json_encode(['res'=>false , 'msg'=>'此操作只有經銷商會員可以執行' , 'datas'=>'' ]);
+            exit;
+        }
+
+        // 搜尋商品
+        $goods = Goods::where( 'goods_sn' , $request->addStockGoodsSn )->first();
+        
+        if( count($goods) == 0 ){
+            
+            echo json_encode(['res'=>false , 'msg'=>'無此商品貨號' , 'datas'=>'' ]);
+            exit;
+
+        }else{
+
+            $goods = $goods->toArray();
+            echo json_encode(['res'=>true , 'msg'=>'成功取得' , 'datas'=>$goods ]);
+            exit;            
+        }
     }
 
 
@@ -1378,5 +1546,19 @@ class PurchaseController extends Controller
             
             return false;
         }
+    }
+
+
+
+
+    /*----------------------------------------------------------------
+     | 確認商品是否存在
+     |----------------------------------------------------------------
+     |
+     */
+    public function chkGoodsExist( $_goodsId ){
+
+        return( Goods::where('id', $_goodsId)->exists() );
+
     }
 }

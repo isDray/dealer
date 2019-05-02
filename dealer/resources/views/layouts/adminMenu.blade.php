@@ -101,11 +101,7 @@
 
                             <li>
                                 <a href="{{url('/purchaseList')}}">進貨單管理</a>
-                            </li>                              
-
-                            <li>
-                                <a href="{{url('/purchaseList')}}">商品庫存管理</a>
-                            </li>                             
+                            </li>                                                       
                           
                         </ul>
                     </li>                    

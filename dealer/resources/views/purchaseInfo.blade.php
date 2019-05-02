@@ -177,7 +177,13 @@
                             @endif
 
                             @if($purchaseData['status'] == 3)
-                            <input type="submit" name="addStock" class="btn btn-primary waves-effect" value="加入庫存">
+                            <!--<input type="submit" name="addStock" class="btn btn-primary waves-effect" value="加入庫存">-->
+                            
+                            <!-- 針對細項的加入庫存 -->
+                            <a href="{{url('addStockException')}}/{{$purchaseData['id']}}" class="btn btn-primary waves-effect">
+                                加入庫存
+                            </a>
+                            <!-- /針對細項加入庫存 -->
                             @endif
                         @endrole
                     </div>
