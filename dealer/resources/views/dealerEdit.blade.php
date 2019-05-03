@@ -48,10 +48,22 @@
                             </div>
                             </div>
                         </div>
-                       
+
+                        <div class="col-md-3 col-sm-12 col-xs-12">
+                            <b> </b>
+                            <div class="form-group">
+                            <div class="">
+                            <button class="btn bg-cyan waves-effect m-b-15" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false"
+                                    aria-controls="collapseExample">
+                                修改密碼
+                            </button>
+                            </div>
+                            </div>                            
+                        </div>
+
                     </div>
 
-                    <div class="row clearfix">
+                    <div class="collapse row clearfix" id="collapseExample">
 
                         <div class="col-md-3 col-sm-12 col-xs-12">
                             <b>舊密碼:</b>
