@@ -88,7 +88,7 @@ class DealerController extends Controller
 
         $recordsTotal = $query->count();
         $allFilter    = $query->count();
-        $datas = $query->select('users.*','dealer.*')->get();
+        $datas = $query->select('users.id as uid','users.*','dealer.*')->get();
 
         $datas = $datas->toArray();
 
@@ -102,7 +102,8 @@ class DealerController extends Controller
                 $value->user_name,
                 $value->email,
                 $value->user_phone,
-                $value->created_at
+                $value->created_at,
+                $value->uid,
 
             ]);
                 
@@ -307,5 +308,85 @@ class DealerController extends Controller
 
             return back()->withInput()->with('errorMsg', '經銷商新增失敗 , 請稍後再試' );         
         }          
+    }
+
+
+
+
+    /*----------------------------------------------------------------
+     | 編輯經銷商頁面
+     |----------------------------------------------------------------
+     |
+     */
+    public function dealerEdit( Request $request ){
+        
+        $pageTitle = '經銷商編輯';
+
+        // 如果不是系統方也不是經銷方則直接終止
+        if( !Auth::user()->hasRole('Admin') && !Auth::user()->hasRole('Dealer') ){ exit; }
+        
+        if( empty( $request->id ) ){
+
+            return back()->with('errorMsg', '缺少必要參數 , 請重新整理頁面後再試' );
+        }
+
+        // 列表功能一定要系統方才能查看
+        if( Auth::user()->hasRole('Admin') ){
+
+            // 確認權限
+            if( !Auth::user()->can('dealerNew') ){
+
+        	    return back()->with('errorMsg', '帳號無此操作權限 , 如有需要請切換帳號或聯絡管理員增加權限' );
+            }
+
+        }elseif( Auth::user()->hasRole('Dealer') ){
+            
+            // 如果是經銷商則需要確認是不是為自己的資料
+            if( !$this->chkDealer( $request->id ) ){
+
+                return back()->with('errorMsg', '要編輯的經銷商非您所擁有 , 請勿嘗試非法操作' );
+            }
+        }
+        
+        $multiple = Multiple::orderBy('multiple', 'asc')->get();
+        $multiple = $multiple->toArray();
+
+        $dealer = User::leftJoin('dealer', function($join) {
+            $join->on('users.id', '=', 'dealer.dealer_id');
+        })
+        ->where('users.id',$request->id )
+        ->first([
+            'users.id as uid',
+            'users.name',
+            'users.email',
+            'dealer.*'
+        ]);
+        
+        $dealer = $dealer->toArray();
+
+    	return view('dealerEdit')->with(['title'     => $pageTitle,
+    		                             'multiples' => $multiple,
+    		                             'dealer'    => $dealer
+    		                            ]);  
+    }
+
+
+
+
+    /*----------------------------------------------------------------
+     | 確認經銷商資料為當下操作者
+     |----------------------------------------------------------------
+     |
+     */
+    public function chkDealer( $_dealerId ){
+        
+        if( $_dealerId == Auth::id() ){
+            
+            return true;
+
+        }else{
+            
+            return false;
+        }
     }
 }

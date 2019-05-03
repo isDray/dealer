@@ -271,7 +271,7 @@ $(function(){
                 "orderable": false,
                 "render" : function ( url, type, full) {
                     //console.log( full );
-                    return  '<a href="'+"{{url('/purchaseInfo')}}/"+full[0]+'">'+
+                    return  '<a href="'+"{{url('/dealerEdit')}}/"+full[5]+'">'+
                             @role('Admin')
                             @permission('purchaseEdit')
                             '<button type="button" class="btn btn-success waves-effect">'+
