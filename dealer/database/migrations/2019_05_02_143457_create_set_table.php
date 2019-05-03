@@ -79,6 +79,7 @@ class CreateSetTable extends Migration
      */
     public function down()
     {    
+        Schema::dropIfExists('multiple');
         Schema::dropIfExists('set');
         Schema::dropIfExists('article');
         Schema::dropIfExists('announcement');

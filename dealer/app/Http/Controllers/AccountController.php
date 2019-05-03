@@ -276,9 +276,9 @@ class AccountController extends Controller
             
             }
             
-            $user->phone    = $request->phone;
+            /*$user->phone    = $request->phone;
 
-            $user->address  = $request->address;
+            $user->address  = $request->address;*/
 
             $user->save();
             

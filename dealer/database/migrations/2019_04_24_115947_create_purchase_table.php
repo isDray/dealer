@@ -110,6 +110,7 @@ class CreatePurchaseTable extends Migration
      */
     public function down()
     {   
+        Schema::dropIfExists('purchase_log');
         Schema::dropIfExists('goods_stock');
         Schema::dropIfExists('purchase_goods');
         Schema::dropIfExists('purchase');

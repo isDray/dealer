@@ -28,8 +28,8 @@ class vAccountEdit extends FormRequest
             'email'     => "required|unique:users,email,{$this->id}",
             'password'  => 'same:password2',
             'useTarget' => 'required|in:Admin,Dealer',
-            'phone'     => 'required|regex:/^09[0-9]{8}$/',
-            'address'   => 'required'
+            /*'phone'     => 'required|regex:/^09[0-9]{8}$/',
+            'address'   => 'required'*/
         ];
     }
 

@@ -11,53 +11,6 @@
     <ul class="list">
                     <li class="header">操作選單</li>
 
-
-                    <!-- 權限管理 -->
-                    @role('Admin')
-                    <li  class="@if($controller == 'PermissionsController'||$controller == 'AccountController' || $controller == 'RoleController') active @endif">
-                        <a href="javascript:void(0);" class="menu-toggle">
-                            <i class="material-icons">perm_identity</i>
-                            <span>權限管理模組</span>
-                        </a>
-                        <ul class="ml-menu">
-                            <li>
-                                <a href="{{url('/permissions')}}">權限管理</a>
-                            </li>
-
-                            <li>
-                                <a href="{{url('/role')}}">身分管理</a>
-                            </li>
-
-                            <li>
-                                <a href="{{url('/account')}}">帳號管理</a>
-                            </li>
-                        </ul>
-                    </li> 
-                    @endrole                 
-                    <!-- /權限管理 -->
-
-                    <!-- 網站設置 -->
-                    @role('Admin')
-                    <li class="@if($controller == 'testController' ) active @endif">
-                        <a href="javascript:void(0);" class="menu-toggle">
-                            <i class="material-icons">settings_applications</i>
-                            <span>網站設置模組</span>
-                        </a>
-                        <ul class="ml-menu">
-                            <li>
-                                <a href="{{url('/set')}}">網站資料設定</a>
-                            </li>
-                            <li>
-                                <a href="{{url('/articleList')}}">文章管理</a>
-                            </li>
-                            <li>
-                                <a href="{{url('/announcementList')}}">公告管理</a>
-                            </li>                            
-                        </ul>
-                    </li>
-                    @endrole              
-                    <!-- /網站設置 -->
-
                     <!-- 商品管理 -->
                     <li class="@if($controller == 'GoodsController' || $controller == 'CategoryController') active @endif">
                         <a href="javascript:void(0);" class="menu-toggle">
@@ -113,7 +66,77 @@
                     </li>                    
                     <!-- /進貨管理 -->
 
+                    <!-- 經銷商管理 -->
+                    <li class="@if($controller == 'DealerController' ) active @endif">
 
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">device_hub</i>
+                            <span>經銷商網站管理模組</span>
+                        </a>
+
+                        <ul class="ml-menu">
+
+                            @role('Admin')
+                            <li>
+                               <a href="{{url('/dealer')}}">經銷商網站設定</a>
+                            </li>         
+                            @endrole
+
+                            @role('Dealer')
+                            <li>
+                               <a href="{{url('/dealer')}}">經銷商網站設定</a>
+                            </li>                            
+                            @endrole
+                          
+                        </ul>
+                    </li>                    
+                    <!-- /經銷商管理 -->
+
+                    <!-- 權限管理 -->
+                    @role('Admin')
+                    <li  class="@if($controller == 'PermissionsController'||$controller == 'AccountController' || $controller == 'RoleController') active @endif">
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">perm_identity</i>
+                            <span>權限管理模組</span>
+                        </a>
+                        <ul class="ml-menu">
+                            <li>
+                                <a href="{{url('/permissions')}}">權限管理</a>
+                            </li>
+
+                            <li>
+                                <a href="{{url('/role')}}">身分管理</a>
+                            </li>
+
+                            <li>
+                                <a href="{{url('/account')}}">帳號管理</a>
+                            </li>
+                        </ul>
+                    </li> 
+                    @endrole                 
+                    <!-- /權限管理 -->
+
+                    <!-- 網站設置 -->
+                    @role('Admin')
+                    <li class="@if($controller == 'SetController' ) active @endif">
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">settings_applications</i>
+                            <span>網站設置模組</span>
+                        </a>
+                        <ul class="ml-menu">
+                            <li>
+                                <a href="{{url('/set')}}">網站資料設定</a>
+                            </li>
+                            <li>
+                                <a href="{{url('/articleList')}}">文章管理</a>
+                            </li>
+                            <li>
+                                <a href="{{url('/announcementList')}}">公告管理</a>
+                            </li>                            
+                        </ul>
+                    </li>
+                    @endrole              
+                    <!-- /網站設置 -->
                     
                 </ul>
             </div>

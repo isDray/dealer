@@ -146,4 +146,11 @@ Route::group(['middleware' => ['auth','role:Admin|Dealer'] ], function () {
     Route::get('reportOrder','ReportController@order');
     Route::get('reportPurchase','ReportController@purchase');
     Route::get('reportGoodsSale','ReportController@goodsSale');
+
+
+    // 經銷商網站管理
+    Route::get('/dealer','DealerController@index');
+    Route::post('/dealerQuery','DealerController@query');
+    Route::get('/dealerNew','DealerController@dealerNew');     // 新增經銷商介面
+    Route::post('/dealerNewDo','DealerController@dealerNewDo');// 新增經銷商實作
 });    

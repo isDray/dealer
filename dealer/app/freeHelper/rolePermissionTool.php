@@ -12,7 +12,8 @@ Class rolePermissionTool{
                                                     ['WebSetManager'],
                                                     ['GoodsManager' , 'GoodsViewer'],
                                                     ['OrderManager'],
-                                                    ['PurchaseManager']
+                                                    ['PurchaseManager'],
+                                                    ['DealerManager']
                                                   ],
 
                                        'Dealer'=> []
