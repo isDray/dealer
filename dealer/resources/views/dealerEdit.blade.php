@@ -32,8 +32,8 @@
 
         <div class="body">
         
-            <form action="{{url('/dealerNewDo')}}" method="POST" enctype="multipart/form-data">
-
+            <form action="{{url('/dealerEditDo')}}" method="POST" enctype="multipart/form-data">
+                <input type='hidden' name="dealerId" value="{{ $dealer['uid'] }}" >
                 {{ csrf_field() }} 
                 <div class='col-sm-12'>
                     
@@ -50,7 +50,7 @@
                         </div>
 
                         <div class="col-md-3 col-sm-12 col-xs-12">
-                            <b> </b>
+                            <b>&nbsp;</b>
                             <div class="form-group">
                             <div class="">
                             <button class="btn bg-cyan waves-effect m-b-15" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false"
@@ -69,7 +69,7 @@
                             <b>舊密碼:</b>
                             <div class="form-group">
                             <div class="form-line">
-                                <input type="password" class="form-control myborder" name="password1" placeholder="" value=""/>
+                                <input type="password" class="form-control myborder" name="oldpassword" placeholder="" value=""/>
                             </div>
                             </div>
                         </div>

@@ -153,5 +153,6 @@ Route::group(['middleware' => ['auth','role:Admin|Dealer'] ], function () {
     Route::post('/dealerQuery','DealerController@query');
     Route::get('/dealerNew','DealerController@dealerNew');      // 新增經銷商介面
     Route::post('/dealerNewDo','DealerController@dealerNewDo'); // 新增經銷商實作
-    Route::get('dealerEdit/{id}','DealerController@dealerEdit');// 編輯經銷商頁面
+    Route::get('/dealerEdit/{id}','DealerController@dealerEdit');// 編輯經銷商頁面
+    Route::post('/dealerEditDo','DealerController@dealerEditDo'); // 編輯經銷商實作
 });    
