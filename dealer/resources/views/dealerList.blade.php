@@ -62,7 +62,7 @@ a{
                                     </select>
                                 </div>
                                 @endrole
-                                
+                                <!--
                                 <div class="col-sm-2">
                                     <p>進貨單狀態</p>
                                     <select class="form-control show-tick" id='status'>
@@ -86,8 +86,10 @@ a{
                                         </div>                                        
                                     </div>
                                 </div>
-
+                                -->
                                 <!-- 訂單時間選擇 -->
+
+                                <!--
                                 <div class="col-xs-3">
                                     
                                     <p>進貨單時間</p>
@@ -116,7 +118,7 @@ a{
 
 
 
-                                </div>
+                                </div>-->
 
                                 <!-- /訂單時間選擇 -->
                                 
