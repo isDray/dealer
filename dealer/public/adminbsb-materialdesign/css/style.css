@@ -8214,3 +8214,7 @@ html.ie11 .bs-searchbox .form-control {
 .myborder{
     border:1px solid #c4c4c4 !important;
 }
+.mysearchbox{
+    border:1px solid #d4d4d4 !important;
+    margin-bottom:50px !important;
+}

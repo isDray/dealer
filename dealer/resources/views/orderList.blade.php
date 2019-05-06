@@ -45,8 +45,8 @@ a{
 
 
                             <!-- 進階搜尋框 -->
-                            <div class="row clearfix">
-                                <div class='col-xs-12 col-sm-12 col-md-12'>
+                            <div class="row clearfix mysearchbox">
+                                <div class='col-xs-12 col-sm-12 col-md-12 bg-grey'>
                                     <p><b>進階搜尋</b></p>
                                 </div>
                                
@@ -54,11 +54,11 @@ a{
                                     <p>價格</p>
                                     <div class="input-group">
                                         <div class="form-line">
-                                            <input type="text" class="form-control" placeholder="" id='min_price'>
+                                            <input type="text" class="form-control myborder" placeholder="" id='min_price'>
                                         </div>
                                         <span class="input-group-addon">~</span>
                                         <div class="form-line">
-                                            <input type="text" class="form-control" placeholder="" id='max_price'>
+                                            <input type="text" class="form-control myborder" placeholder="" id='max_price'>
                                         </div>                                        
                                     </div>
                                 </div>
@@ -66,7 +66,7 @@ a{
                                 
                                 <div class="col-sm-2">
                                     <p>訂單狀態</p>
-                                    <select class="form-control show-tick" id='status'>
+                                    <select class="form-control show-tick myborder" id='status'>
                                         <option value='0' >-選擇-</option>
                                         <option value='1' >未新增完成</option>
                                         <option value='2' >待處理</option>
@@ -85,7 +85,7 @@ a{
                                         
                                         <div class="form-line" id='orderSatrtBox'>
                                         
-                                            <input type="text" class="form-control" placeholder="開始日期" id='orderSatrt'>
+                                            <input type="text" class="form-control myborder" placeholder="開始日期" id='orderSatrt'>
                                         
                                         </div>
                                         
@@ -95,7 +95,7 @@ a{
                                         
                                         <div class="form-line" id='orderEndBox'>
                                             
-                                            <input type="text" class="form-control" placeholder="結束日期" id='orderEnd'>
+                                            <input type="text" class="form-control myborder" placeholder="結束日期" id='orderEnd'>
                                         
                                         </div>
                                         

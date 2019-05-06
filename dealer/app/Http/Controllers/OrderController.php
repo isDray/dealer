@@ -241,10 +241,16 @@ class OrderController extends Controller
             
             $orderGoods = $this->getOrderGoods( $request->id );
             
+            $dealerId = Order::find( $request->id );
+            
+            $dealerId = $dealerId->dealer_id;
+
+
             return view('orderEdit')->with([ 'title'      => $pageTitle,
                                              'orderId'    => $request->id,
                                              'orderGoods' => $orderGoods,
-                                             'isNew'      => $isNew
+                                             'isNew'      => $isNew,
+                                             'dealerId'   => $dealerId
 
             ]);
 
@@ -267,10 +273,15 @@ class OrderController extends Controller
 
             $orderGoods = $this->getOrderGoods( $request->id );
             
+            $dealerId = Order::find( $request->id );
+            
+            $dealerId = $dealerId->dealer_id;
+
             return view('orderEdit')->with([ 'title'      => $pageTitle,
                                              'orderId'    => $request->id,
                                              'orderGoods' => $orderGoods,
-                                             'isNew'      => $isNew
+                                             'isNew'      => $isNew,
+                                             'dealerId'   => $dealerId
 
             ]);
 
@@ -1087,6 +1098,9 @@ class OrderController extends Controller
                 ->where('goods.id',$request->chooseId)
                 ->first();
                 
+                $datas = $datas->toArray();
+
+
                 if( !empty($datas) ){
                     
                     echo json_encode( $datas );

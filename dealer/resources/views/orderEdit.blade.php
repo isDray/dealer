@@ -23,7 +23,7 @@
         
         <!-- 訂單明細 -->
         <div class='card'>
-            <div class="header">
+            <div class="header bg-red">
                 <h2>訂單明細</h2>
             </div>
             <div class='body' id='orderGoodsList'>
@@ -98,7 +98,7 @@
         <div class="card">
 
         <!-- form 表格 -->
-        <div class="header">
+        <div class="header bg-red">
             <h2>
             {{$title}}表格
             <small>填寫以下表格以新增一組訂單</small>
@@ -138,7 +138,7 @@
                         
                         <div class="form-group">
                             <div class="form-line">
-                                <input type="text" class="form-control" placeholder="" id='goodsKeyWord' />
+                                <input type="text" class="form-control myborder" placeholder="" id='goodsKeyWord' />
                             </div>
                         </div>
                     </div>
@@ -159,7 +159,7 @@
                         <div class="form-group">
                             
                             <div class="form-line">
-                                <select id='goodsres' class="form-control show-tick"  > 
+                                <select id='goodsres' class="form-control show-tick myborder"  > 
                                     <option value="">請先搜尋關鍵字</option>
                                 </select>
                             </div>
@@ -295,8 +295,8 @@ $(function(){
                 url: "{{url('/orderGetGoods')}}",
                 method: "POST",
                 data: { _token: "{{ csrf_token() }}", 
-                        chooseId : chooseId
-
+                        chooseId : chooseId,
+                        dealerId :"{{$dealerId}}"
                 },
                 dataType: "json"
             });
