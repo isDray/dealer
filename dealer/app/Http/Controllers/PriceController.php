@@ -234,20 +234,27 @@ class PriceController extends Controller
         $multiple = Multiple::orderBy('multiple', 'asc')->get();
         $multiples = $multiple->toArray();
 
-        $goodsPrice = GoodsPrice::where('goods_id' , $request->id)->where('dealer_id',Auth::id())->first();
-        if( count($goodsPrice) > 0){
+        
+        $chkgoodsPrice = GoodsPrice::where('goods_id' , $request->id)->where('dealer_id',Auth::id())->exists();
+
+        if( $chkgoodsPrice ){
+            $goodsPrice = GoodsPrice::where('goods_id' , $request->id)->where('dealer_id',Auth::id())->first();
             $goodsPrice = $goodsPrice->toArray();
+
         }else{
+
             $goodsPrice = [];
         }
 
 
        
 
-        $dealer = Dealer::where('dealer_id',Auth::id())->first();
+        
+        $chkDealer = Dealer::where('dealer_id',Auth::id())->exists();
 
-        if( count($dealer) > 0 ){
+        if( $chkDealer ){
 
+            $dealer = Dealer::where('dealer_id',Auth::id())->first();
             $dealer = $dealer->toArray();
 
         }else{
@@ -319,9 +326,9 @@ class PriceController extends Controller
 
         }
 
-        $multiple = Multiple::find( $request->multiple );
+        $chkMultiple = Multiple::where( 'id' ,$request->multiple )->exists();
 
-        if( count($multiple) <= 0 && $request->multiple != 999){
+        if( !$chkMultiple && $request->multiple != 999){
 
             $errText .= '售價倍數不存在<br>';
         }
@@ -332,8 +339,8 @@ class PriceController extends Controller
 
         }
 
-        if( count($multiple) > 0 ){
-
+        if( $chkMultiple ){
+            $multiple = Multiple::where( 'id' ,$request->multiple )->first();
             $multiple = $multiple->toArray();
         }
         
@@ -364,7 +371,7 @@ class PriceController extends Controller
             
             $goodsPrice = GoodsPrice::where('dealer_id',Auth::id())->where('goods_id',$request->id);
            
-            if( count($multiple) > 0 ){ 
+            if( $chkMultiple ){ 
             	$tmpMultiple_id = $multiple['id'] ;
             }else{
                 if( $request->multiple==999 ){
@@ -378,7 +385,7 @@ class PriceController extends Controller
             };
 
             
-            if( count($multiple) > 0 ){
+            if( $chkMultiple ){
 
             	$tmpMultiple = $multiple['multiple'];
 
@@ -400,7 +407,7 @@ class PriceController extends Controller
 
         }else{
             
-            if( count($multiple) > 0 ){ 
+            if( $chkMultiple ){ 
             	
             	$tmpMultiple_id = $multiple['id'];
 
@@ -417,7 +424,7 @@ class PriceController extends Controller
             };
 
             
-            if( count($multiple) > 0 ){
+            if( $chkMultiple ){
 
             	$tmpMultiple = $multiple['multiple'];
 

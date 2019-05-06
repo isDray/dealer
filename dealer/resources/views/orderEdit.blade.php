@@ -317,13 +317,13 @@ $(function(){
                     tableDatas += "<tr><td>商品名稱</td><td>"+res['name']+"</td></tr>";
                     tableDatas += "<tr><td>商品貨號</td><td>"+res['goods_sn']+"</td></tr>";
                     tableDatas += "<tr><td>商品類別</td><td>"+res['cname']+"</td></tr>";
-                    tableDatas += "<tr><td>商品價格</td><td><input name='goodsPrice' type='radio' id='radio_1' checked value='"+res['price']+"' /><label for='radio_1'>售價:"+res['price']+"</label><br><input name='goodsPrice' type='radio' id='radio_2' value='"+res['w_price']+"' /><label for='radio_2'>批發價:"+res['w_price']+"</label><br><input name='goodsPrice' type='radio' id='radio_3' value='"+res['w_price']+"' /><label for='radio_3'>自訂售價:</label><input type='text' class='form-control' style='display:inline;width:auto;' id='setPrice' ></td></tr>";
+                    tableDatas += "<tr><td>商品價格</td><td><input name='goodsPrice' type='radio' id='radio_1' checked value='"+res['price']+"' /><label for='radio_1'>售價:"+res['price']+"</label><br><input name='goodsPrice' type='radio' id='radio_3' value='"+res['w_price']+"' /><label for='radio_3'>自訂售價:</label><input type='text' class='form-control' style='display:inline;width:auto;' id='setPrice' ></td></tr>";
                     tableDatas += "<tr><td>商品縮圖</td><td><img src='{{url('/images')}}/"+res['thumbnail']+"' width='64px'></td></tr>";
                     tableDatas += "<tr><td>商品數量</td><td><div class='col-md-2' style='padding-left:0px;'><input type='number' class='form-control' min='1' value='1' id='goodsNumber'/></div></td></tr>";
                     tableDatas += "<tr><td colspan='2'><button id='addToOrder' class='btn btn-primary waves-effect'>添加商品</button></td></tr>";
                     tableDatas += "</tbody></table>";
                     tableDatas += "<input type='hidden' id='goodsId' value='"+res['id']+"'>";
-                                
+                    //<input name='goodsPrice' type='radio' id='radio_2' value='"+res['w_price']+"' /><label for='radio_2'>批發價:"+res['w_price']+"</label><br>            
                     $("#goodsTables").append( tableDatas );
 
 

@@ -16,6 +16,8 @@ use App\OrderGoods;
 use App\User;
 use App\Role;
 use App\OrderLog;
+use App\GoodsPrice;
+use App\Dealer;
 
 use \Exception;
 
@@ -649,6 +651,12 @@ class OrderController extends Controller
 
                     $Order->status = $wantStatus;
 
+                    if( $wantStatus == 3 ){
+                        
+                        $Order->ship_at = date("Y-m-d H:i:s");
+
+                    }
+
                     if( $Order->save() ){
                         
                         $this->orderLog( $request->orderId , $wantStatus , 3 );
@@ -705,7 +713,13 @@ class OrderController extends Controller
                     $Order = Order::find($request->orderId);
 
                     $Order->status = $wantStatus;
+                    
+                    if( $wantStatus == 3 ){
+                        
+                        $Order->ship_at = date("Y-m-d H:i:s");
 
+                    }
+                    
                     if( $Order->save() ){
 
                         $this->orderLog( $request->orderId , $wantStatus , 3 );
@@ -1099,10 +1113,23 @@ class OrderController extends Controller
                 ->first();
                 
                 $datas = $datas->toArray();
-
-
+                
                 if( !empty($datas) ){
+                    // 判斷有沒有給特定價格
+                    $chkPrice = GoodsPrice::where('dealer_id',$request->dealerId)->where('goods_id',$request->chooseId)->exists();
                     
+                    if( $chkPrice ){
+                        $price = GoodsPrice::where('dealer_id',$request->dealerId)->where('goods_id',$request->chooseId)->first();
+                        $datas['price'] = $price->price;
+                
+                    }else{
+                    
+                        $dealer = Dealer::where('dealer_id',$request->dealerId)->first();
+                         
+
+                        //$dealer = $dealer->toArray();
+                        $datas['price'] = round( $datas['w_price'] * $dealer->multiple ); 
+                    }                    
                     echo json_encode( $datas );
 
                 }else{
@@ -1128,7 +1155,22 @@ class OrderController extends Controller
                 ->first();
                 
                 if( !empty($datas) ){
+                    // 判斷有沒有給特定價格
+                    $chkPrice = GoodsPrice::where('dealer_id',$request->dealerId)->where('goods_id',$request->chooseId)->exists();
                     
+                    if( $chkPrice ){
+
+                        $price = GoodsPrice::where('dealer_id',$request->dealerId)->where('goods_id',$request->chooseId)->first();
+                        $datas['price'] = $price->price;
+                
+                    }else{
+                    
+                        $dealer = Dealer::where('dealer_id',$request->dealerId)->first();
+                         
+                        
+                        //$dealer = $dealer->toArray();
+                        $datas['price'] = round( $datas['w_price'] * $dealer->multiple ); 
+                    }                     
                     echo json_encode( $datas );
 
                 }else{
