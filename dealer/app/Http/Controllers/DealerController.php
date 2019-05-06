@@ -391,7 +391,7 @@ class DealerController extends Controller
 
         }elseif( Auth::user()->hasRole('Dealer') ){
             
-            if( empty( $request->dealerId ) || !chkDealer($request->dealerId) ){
+            if( empty( $request->dealerId ) || !$this->chkDealer($request->dealerId) ){
 
                 return back()->with('errorMsg', '要編輯的經銷商非您所擁有 , 請勿嘗試非法操作' );
             }
@@ -399,6 +399,7 @@ class DealerController extends Controller
         }else{
 
             return back()->with('errorMsg', '帳號無此操作權限 , 請勿嘗試非法操作' );
+
         }
 
         // 檢驗資料
@@ -541,8 +542,13 @@ class DealerController extends Controller
             $dealer->save();
 
             DB::commit();
+            if( Auth::user()->hasRole('Admin') ){
 
-            return redirect('/dealer')->with('successMsg', '經銷商編輯成功');
+                return redirect('/dealer')->with('successMsg', '經銷商編輯成功');
+
+            }elseif( Auth::user()->hasRole('Dealer') ){
+                return redirect('dealerEdit/'.$user->id)->with('successMsg', '經銷商編輯成功');
+            }
 
         } catch (Exception $e) {
 
@@ -620,7 +626,7 @@ class DealerController extends Controller
 
         }else{
 
-            return redirect('/dealer')->with('successMsg', '經銷商刪除失敗請稍後再試');
+            return redirect('/dealer')->with('erroeMsg', '經銷商刪除失敗請稍後再試');
         }
 
     }

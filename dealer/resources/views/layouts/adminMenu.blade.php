@@ -12,6 +12,7 @@
                     <li class="header">操作選單</li>
 
                     <!-- 商品管理 -->
+                    @role('Admin')
                     <li class="@if($controller == 'GoodsController' || $controller == 'CategoryController') active @endif">
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">view_compact</i>
@@ -27,8 +28,25 @@
                           
                         </ul>
                     </li>
+                    @endrole
                     <!-- /商品管理 -->
 
+                    <!-- 經銷商商品管理 -->
+                    @role('Dealer')
+                    <li class="@if($controller == 'GoodsController' || $controller == 'CategoryController') active @endif">
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">view_compact</i>
+                            <span>商品管理模組</span>
+                        </a>
+                        <ul class="ml-menu">
+                            <li>
+                                <a href="{{url('/price')}}">商品管理</a>
+                            </li>                                                        
+                          
+                        </ul>
+                    </li>
+                    @endrole
+                    <!-- /商品管理 -->
 
                     <!-- 訂單管理 -->
                     <li class="@if($controller == 'OrderController' ) active @endif">
@@ -84,7 +102,7 @@
 
                             @role('Dealer')
                             <li>
-                               <a href="{{url('/dealer')}}">經銷商網站設定</a>
+                               <a href="{{url('/dealerEdit')}}/{{Auth::id()}}">經銷商網站設定</a>
                             </li>                            
                             @endrole
                           

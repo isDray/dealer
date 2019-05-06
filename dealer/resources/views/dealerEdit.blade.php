@@ -281,7 +281,7 @@
 
                 </div>
 
-                <button class="btn btn-primary waves-effect" type="submit">新增</button>
+                <button class="btn btn-primary waves-effect" type="submit">編輯</button>
 
             </form>
 
