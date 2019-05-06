@@ -18,6 +18,7 @@ use App\Purchase;
 use App\PurchaseGoods;
 use App\GoodsStock;
 use App\PurchaseLog;
+use App\Dealer;
 
 use \Exception;
 class PurchaseController extends Controller
@@ -60,7 +61,6 @@ class PurchaseController extends Controller
 
             return view('purchaseList')->with([ 'title'   => $pageTitle,
                                                 'dealers' => $dealers
-
                                                ]); 
         }
 
@@ -387,11 +387,13 @@ class PurchaseController extends Controller
 
             // 取出所選經銷商資料
             $tmpDealer = User::find( $request->dealerId );
+            //$tmpDealer = Dealer::find( $request->dealerId );
 
             $dealerName    = $tmpDealer->ship_name;
             $dealerPhone   = $tmpDealer->ship_phone;
             $dealerTel     = $tmpDealer->ship_tel;
-            $dealerAddress = $tmpDealer->ship_address;            
+            $dealerAddress = $tmpDealer->ship_address; 
+
 
         }elseif( Auth::user()->hasRole('Dealer') ){
             
@@ -573,7 +575,8 @@ class PurchaseController extends Controller
             $w_price[]     = $saleData['w_price'];
         }
 
-        $tmpDatas = [ 'goodsId'   => $goodsId,
+        $tmpDatas = [ 'dealerId'  => $dealerId,
+                      'goodsId'   => $goodsId,
                       'goodsName' => $goodsName,
                       'goodsSn'   => $goodsSn,
                       'salesNum'  => $salesNum, 
@@ -582,9 +585,17 @@ class PurchaseController extends Controller
                     ];
 
         // 取出經銷會員的預設配送資料
-        $shipData = User::find( $dealerId );  
-        $shipData = $shipData->toArray();                 
+        $shipData = Dealer::where( 'dealer_id' , $dealerId )->first();  
+        if( !empty($shipData) ){
+            $shipData = $shipData->toArray();                 
+        }else{
+            $shipData = ['ship_name'=>'',
+            'ship_phone'=>'',
+            'ship_tel'=>'',
+            'ship_address'=>'',];
+        }
         
+
         $tmpDatas['ship'] = $shipData;
 
         echo json_encode(['res'=>true,'msg'=>'進貨單預估完成','datas'=>$tmpDatas]);
@@ -1505,7 +1516,62 @@ class PurchaseController extends Controller
             exit;            
         }
     }
+    
 
+
+
+    /*----------------------------------------------------------------
+     | 進貨單刪除
+     |----------------------------------------------------------------
+     */
+    public function purchaseDelete( Request $request ){
+        // 確認是經銷商
+        if( Auth::user()->hasRole('Admin') ){
+            
+            if( !Auth::user()->can('purchaseNew') ){
+
+                return back()->with('errorMsg', '帳號無此操作權限 , 如有需要請切換帳號或聯絡管理員增加權限');
+            }
+            
+
+        }else{
+
+            return back()->with('errorMsg', '無此權限 , 請勿嘗試非法操作');
+        }
+
+        // 檢驗資料
+        $validator = Validator::make($request->all(), [
+            'id'    => 'required|exists:purchase,id',
+
+        ],[
+            'id.required'     => '缺少必要參數',
+            'id.exists' => '要刪除的進貨單不存在',
+        ]  );
+        
+        $errText = '';
+        
+        if ($validator->fails()) {
+                
+            $errors = $validator->errors();
+                
+            foreach( $errors->all() as $message ){
+                    
+                $errText .= "$message<br>";
+            }
+
+        }    
+
+        $purchase = Purchase::find( $request->id );
+        
+        if( $purchase->delete() ){
+
+            return redirect('/purchaseList')->with('successMsg', '進貨單刪除成功');
+
+        }else{
+            
+            return redirect('/purchaseList')->with('errorMsg', '進貨單刪除失敗');
+        }
+    }
 
 
 

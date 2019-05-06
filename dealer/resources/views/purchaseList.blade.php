@@ -164,7 +164,7 @@ a{
                     </div>
                 </div>
 
-                <form action="{{url('/orderDeleteDo')}}" method="POST" id='deleteOrderForm'>
+                <form action="{{url('/purchaseDeleteDo')}}" method="POST" id='deleteOrderForm'>
                     {{ csrf_field() }}
                     <input type='hidden' id='deleteInput' name='id'>
                 </form>
@@ -295,14 +295,18 @@ $(function(){
                             '<button type="button" class="btn btn-success waves-effect">'+
                             '<i class="material-icons">settings</i>'+
                             '<span>管理</span>'+
-                            '</button>'+                            
+                            '</button>'                          
                             @endrole
 
+                            @role('Admin')
+                            @permission('purchaseDelete')
                             '</a>&nbsp;'+
-                            '<button type="button" class="btn btn-danger waves-effect deleteOrder" orderId="'+full[8]+'" orderName="'+full[0]+'">'+
+                            '<button type="button" class="btn btn-danger waves-effect deleteOrder" purchaseId="'+full[0]+'">'+
                             '<i class="material-icons">cancel</i>'+
                             '<span>刪除</span>'+
                             '</button>'
+                            @endpermission
+                            @endrole                            
                 }
         
             },                     
@@ -354,7 +358,7 @@ $(function(){
         Swal.fire({
 
             title: '刪除確認',
-            text: "即將刪除訂單編號:"+$(this).attr('orderName')+"之訂單,確定要刪除?",
+            text: "即將刪除進貨單,確定要刪除?",
             type: 'warning',
             showCancelButton: true,
             confirmButtonText: '確定刪除',
@@ -363,7 +367,7 @@ $(function(){
         }).then((result) => {
             if (result.value) {
 
-                $("#deleteInput").val( $(this).attr('orderId') );
+                $("#deleteInput").val( $(this).attr('purchaseId') );
                 $("#deleteOrderForm").submit();
             }
         })

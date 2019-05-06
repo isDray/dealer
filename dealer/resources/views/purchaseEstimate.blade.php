@@ -161,7 +161,7 @@
                         <tbody>
                             <tr>
                                 <td colspan='4' class='align-center'>
-                                    <input type='submit' class='btn btn-primary waves-effect' value='產生出貨單'>
+                                    <input type='submit' class='btn btn-primary waves-effect' value='產生進貨單'>
                                 </td>
                             </tr> 
                         </tbody>
@@ -273,8 +273,8 @@ $(function(){
         $("#shipTel").val( $.trim(_datas['ship']['ship_tel']) );
         $("#shipPhone").val( $.trim(_datas['ship']['ship_phone']) );
         $("#shipAddress").val( $.trim(_datas['ship']['ship_address']) );
-        $("#purchaseDealerId").val( $.trim(_datas['ship']['id']) );
-
+        $("#purchaseDealerId").val( $.trim(_datas['dealerId']) );
+ 
 
         $("#purchaseData").show();
         $("#goodsAndNum").show();
@@ -372,7 +372,6 @@ $(function(){
     $("#addGoods").click(function(){
         
         if( !$("#purchaseDealerId").val() ){
-
             estimateErr('請先產生需補貨數');
             return;
         }

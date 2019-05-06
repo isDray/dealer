@@ -137,6 +137,7 @@ Route::group(['middleware' => ['auth','role:Admin|Dealer'] ], function () {
     Route::post('/purchaseAjaxOrder','PurchaseController@ajaxNewPurchaseOrder');
     Route::post('/purchaseAjaxAddGoods','PurchaseController@ajaxAddPurchaseGoods');
     Route::post('/puchaseStatus','PurchaseController@updateStatus');
+    Route::post('/purchaseDeleteDo','PurchaseController@purchaseDelete');
     Route::get('/addStockException/{id}','PurchaseController@addStockException'); // 特殊狀況入庫 
     Route::post('ajaxAddStockGoods','PurchaseController@ajaxAddStockGoods'); // ajax撈出要加入庫存之商品
     Route::post('addToStock','PurchaseController@addStockExceptionDo'); // 特殊狀況入庫實作
@@ -155,4 +156,5 @@ Route::group(['middleware' => ['auth','role:Admin|Dealer'] ], function () {
     Route::post('/dealerNewDo','DealerController@dealerNewDo'); // 新增經銷商實作
     Route::get('/dealerEdit/{id}','DealerController@dealerEdit');// 編輯經銷商頁面
     Route::post('/dealerEditDo','DealerController@dealerEditDo'); // 編輯經銷商實作
+    Route::post('/dealerDeleteDo','DealerController@dealerDeleteDo'); // 刪除經銷商
 });    

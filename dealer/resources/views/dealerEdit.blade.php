@@ -197,7 +197,9 @@
                                     <input type="file" class="form-control imageupload" name="mainpic" id="mainpic" placeholder="" />
                                 </div>
                                 <div id="mainDisplay">
+                                    @if( !empty($dealer['logo1']) )
                                     <img src="{{url('')}}/logo/{{$dealer['uid']}}/{{$dealer['logo1']}}">
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -209,7 +211,9 @@
                                     <input type="file" class="form-control imageupload" name="thumbnail" id="thumbnail" placeholder="" />
                                 </div>
                                 <div id="thumbDisplay">
+                                    @if( !empty($dealer['logo2']) )
                                     <img src="{{url('')}}/logo/{{$dealer['uid']}}/{{$dealer['logo2']}}">
+                                    @endif
                                 </div>
                             </div>
                         </div>                                                                                                                

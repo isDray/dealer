@@ -475,7 +475,7 @@ class DealerController extends Controller
 
         }
 
-       // 開始更新經銷商資料
+        // 開始更新經銷商資料
         DB::beginTransaction();   
         
         try{
@@ -513,6 +513,10 @@ class DealerController extends Controller
             
 
             $dealer = Dealer::where('dealer_id',$request->dealerId)->first();
+            if( $dealer == NULL ){
+
+                $dealer = new Dealer();
+            }
             $dealer->dealer_id     = $user->id;
             $dealer->hotel_name    = isset( $request->hotel_name )? trim( $request->hotel_name ):'';
             $dealer->web_url       = isset( $request->hotel_url)? trim( $request->hotel_url):''; 
@@ -527,10 +531,10 @@ class DealerController extends Controller
             $dealer->ship_tel      = isset( $request->ship_tel)?trim($request->ship_tel):'';
             $dealer->ship_address  = isset( $request->ship_address)?trim($request->ship_address):'';
             if( $request->file('mainpic') != null){
-                $dealer->logo1         = 'wlogo'.$mainpicExtension;
+                $dealer->logo1         = 'wlogo.'.$mainpicExtension;
             }
             if( $request->file('thumbnail') != null){
-                $dealer->logo2         = 'mlogo'.$thumbnailExtension;
+                $dealer->logo2         = 'mlogo.'.$thumbnailExtension;
             }
             $dealer->multiple      = isset( $request->multiple)?trim($request->multiple):'';
             
@@ -538,7 +542,7 @@ class DealerController extends Controller
 
             DB::commit();
 
-            return redirect('/dealer')->with('successMsg', '經銷商新增成功');
+            return redirect('/dealer')->with('successMsg', '經銷商編輯成功');
 
         } catch (Exception $e) {
 
@@ -549,8 +553,76 @@ class DealerController extends Controller
             
             logger("{$e->getMessage()} \n\n-----------------------------------------------\n\n"); 
 
-            return back()->withInput()->with('errorMsg', '經銷商新增失敗 , 請稍後再試' );         
+            return back()->withInput()->with('errorMsg', '經銷商編輯失敗 , 請稍後再試' );         
         }         
+    }
+
+
+
+
+    /*----------------------------------------------------------------
+     | 經銷商刪除
+     |----------------------------------------------------------------
+     | 系統方單方面可以執行刪除經銷商的相關資料
+     |
+     */
+    public function dealerDeleteDo( Request $request ){
+        
+        if( Auth::user()->hasRole('Admin') ){
+            
+            // 確認有刪除經銷商的權限
+            if( !Auth::user()->can('dealerDelete') ){
+
+                return back()->with('errorMsg', '帳號無此操作權限 , 如有需要請切換帳號或聯絡管理員增加權限' );
+            }            
+
+        }else{
+        
+            return back()->with('errorMsg', ' 無此權限 , 請勿嘗試非法操作' ); 
+        
+        }
+
+        // 檢驗資料
+        $validator = Validator::make($request->all(), [
+            'id'    => 'required|exists:users,id',
+
+
+  
+        ],[
+            'id.required'     => '缺少必要參數',
+            'id.exists' => '要刪除的經銷商不存在',
+        ]  );
+        
+        $errText = '';
+        
+        if ($validator->fails()) {
+                
+            $errors = $validator->errors();
+                
+            foreach( $errors->all() as $message ){
+                    
+                $errText .= "$message<br>";
+            }
+
+        }       
+
+        if( !empty( $errText ) ){
+
+            return back()->with('errorMsg', $errText );
+
+        }
+
+        $dealer = User::find( $request->id );
+
+        if( $dealer->delete() ){
+
+            return redirect('/dealer')->with('successMsg', '經銷商刪除成功');
+
+        }else{
+
+            return redirect('/dealer')->with('successMsg', '經銷商刪除失敗請稍後再試');
+        }
+
     }
 
 
@@ -572,4 +644,8 @@ class DealerController extends Controller
             return false;
         }
     }
+
+
+
+
 }

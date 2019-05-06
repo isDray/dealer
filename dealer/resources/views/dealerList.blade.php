@@ -13,7 +13,7 @@ a{
 <div class="row clearfix">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <div class="card">
-            <div class="header">
+            <div class="header bg-red">
                 <h2>
                 &nbsp;
                 </h2>
@@ -47,8 +47,8 @@ a{
 
 
                             <!-- 進階搜尋框 -->
-                            <div class="row clearfix">
-                                <div class='col-xs-12 col-sm-12 col-md-12'>
+                            <div class="row clearfix" style="border:1px solid #d4d4d4; margin-bottom:50px;">
+                                <div class='col-xs-12 col-sm-12 col-md-12 bg-grey' style="">
                                     <p><b>進階搜尋</b></p>
                                 </div>
                                 @role('Admin')
@@ -155,7 +155,7 @@ a{
                     </div>
                 </div>
 
-                <form action="{{url('/orderDeleteDo')}}" method="POST" id='deleteOrderForm'>
+                <form action="{{url('/dealerDeleteDo')}}" method="POST" id='deleteDealerForm'>
                     {{ csrf_field() }}
                     <input type='hidden' id='deleteInput' name='id'>
                 </form>
@@ -179,6 +179,7 @@ $(function(){
     orderTable = $('.orderTable').DataTable({
         order:[[2,'desc']],
         responsive: true,
+        searching: false,
         language:{
             "processing":   "處理中...",
             "loadingRecords": "載入中...",
@@ -290,7 +291,7 @@ $(function(){
                             @endrole
 
                             '</a>&nbsp;'+
-                            '<button type="button" class="btn btn-danger waves-effect deleteOrder" orderId="'+full[8]+'" orderName="'+full[0]+'">'+
+                            '<button type="button" class="btn btn-danger waves-effect deleteDealer" dealerId="'+full[5]+'" orderName="'+full[0]+'">'+
                             '<i class="material-icons">cancel</i>'+
                             '<span>刪除</span>'+
                             '</button>'
@@ -340,12 +341,12 @@ $(function(){
     });
 
 
-    $('body').on('click', '.deleteOrder', function() {
+    $('body').on('click', '.deleteDealer', function() {
         
         Swal.fire({
 
             title: '刪除確認',
-            text: "即將刪除訂單編號:"+$(this).attr('orderName')+"之訂單,確定要刪除?",
+            text: "即將刪除經銷商:"+$(this).attr('orderName')+",確定要刪除?",
             type: 'warning',
             showCancelButton: true,
             confirmButtonText: '確定刪除',
@@ -354,8 +355,8 @@ $(function(){
         }).then((result) => {
             if (result.value) {
 
-                $("#deleteInput").val( $(this).attr('orderId') );
-                $("#deleteOrderForm").submit();
+                $("#deleteInput").val( $(this).attr('dealerId') );
+                $("#deleteDealerForm").submit();
             }
         })
 
