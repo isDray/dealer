@@ -84,6 +84,31 @@
                     </li>                    
                     <!-- /進貨管理 -->
 
+                    <!-- 報表模組 -->
+                    @role('Admin')
+                    <li class="@if($controller == 'ReportController' ) active @endif">
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">trending_up</i>
+                            <span>報表模組</span>
+                        </a>
+                        <ul class="ml-menu">
+                            
+                            <li>
+                               <a href="{{url('/reportOrder')}}">銷售報表</a>
+                            </li>
+
+                            <li>
+                                <a href="{{url('/reportPurchase')}}">進貨報表</a>
+                            </li> 
+
+                            <li>
+                                <a href="{{url('/reportGoodsSale')}}">未銷售報表</a>
+                            </li>                           
+                        </ul>
+                    </li>
+                    @endrole                      
+                    <!-- /報表模組-->
+
                     <!-- 經銷商管理 -->
                     <li class="@if($controller == 'DealerController' ) active @endif">
 
