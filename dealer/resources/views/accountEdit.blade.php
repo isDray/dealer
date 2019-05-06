@@ -81,7 +81,7 @@
                     </div>
                 </div>
 
-                <div class="row clearfix">
+<!--                 <div class="row clearfix">
                     <div class="col-sm-6">
                         <b>手機</b>
                         <div class="form-group">
@@ -101,10 +101,10 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
                 
-                <div class="row clearfix">
+                <div class="row clearfix" style='display:none;'>
                     <div class="col-sm-12">
                         <b class='col-red'>管理平台</b>
                     </div>
@@ -121,7 +121,7 @@
                        
                     @endforeach
                     </div>
-                </div>
+                </div> 
                          
 
 

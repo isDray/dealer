@@ -29,8 +29,8 @@ class AccountController extends Controller
     	$pageTitle = "帳號管理";
         
         // 取出所有使用者
-        $tmpUsers = accountTool::getAllAccount();
-        
+        //$tmpUsers = accountTool::getAllAccount();
+        $tmpUsers = Role::where('name','Admin')->first()->users()->get();
         $users    = [];
         foreach ($tmpUsers as $tmpUser) {
             
@@ -112,11 +112,9 @@ class AccountController extends Controller
     		$user->name = $request->name;
             $user->password = Hash::make( $request->password );
             $user->email =  $request->email;
-            $user->phone    = $request->phone;
-            $user->address  = $request->address;
             $user->save();
 
-            $role = Role::where('name',$request->useTarget)->first();
+            $role = Role::where('name','Admin')->first();
             $user->attachRole($role);
             
             if( count($request->addRole) > 0){
@@ -290,7 +288,7 @@ class AccountController extends Controller
             $role = Role::where('name',"Admin")->get();
             $user->detachRoles($role);  
             */
-            $role = Role::where('name',$request->useTarget)->first();
+            $role = Role::where('name','Admin')->first();
 
             $user->attachRole($role);
 

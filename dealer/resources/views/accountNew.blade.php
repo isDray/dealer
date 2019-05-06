@@ -38,49 +38,50 @@
                 
 
                 <div class="row clearfix">
-                    <div class="col-sm-6">
+                    <div class="col-md-4">
                         <b>姓名</b>
                         <div class="form-group">
                             <div class="form-line">
-                                <input type="text" class="form-control" name="name" placeholder="" />
+                                <input type="text" class="form-control myborder" name="name" placeholder="" />
                             </div>
                         </div>
                     </div>
                 </div>
                 
                 <div class="row clearfix">
-                    <div class="col-sm-6">
+                    <div class="col-md-4">
                         <b>信箱</b>
                         <div class="form-group">
                             <div class="form-line">
-                                <input type="text" class="form-control" name='email' placeholder="" />
+                                <input type="text" class="form-control myborder" name='email' placeholder="" />
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="row clearfix">
-                    <div class="col-sm-6">
+                    <div class="col-md-4">
                         <b>密碼</b>
                         <div class="form-group">
                             <div class="form-line">
-                                <input type="password" class="form-control" name='password' placeholder=""/>
+                                <input type="password" class="form-control myborder" name='password' placeholder=""/>
                             </div>
                         </div>
                     </div>
                 </div> 
 
                 <div class="row clearfix">
-                    <div class="col-sm-6">
+                    <div class="col-md-4">
                         <b>密碼確認</b>
                         <div class="form-group">
                             <div class="form-line">
-                                <input type="password" class="form-control" name='password2' placeholder=""/>
+                                <input type="password" class="form-control myborder" name='password2' placeholder=""/>
                             </div>
                         </div>
                     </div>
                 </div>            
-
+                
+                <!--
                 <div class="row clearfix">
                     <div class="col-sm-6">
                         <b>手機</b>
@@ -102,10 +103,11 @@
                         </div>
                     </div>
                 </div>
+                -->
 
 
                 
-                <div class="row clearfix">
+                <div class="row clearfix" style='display:none;'>
                     <div class="col-sm-12">
                         <b class='col-red'>管理平台</b>
                     </div>

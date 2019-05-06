@@ -27,9 +27,7 @@ class vAccountNew extends FormRequest
             'name'  => 'required|unique:users,name',
             'email' => 'required|unique:users,email',
             'password'=>'required|same:password2',
-            'useTarget' =>'required|in:Admin,Dealer',
-            'phone'     => 'required|regex:/^09[0-9]{8}$/',
-            'address'   => 'required'            
+            'useTarget' =>'required|in:Admin,Dealer',            
         ];
     }
 

@@ -70,7 +70,7 @@ Class rolePermissionTool{
     public static function getRootCategory(){
 
     	return Role::where('name',"Admin")
-                   ->orWhere('name','Dealer')
+                   //->orWhere('name','Dealer')
     	           ->get();
     }
 
