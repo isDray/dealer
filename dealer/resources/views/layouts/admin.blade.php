@@ -337,12 +337,13 @@
         <!-- #END# Left Sidebar -->
         <!-- Right Sidebar -->
         <aside id="rightsidebar" class="right-sidebar">
-            <ul class="nav nav-tabs tab-nav-right" role="tablist">
+
+<!--             <ul class="nav nav-tabs tab-nav-right" role="tablist">
                 <li role="presentation" class="active"><a href="#skins" data-toggle="tab">SKINS</a></li>
                 <li role="presentation"><a href="#settings" data-toggle="tab">SETTINGS</a></li>
-            </ul>
+            </ul> -->
             <div class="tab-content">
-                <div role="tabpanel" class="tab-pane fade in active in active" id="skins">
+<!--                 <div role="tabpanel" class="tab-pane fade in active in active" id="skins">
                     <ul class="demo-choose-skin">
                         <li data-theme="red" class="active">
                             <div class="red"></div>
@@ -425,10 +426,10 @@
                             <span>Black</span>
                         </li>
                     </ul>
-                </div>
-                <div role="tabpanel" class="tab-pane fade" id="settings">
+                </div> -->
+                <div role="tabpanel" class="tab-pane fade in active" id="settings">
                     <div class="demo-settings">
-                        <p>GENERAL SETTINGS</p>
+<!--                         <p>GENERAL SETTINGS</p>
                         <ul class="setting-list">
                             <li>
                                 <span>Report Panel Usage</span>
@@ -472,20 +473,23 @@
                                     <label><input type="checkbox" checked><span class="lever"></span></label>
                                 </div>
                             </li>
-                        </ul>
+                        </ul> -->
 
                         <!-- 登出 -->
-                        <li>
-                            <a  href="{{ route('logout') }}"
-                                onclick="event.preventDefault();document.getElementById('logout-form').submit();">
-                                Logout
-                            </a>
+                        <p>帳戶操作</p>
+                        <ul class="setting-list">
+                            <li>
+                                <span  href="{{ route('logout') }}" style="cursor:pointer;"
+                                    onclick="event.preventDefault();document.getElementById('logout-form').submit();">
+                                    登出
+                                </span>
 
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                {{ csrf_field() }}
-                            </form>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                    {{ csrf_field() }}
+                                </form>
                         
-                        </li>                        
+                            </li>  
+                        </ul>                      
                         <!-- /登出 -->
                     </div>
                 </div>
