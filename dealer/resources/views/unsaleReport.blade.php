@@ -28,7 +28,7 @@ a{
                     <div class='col-xs-12 col-sm-12 col-md-12 bg-grey' style="">
                         <p><b>進階搜尋</b></p>
                     </div>
-                    <form action="{{url('/reportPurchase')}}" method="get" autocomplete="off" >
+                    <form action="{{url('/reportGoodsSale')}}" method="get" autocomplete="off" >
                     {{ csrf_field() }}
                     @role('Admin')
                     <div class="col-sm-2">

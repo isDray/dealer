@@ -384,7 +384,8 @@ class ReportController extends Controller
         $dealers = $dealers->toArray();
         
         // 查詢
-        $query = DB::table('order');
+        $query = DB::table('order')
+               ->leftJoin('order_goods', 'order.id', '=', 'order_goods.oid');
 
         // 如果有接收到指定經銷商 , 則表示要找單一會員的訂單
         $dealer_id = 0;
@@ -393,19 +394,19 @@ class ReportController extends Controller
             
             if( Auth::user()->hasRole('Admin') ){    
                 
-                $query->where( 'dealer_id' , $request->dealerId );
+                $query->where( 'order.dealer_id' , $request->dealerId );
                 $dealer_id = $request->dealerId;
 
             }else{
 
-                $query->where( 'dealer_id' , Auth::id() );
+                $query->where( 'order.dealer_id' , Auth::id() );
                 $dealer_id = Auth::id();
             }
                
         }else{
 
             if( Auth::user()->hasRole('Dealer') ){
-                $query->where( 'dealer_id' , Auth::id() ); 
+                $query->where( 'order.dealer_id' , Auth::id() ); 
                 $dealer_id = Auth::id();               
             }
         }
@@ -420,7 +421,7 @@ class ReportController extends Controller
 
             $dateEnd   = date('Y-m-d 23:59:59', strtotime(date('Y-m-01') . ' +1 month -1 day'));
             
-            $query->where('created_at','>=',$dateStart)->where('created_at','<=',$dateEnd);
+            $query->where('order.created_at','>=',$dateStart)->where('order.created_at','<=',$dateEnd);
 
             $dateStart = date('Y-m-01');
             $dateEnd   = date('Y-m-d', strtotime(date('Y-m-01') . ' +1 month -1 day'));
@@ -430,22 +431,64 @@ class ReportController extends Controller
             if( !empty($request->start) ){
 
                 $dateStart = $request->start." 00:00:00";
-                $query->where('created_at','>=',$dateStart);
+                $query->where('order.created_at','>=',$dateStart);
                 $dateStart = $request->start;
             }
             
             if( !empty($request->end) ){
 
                 $dateEnd = $request->end." 23:59:59";
-                $query->where('created_at','<=',$dateEnd);
+                $query->where('order.created_at','<=',$dateEnd);
                 $dateEnd = $request->end;
             }
         }
 
         // 取出時間內所有確定成交的訂單
-        $datas = $query->where('status',3)->get();
+        $query->select('order_goods.gid');
 
+        $datas = $query->where('order.status',3)->groupBy('gid')->get();
         
+        $datas = json_decode($datas,true);
+        
+        $saleArr = [];
+        
+        foreach ($datas as $datak => $data ) {
+            
+            array_push($saleArr, $data['gid']);
+
+        }
+        
+       
+        
+        // 找出所有有庫存的商品        
+        $allGoods = DB::table('goods_stock')
+                  ->select( "goods.name" , 'goods.goods_sn' , 'goods.id' , 'goods.w_price' )
+                  ->leftJoin('goods', 'goods_stock.goods_id', '=', 'goods.id')
+                  ->where('goods_num' ,'>', '0')->groupBy('goods_id')->get();
+
+        $allGoods = json_decode($allGoods,true);
+        
+        $details = [];
+
+        foreach ( $allGoods as $allGoodk => $allGood ) {
+
+            if( !in_array($allGood['id'], $saleArr ) ){
+
+                array_push($details, $allGood);
+
+            }
+        }
+        
+        foreach ($details as $detailk => $detail ) {
+            
+            $stockquery = DB::table('goods_stock')->select(DB::raw('sum(goods_num) as stock '))->groupBy('goods_id')->get();
+            $stockquery = json_decode($stockquery,true);
+            var_dump($stockquery);
+            //$details[$detailk]['stock'] = ;
+            
+        }
+
+        var_dump($details);
 
         return view('unsaleReport')->with([ 'title'        => $pageTitle,
                                               'dealer_id'    => $dealer_id,
