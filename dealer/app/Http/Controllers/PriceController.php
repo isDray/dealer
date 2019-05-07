@@ -261,7 +261,21 @@ class PriceController extends Controller
 
         	$dealer = [];
         }
+        
+        // 取出商品庫存
+        $stock = GoodsStock::where('dealer_id',Auth::id())->where('goods_id',$request->id)->first();
 
+        if( $stock == NULL){
+
+            $stock = 0;
+
+        }else{
+
+            $stock = $stock->toArray();
+            $stock = $stock['goods_num'];
+
+        }
+        // var_dump($stock);
         return view('priceEdit')->with([
                                         'title'     => $pageTitle,
                                         'categorys' => $category,
@@ -270,7 +284,8 @@ class PriceController extends Controller
                                         'goodsCats' => $goodsCats,
                                         'multiples' => $multiples,
                                         'goodsPrice' => $goodsPrice,
-                                        'dealer'=>$dealer
+                                        'dealer'=>$dealer,
+                                        'stock'=>$stock
                                         ]);   
     }
 
@@ -301,6 +316,7 @@ class PriceController extends Controller
             'id'        => 'required|exists:goods,id',
             'multiple'  => 'required',
             'custome'   => 'nullable|integer|min:0',
+            'stock'     => 'required|integer|min:0',
 
 
   
@@ -310,6 +326,9 @@ class PriceController extends Controller
             'multiple.required' => '倍數為必選',
             'custome.integer' => '自訂售價只接受正整數',
             'custome.min'     => '自訂售價只接受正整數',
+            'stock.required'=> '庫存為必填',
+            'stock.integer'=> '庫存只接受正整數',
+            'stock.min'=> '庫存只接受正整數'
 
         ]  );
         
@@ -365,7 +384,34 @@ class PriceController extends Controller
              'price'       => $tmpPrice
             ]
         );*/
+        DB::beginTransaction();   
+        
+        try{
+            $chkStock = GoodsStock::where('dealer_id',Auth::id())->where('goods_id',$request->id)->exists();
+        
+            $nowDate = date("Y-m-d H:i:s");
 
+            if( $chkStock ){
+            
+                DB::table('goods_stock')
+                ->where('dealer_id', Auth::id())
+                ->where('goods_id', $request->id)
+                ->update(['goods_num' => $request->stock,
+                          'updated_at'=> $nowDate
+                         ]);
+
+            }else{
+            
+
+                DB::table('goods_stock')->insert(
+                    ['dealer_id' => Auth::id(), 
+                     'goods_id'  => $request->id,
+                     'goods_num' => $request->stock,
+                     'created_at' => $nowDate,
+                     'updated_at'=> $nowDate,
+                    ]
+                );
+            }
 
         if( GoodsPrice::where('dealer_id',Auth::id())->where('goods_id',$request->id)->exists() ){
             
@@ -396,14 +442,8 @@ class PriceController extends Controller
                             
             $goodsPrice->price = $tmpPrice;
 
-            if( $goodsPrice->update(['multiple_id' => $tmpMultiple_id , 'multiple'=>$tmpMultiple ,'price'=>$tmpPrice ]) ){
-    
-                return redirect('/price')->with('successMsg', '售價編輯成功');
-    
-            }else{
-    
-                return redirect('/price')->with('errorMsg', '售價編輯失敗');
-            }              
+            $goodsPrice->update(['multiple_id' => $tmpMultiple_id , 'multiple'=>$tmpMultiple ,'price'=>$tmpPrice ]);
+                  
 
         }else{
             
@@ -438,16 +478,25 @@ class PriceController extends Controller
             $goodsPrice->multiple_id = $tmpMultiple_id;
             $goodsPrice->multiple = $tmpMultiple;
             $goodsPrice->price = $tmpPrice;
-            if( $goodsPrice->save() ){
-    
-                return redirect('/price')->with('successMsg', '售價編輯成功');
-    
-            }else{
-    
-                return redirect('/price')->with('errorMsg', '售價編輯失敗');
-            }            
+            $goodsPrice->save();
+           
         }
-        
+
+            DB::commit();
+
+            return redirect('/price')->with('successMsg', '商品編輯成功');
+
+        } catch (Exception $e) {
+
+            DB::rollback();
+            //$e->getMessage();
+
+            // 寫入錯誤代碼後轉跳
+            
+            logger("{$e->getMessage()} \n\n-----------------------------------------------\n\n"); 
+
+            return redirect('/price')->with('errorMsg', '商品編輯失敗');       
+        }        
 
 
 

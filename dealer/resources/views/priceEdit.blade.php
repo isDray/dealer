@@ -183,8 +183,19 @@
                                         </div>
                                     </div>
                                     -->
-                                </div>                
-                                
+                                </div>
+
+                                <div class="row clearfix">
+                                    <div class="col-sm-3">
+                                        <b>庫存</b>
+                                        <div class="form-group">
+                                            <div class="form-line">
+                                                <input type="text" class="form-control" name="stock" placeholder="" value="{{$stock}}" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>                                
+
                                 <div class='row clearfix'>
                                     <div class="col-sm-3">
                                         <b>商品主圖</b>
