@@ -13,7 +13,8 @@ Class rolePermissionTool{
                                                     ['GoodsManager' , 'GoodsViewer'],
                                                     ['OrderManager'],
                                                     ['PurchaseManager'],
-                                                    ['DealerManager']
+                                                    ['DealerManager'],
+                                                    ['ReportManager']
                                                   ],
 
                                        'Dealer'=> []

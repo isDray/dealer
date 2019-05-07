@@ -92,6 +92,10 @@
                         <tr>
                             <td colspan='6' class='align-center'>
                                 
+                                @if( $isNew )
+                                <input type='hidden' name='isNew' value='1'>
+                                @endif
+
                                 <input type='submit' value='完成' class='btn btn-primary waves-effect' >
                                 
                                 @if( ! $isNew )

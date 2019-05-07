@@ -80,6 +80,7 @@
                 </table>
                 </form>
             @else
+                <input type="hidden" value="{{ $orderId }}" name="orderid"  id='orderid_input' class="form-control" >
                 暫無商品
             @endif
 
@@ -190,12 +191,13 @@
             <div class='body align-center'>
                 
                 @if( $isNew == True )
-                    <a href="{{url('/orderEditBasic/new/'.$orderId)}}">
-                        <span class='btn btn-primary waves-effect'>繼續新增基本資料</span>
+                    <!-- <a href="{{url('/orderEditBasic/new/'.$orderId)}}"> -->
+                    <a href="{{url('/orderInfo/'.$orderId)}}">
+                        <span class='btn btn-primary waves-effect'>完成</span>
                     </a>
                 @else
                     <a href="{{url('/orderInfo/'.$orderId)}}">
-                        <span class='btn btn-primary waves-effect'>返回訂單資訊</span>
+                        <span class='btn btn-primary waves-effect'>完成</span>
                     </a>
                 @endif
 

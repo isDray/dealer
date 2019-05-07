@@ -28,7 +28,7 @@ a{
                     <div class='col-xs-12 col-sm-12 col-md-12 bg-grey' style="">
                         <p><b>進階搜尋</b></p>
                     </div>
-                    <form action="{{url('/reportOrder')}}" method="get" autocomplete="off" >
+                    <form action="{{url('/reportPurchase')}}" method="get" autocomplete="off" >
                     {{ csrf_field() }}
                     @role('Admin')
                     <div class="col-sm-2">
@@ -108,29 +108,24 @@ a{
                         </thead>
                         <tbody>
 
-                            <tr>
-                                <td class='bg-grey' width='10%'> 訂單總數 </td>
-                                <td> {{ $totalOrderNum }} </td>
+<!--                             <tr>
+                                <td class='bg-grey' width='10%'> 進貨單數 </td>
+                                <td> </td>
                                                                
-                            </tr>
+                            </tr> -->
                             <tr>
-                                <td class='bg-grey' width='10%'> 已出貨訂單總數</td>
-                                <td> {{ $totalShipOrderNum }}</td>
+                                <td class='bg-grey' width='10%'> 進貨單總數</td>
+                                <td> {{ $purchaseNum }} </td>
                             </tr>
-                            <tr>
+<!--                             <tr>
                                 <td class='bg-grey' width='10%'> 總金額</td>
-                                <td> {{ $totalPrice }}</td>
-                            </tr>
+                                <td> </td>
+                            </tr> -->
                             <tr>
                                 <td class='bg-grey' width='10%'> 總批發金額</td>
-                                <td> {{ $totalW_price }}</td> </tr>
+                                <td>{{ $purchaseW_price }}</td> 
                             </tr>
-                            @role('Dealer')
-                            <tr>
-                                <td class='bg-grey' width='10%'> 利潤</td>
-                                <td> {{ $profit }}</td> </tr>
-                            </tr>
-                            @endrole
+
                         </tbody>
 
                     </table>
@@ -144,7 +139,7 @@ a{
                             <tr>
                                 <th>貨號</th>
                                 <th>商品名稱</th>
-                                <th>銷售數量</th>
+                                <th>進貨量</th>
                             </tr>                            
                         </thead> 
                         <tbody>
@@ -165,7 +160,7 @@ a{
                 <!-- /統計報表 -->
 
                 <!-- 統計圖表 -->
-                <div class="row clearfix">
+<!--                 <div class="row clearfix">
                     
                     <div class="col-md-8 col-sm-12 col-xs-12 " style="height:300px;border:1px solid #d3d3d3;">
                         <canvas id="perDayChart">
@@ -173,13 +168,13 @@ a{
                     </div>                    
 
                     <div class="col-md-4 col-sm-12 col-xs-12 " style="height:300px;border:1px solid #d3d3d3;">
-                        <!-- <div style='width:100%;height:300px;position:relative;display:inline-block;margin-bottom:30px; border:1px solid gray;'> -->
+                        <!-- <div style='width:100%;height:300px;position:relative;display:inline-block;margin-bottom:30px; border:1px solid gray;'>
                         <canvas id="shipPie" style='height:100%!important;width:100%;!important'>
                         </canvas>                            
                     </div>
 
 
-                </div>
+                </div> -->
                 <!--/統計圖表 -->
 
             </div>
@@ -242,57 +237,57 @@ $('#orderEnd').datepicker({
  |----------------------------------------------------------------
  |
  */
-var ctx = $("#shipPie");
+// var ctx = $("#shipPie");
 
-totalData = {
+// totalData = {
   
-  labels: ['未出貨訂單','已出貨訂單'] , 
-  datasets: [{
+//   labels: ['未出貨訂單','已出貨訂單'] , 
+//   datasets: [{
       
-      data: ['{{$totalUnshipOrderNum}}','{{$totalShipOrderNum}}'],
+//       data: [],
       
-      backgroundColor: [
-          'rgba(255, 99, 132, 0.6)',
-          'rgba(54, 162, 235, 0.6)',
-          'rgba(255, 206, 86, 0.6)',
-          'rgba(75, 192, 192, 0.6)',
-          'rgba(153, 102, 255, 0.6)',
-          'rgba(255, 159, 64, 0.6)'
-      ],
-  }],
+//       backgroundColor: [
+//           'rgba(255, 99, 132, 0.6)',
+//           'rgba(54, 162, 235, 0.6)',
+//           'rgba(255, 206, 86, 0.6)',
+//           'rgba(75, 192, 192, 0.6)',
+//           'rgba(153, 102, 255, 0.6)',
+//           'rgba(255, 159, 64, 0.6)'
+//       ],
+//   }],
         
-};
+// };
 
-var myPieChart = new Chart(ctx, {
+// var myPieChart = new Chart(ctx, {
     
-    type: 'pie',
-    data: totalData,
-    options: { 
-        responsive: true ,
-        maintainAspectRatio: false,
-        title: {
-            display: true,
-            text: '訂單比例圖'
-        },
-        tooltips: {
-            callbacks: {
-                label: function(tooltipItem, data) {
+//     type: 'pie',
+//     data: totalData,
+//     options: { 
+//         responsive: true ,
+//         maintainAspectRatio: false,
+//         title: {
+//             display: true,
+//             text: '訂單比例圖'
+//         },
+//         tooltips: {
+//             callbacks: {
+//                 label: function(tooltipItem, data) {
                   
-                allData = data['datasets'][0]['data'];
-                ctxAll = 0;
+//                 allData = data['datasets'][0]['data'];
+//                 ctxAll = 0;
                     
-                $.each(allData,function(aDk,aDv){
+//                 $.each(allData,function(aDk,aDv){
                     
-                    ctxAll += parseInt(aDv);
+//                     ctxAll += parseInt(aDv);
                 
-                })
-                return data['labels'][tooltipItem['index']] + ': '+data['datasets'][0]['data'][tooltipItem['index']]+'筆' + ((data['datasets'][0]['data'][tooltipItem['index']]/ctxAll)*100).toFixed(2) + '%';
-                }
-            }
-        }
-    }
+//                 })
+//                 return data['labels'][tooltipItem['index']] + ': '+data['datasets'][0]['data'][tooltipItem['index']]+'筆' + ((data['datasets'][0]['data'][tooltipItem['index']]/ctxAll)*100).toFixed(2) + '%';
+//                 }
+//             }
+//         }
+//     }
   
-});
+// });
 
 
 
@@ -302,61 +297,61 @@ var myPieChart = new Chart(ctx, {
  |----------------------------------------------------------------
  |
  */
-var perDayCtx = $("#perDayChart"); 
+// var perDayCtx = $("#perDayChart"); 
 
-totalData = {
+// totalData = {
     
-    labels: [@php echo json_decode($dateLabelsStr) @endphp],      
-    datasets: 
-    [  
-      { fill:false,
-        label:'完成訂單',
-        borderColor:'rgba(255, 99, 132, 0.6)',
-        data: [{{$perDateStr}}],
-        backgroundColor: 'rgba(255, 99, 132, 0.6)'
-      },
-      /*
-      { fill:false,
-        type: "line",
-        label:'本站訂單',
-        borderColor:'rgba(54, 162, 235, 0.6)',
-        data: [{$perOtherDateStr}],
-        backgroundColor: 'rgba(54, 162, 235, 0.6)'
-      },
-      { fill:false,
-        type: "line",
-        label:'平台訂單',
-        borderColor:'rgba(255, 206, 86, 0.6)',
-        data: [{$perOutDateStr}],
-        backgroundColor: 'rgba(255, 206, 86, 0.6)'
-      }
-      */     
-    ],
+//     labels: [],      
+//     datasets: 
+//     [  
+//       { fill:false,
+//         label:'完成訂單',
+//         borderColor:'rgba(255, 99, 132, 0.6)',
+//         data: [],
+//         backgroundColor: 'rgba(255, 99, 132, 0.6)'
+//       },
+      
+//       { fill:false,
+//         type: "line",
+//         label:'本站訂單',
+//         borderColor:'rgba(54, 162, 235, 0.6)',
+//         data: [{$perOtherDateStr}],
+//         backgroundColor: 'rgba(54, 162, 235, 0.6)'
+//       },
+//       { fill:false,
+//         type: "line",
+//         label:'平台訂單',
+//         borderColor:'rgba(255, 206, 86, 0.6)',
+//         data: [{$perOutDateStr}],
+//         backgroundColor: 'rgba(255, 206, 86, 0.6)'
+//       }
+           
+//     ],
     
 
-};
+// };
 
-var myBarChart = new Chart(perDayCtx, {
+// var myBarChart = new Chart(perDayCtx, {
     
-    type: 'bar',
-    data: totalData,
-    options: { 
-        responsive: true ,
-        maintainAspectRatio: false,
-        title: {
-            display: true,
-            text: '每日訂單'
-        },
-        scales: {
-            yAxes: [{
-                ticks: {
-                    min: 0,
-                    stepSize: 1
-                }
-            }]
-        }        
-    }    
-}); 
+//     type: 'bar',
+//     data: totalData,
+//     options: { 
+//         responsive: true ,
+//         maintainAspectRatio: false,
+//         title: {
+//             display: true,
+//             text: '每日訂單'
+//         },
+//         scales: {
+//             yAxes: [{
+//                 ticks: {
+//                     min: 0,
+//                     stepSize: 1
+//                 }
+//             }]
+//         }        
+//     }    
+// }); 
 
 })
 

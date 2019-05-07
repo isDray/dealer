@@ -85,7 +85,7 @@
                     <!-- /進貨管理 -->
 
                     <!-- 報表模組 -->
-                    @role('Admin')
+                    
                     <li class="@if($controller == 'ReportController' ) active @endif">
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">trending_up</i>
@@ -106,7 +106,7 @@
                             </li>                           
                         </ul>
                     </li>
-                    @endrole                      
+                                         
                     <!-- /報表模組-->
 
                     <!-- 經銷商管理 -->

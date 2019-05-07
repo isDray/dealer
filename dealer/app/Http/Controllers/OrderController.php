@@ -84,7 +84,7 @@ class OrderController extends Controller
      */
     public function new(){
         
-        if(  Auth::user()->hasRole('Admin') ){    
+        if(  Auth::user()->hasRole('Admin') ){
             // 檢查權限
             if( !Auth::user()->can('orderNew') ){
                 
@@ -97,8 +97,8 @@ class OrderController extends Controller
             
             if( !empty($createID) ){
              
-                return redirect("/orderEdit/".$createID)->with('new', 'new');;
-    
+                //return redirect("/orderEdit/".$createID)->with('new', 'new');
+                return redirect("/orderEditBasic/new/".$createID);/*->with('new', 'new')*/
             }else{
     
                 return back()->with('errorMsg', '訂單新增失敗');
@@ -112,8 +112,9 @@ class OrderController extends Controller
             $createID = $this->createOrder();
             
             if( !empty($createID) ){
-             
-                return redirect("/orderEdit/".$createID)->with('new', 'new');;
+
+                return redirect("/orderEditBasic/new/".$createID);
+                //return redirect("/orderEdit/".$createID)->with('new', 'new');
     
             }else{
     
@@ -246,7 +247,6 @@ class OrderController extends Controller
             $dealerId = Order::find( $request->id );
             
             $dealerId = $dealerId->dealer_id;
-
 
             return view('orderEdit')->with([ 'title'      => $pageTitle,
                                              'orderId'    => $request->id,
@@ -393,7 +393,7 @@ class OrderController extends Controller
      |
      */
     public function editBasicDo( Request $request ){
-        
+
         if(  Auth::user()->hasRole('Admin') ){
             
             if( !Auth::user()->can( 'orderNew' ) ){
@@ -429,7 +429,14 @@ class OrderController extends Controller
 
                 DB::commit();
                 
-                return redirect("/orderInfo/{$request->orderId}")->with('successMsg', '修改狀態成功');
+                if( isset($request->isNew) && $request->isNew == 1){
+
+                    return redirect("/orderEdit/".$request->orderId)->with('new', 'new');
+
+                }else{
+
+                    return redirect("/orderInfo/{$request->orderId}")->with('successMsg', '修改狀態成功');
+                }
 
             }catch(\Exception $e){
                 
@@ -480,8 +487,15 @@ class OrderController extends Controller
                 $Order->save();
 
                 DB::commit();
-                
-                return redirect("/orderInfo/{$request->orderId}")->with('successMsg', '修改狀態成功');
+
+                if( isset($request->isNew) && $request->isNew == 1){
+
+                    return redirect("/orderEdit/".$request->orderId)->with('new', 'new');
+
+                }else{                
+                    
+                    return redirect("/orderInfo/{$request->orderId}")->with('successMsg', '修改狀態成功');
+                }
 
             }catch(\Exception $e){
                 
@@ -1119,6 +1133,7 @@ class OrderController extends Controller
                     $chkPrice = GoodsPrice::where('dealer_id',$request->dealerId)->where('goods_id',$request->chooseId)->exists();
                     
                     if( $chkPrice ){
+
                         $price = GoodsPrice::where('dealer_id',$request->dealerId)->where('goods_id',$request->chooseId)->first();
                         $datas['price'] = $price->price;
                 
@@ -1126,7 +1141,6 @@ class OrderController extends Controller
                     
                         $dealer = Dealer::where('dealer_id',$request->dealerId)->first();
                          
-
                         //$dealer = $dealer->toArray();
                         $datas['price'] = round( $datas['w_price'] * $dealer->multiple ); 
                     }                    
@@ -1373,13 +1387,14 @@ class OrderController extends Controller
 
             }catch(\Exception $e){
                              DB::rollback();
+
             //$e->getMessage();
 
             // 寫入錯誤代碼後轉跳
             
             logger("{$e->getMessage()} \n\n-----------------------------------------------\n\n"); 
             
-            return back()->with('errorMsg', '訂單細項編輯失敗');
+            //return back()->with('errorMsg', '訂單細項編輯失敗');
             }
 
 

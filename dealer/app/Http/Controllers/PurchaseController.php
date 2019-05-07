@@ -20,6 +20,7 @@ use App\GoodsStock;
 use App\PurchaseLog;
 use App\Dealer;
 
+
 use \Exception;
 class PurchaseController extends Controller
 {
@@ -563,6 +564,7 @@ class PurchaseController extends Controller
         $salesNum   = [];
         $needNum    = [];
         $w_price    = [];
+        $stock      = [];
 
         foreach ($saleDatas as $saleDatak => $saleData ) {
         
@@ -570,9 +572,23 @@ class PurchaseController extends Controller
             $goodsName[]   = $saleData['name'];
             $goodsSn[]     = $saleData['goods_sn'];
             $salesNum[]    = $saleData['total_sales'];
-            $tmpNeed       = round($saleData['total_sales'] / $reference * $safeDays  );
+            // 撈出庫存
+            $tmpStock = GoodsStock::where('goods_id',$saleData['gid'])->where('dealer_id',$dealerId)->first();
+            $tmpStock = json_decode($tmpStock,true);
+            if( count($tmpStock) > 0 ){
+
+                $stock[] = $tmpStock['goods_num'];
+                $goodsStock = $tmpStock['goods_num'];
+            }else{
+                
+                $stock[] = 0;
+                $goodsStock = 0;
+            }            
+            $tmpNeed       = round( $saleData['total_sales'] / $reference * $safeDays  ) - $goodsStock;
             $needNum[]     = $tmpNeed;
             $w_price[]     = $saleData['w_price'];
+
+
         }
 
         $tmpDatas = [ 'dealerId'  => $dealerId,
@@ -581,7 +597,8 @@ class PurchaseController extends Controller
                       'goodsSn'   => $goodsSn,
                       'salesNum'  => $salesNum, 
                       'needNum'   => $needNum,
-                      'w_price'   => $w_price
+                      'w_price'   => $w_price,
+                      'stock'     => $stock,
                     ];
 
         // 取出經銷會員的預設配送資料
