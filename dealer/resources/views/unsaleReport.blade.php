@@ -115,7 +115,7 @@ a{
                             </tr> -->
                             <tr>
                                 <td class='bg-grey' width='10%'> 未銷售商品數量</td>
-                                <td>  </td>
+                                <td> {{$totalUnSale}} </td>
                             </tr>
 <!--                             <tr>
                                 <td class='bg-grey' width='10%'> 總金額</td>
@@ -134,21 +134,21 @@ a{
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th colspan='3' class='bg-grey'> 明細 </th>
+                                <th colspan='3' class='bg-grey'> 未銷售清單 </th>
                             </tr>
                             <tr>
                                 <th>貨號</th>
                                 <th>商品名稱</th>
-                                <th>進貨量</th>
+                                <th>庫存</th>
                             </tr>                            
                         </thead> 
                         <tbody>
 
                             @foreach( $details as $detailk => $detail)
                             <tr>
-                                <td> {{ $detailk }} </td>
+                                <td> {{ $detail['goods_sn'] }} </td>
                                 <td> {{ $detail['name'] }}</td>
-                                <td> {{ $detail['num'] }}</td>
+                                <td> {{ $detail['stock'] }}</td>
                             </tr>                            
                             @endforeach
 

@@ -481,21 +481,36 @@ class ReportController extends Controller
         
         foreach ($details as $detailk => $detail ) {
             
-            $stockquery = DB::table('goods_stock')->select(DB::raw('sum(goods_num) as stock '))->groupBy('goods_id')->get();
+            if( Auth::user()->hasRole('Admin') ){
+                
+                if($dealer_id == 0){
+                    $stockquery = DB::table('goods_stock')->select(DB::raw('sum(goods_num) as stock '))->where('goods_id',$detail['id'])->groupBy('goods_id')->get();
+                }else{
+                	$stockquery = DB::table('goods_stock')->select(DB::raw('sum(goods_num) as stock '))->where('goods_id',$detail['id'])->where('dealer_id',$dealer_id )->groupBy('goods_id')->get();
+                }
+            
+            }elseif( Auth::user()->hasRole('Dealer') ){
+                
+                $stockquery = DB::table('goods_stock')->select(DB::raw('sum(goods_num) as stock '))->where('goods_id',$detail['id'])->where('dealer_id',Auth::id())->groupBy('goods_id')->get();
+            }
             $stockquery = json_decode($stockquery,true);
-            var_dump($stockquery);
-            //$details[$detailk]['stock'] = ;
+            
+            //var_dump($stockquery);
+            $details[$detailk]['stock'] = $stockquery[0]['stock'];
             
         }
-
-        var_dump($details);
+        
+        $totalUnSale = count($details);
+        // var_dump($details);
 
         return view('unsaleReport')->with([ 'title'        => $pageTitle,
                                               'dealer_id'    => $dealer_id,
                                               'dealers'      => $dealers,
                                               'dateStart'    => $dateStart,
                                               'dateEnd'      => $dateEnd,
-                                              'details' =>[]
+                                              'details' =>$details,
+                                              'totalUnSale'=>$totalUnSale
+
                                        ]);  
 
     }
