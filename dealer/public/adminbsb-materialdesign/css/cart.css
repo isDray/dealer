@@ -16,10 +16,10 @@ body{
 #logoBox{
     height: 100px;
 /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ff55aa+0,e8308c+100 */
-background: #ff55aa; /* Old browsers */
-background: -moz-linear-gradient(top, #ff55aa 0%, #e8308c 100%); /* FF3.6-15 */
-background: -webkit-linear-gradient(top, #ff55aa 0%,#e8308c 100%); /* Chrome10-25,Safari5.1-6 */
-background: linear-gradient(to bottom, #ff55aa 0%,#e8308c 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+background: #94084e; /* Old browsers */
+background: -moz-linear-gradient(top, #94084e 0%, #e8308c 100%); /* FF3.6-15 */
+background: -webkit-linear-gradient(top, #94084e 0%,#e8308c 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to bottom, #94084e 0%,#e8308c 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff55aa', endColorstr='#e8308c',GradientType=0 ); /* IE6-9 */
 }
 
@@ -67,11 +67,33 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff55aa', end
 	font-size: 24px;
 	font-weight: 900;
 }
+
+.boxLabel{
+	position: relative;
+	border-top: 2px solid white;
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+.boxLabel::after{
+	position: absolute;
+	content: attr(label);
+	background-color: #1e1f26;
+	text-align: center;
+	width: 160px;
+	height: 40px;
+	line-height: 40px;
+	left:calc(50% - 80px);
+	top:-20px;
+	font-weight: 900;
+	font-size: 24px;
+	color: white;
+}
+
 /* /區塊標籤 */
 
 /* 最新商品 */
 #newGoods{
-	border:1px solid white;
+
 	margin-bottom: 40px;
 	height: auto;
 }
@@ -79,7 +101,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff55aa', end
 
 /* 熱銷商品 */
 #hotGoods{
-	border:2px solid #ff55aa;
+
 	margin-bottom: 40px;
 	height: auto;
 }
@@ -87,7 +109,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff55aa', end
 
 /* 推薦商品 */
 #recommendGoods{
-	border:2px solid #ff55aa;
+
 	margin-bottom: 40px;
 	height: auto;
 }
@@ -100,6 +122,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff55aa', end
 	background-color: #111212;
 }
 /* 頁腳 */
+
 
 @media (max-width: 767px) {
 ._w{

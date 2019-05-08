@@ -16,7 +16,7 @@
     filebrowserUploadUrl: '/laravel-filemanager/upload?type=Files&_token=',
   };
 </script>
-<div class="container-fluid _np">
+<div class="container-fluid _np" style='margin-bottom:40px;'>
 
 <!-- 輪播 -->
 <div class='col-md-12 col-sm-12 col-xs-12 _np'>
@@ -67,11 +67,11 @@
 
 <!-- 最新商品 -->
 <div class="container-fluid">
-    <div class='boxLabel _np col-md-8 col-md-offset-2 col-sm-12 col-xs-12'><span>最新商品</span></div>
+    <div class='boxLabel _np col-md-10 col-md-offset-1 col-sm-12 col-xs-12' label='最新商品'></div>
     
-    <div id='newGoods' class='col-md-8 col-md-offset-2 col-sm-12 col-xs-12'>
+    <div id='newGoods' class='col-md-10 col-md-offset-1 col-sm-12 col-xs-12 _np'>
         @for( $i=0; $i<8 ; $i++)
-        <div class="col-md-3 col-sm-4 col-xs-6">
+        <div class="col-md-3 col-sm-4 col-xs-6 ">
             <div class="thumbnail">
                 <img src="https://***REMOVED***.com/***REMOVED***/images/201505/thumb_img/9407_thumb_G_1432062363451.gif" alt="...">
                 <div class="caption">
@@ -91,7 +91,7 @@
 
 <!-- 熱銷商品 -->
 <div class="container-fluid">
-    <div class='boxLabel _np col-md-8 col-md-offset-2 col-sm-12 col-xs-12'><span>熱銷商品</span></div>
+    <div class='boxLabel _np col-md-8 col-md-offset-2 col-sm-12 col-xs-12' label='熱銷商品'></div>
     
     <div id='hotGoods' class='col-md-8 col-md-offset-2 col-sm-12 col-xs-12'>
         @for( $i=0; $i<8 ; $i++)
@@ -115,7 +115,7 @@
 
 <!-- 推薦商品 -->
 <div class="container-fluid">
-    <div class='boxLabel _np col-md-8 col-md-offset-2 col-sm-12 col-xs-12'><span>推薦商品</span></div>
+    <div class='boxLabel _np col-md-8 col-md-offset-2 col-sm-12 col-xs-12' label='推薦商品'></div>
     
     <div id='recommendGoods' class='col-md-8 col-md-offset-2 col-sm-12 col-xs-12'>
         @for( $i=0; $i<8 ; $i++)
