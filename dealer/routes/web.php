@@ -11,9 +11,10 @@
 |
 */
 
-Route::get('/', function () {
+/*Route::get('/{$name}', function ( $name ) {
     return view('welcome');
-});
+});*/
+
 
 Auth::routes();
 
@@ -29,12 +30,12 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::group(['middleware' => ['auth','role:Admin'] ], function () {
     
     // 權限管理
-    Route::get('/permissions','PermissionsController@index')->name('permissions');;
-    Route::get('/permissionsNew','PermissionsController@new')->name('permissionsNew');;
-    Route::post('/permissionsNewDo','PermissionsController@newDo')->name('permissionsNewDo');;
-    Route::get('/permissionsEdit/{id?}','PermissionsController@edit')->name('permissionsEdit');;
-    Route::post('/permissionsEditDo','PermissionsController@editDo')->name('permissionsEditDo');;
-    Route::post('/permissionsDeleteDo','PermissionsController@DeleteDo')->name('permissionsDeleteDo');;
+    Route::get('/permissions','PermissionsController@index')->name('permissions');
+    Route::get('/permissionsNew','PermissionsController@new')->name('permissionsNew');
+    Route::post('/permissionsNewDo','PermissionsController@newDo')->name('permissionsNewDo');
+    Route::get('/permissionsEdit/{id?}','PermissionsController@edit')->name('permissionsEdit');
+    Route::post('/permissionsEditDo','PermissionsController@editDo')->name('permissionsEditDo');
+    Route::post('/permissionsDeleteDo','PermissionsController@DeleteDo')->name('permissionsDeleteDo');
     
 
     // 身分管理
@@ -71,9 +72,9 @@ Route::group(['middleware' => ['auth','role:Admin'] ], function () {
     Route::post('/goodsEditDo','GoodsController@editDo');
     Route::post('/goodsDeleteDo','GoodsController@DeleteDo');        
     Route::post('/goodsQuery','GoodsController@query'); 
-    Route::post('goodsAjaxPic','GoodsController@ajaxPic');
-    Route::post('goodsAjaxPicDelete','GoodsController@ajaxPicDelete');
-    Route::post('goodsAjaxPicSort','GoodsController@ajaxPicSort');
+    Route::post('/goodsAjaxPic','GoodsController@ajaxPic');
+    Route::post('/goodsAjaxPicDelete','GoodsController@ajaxPicDelete');
+    Route::post('/goodsAjaxPicSort','GoodsController@ajaxPicSort');
     
     // 網站設置
     Route::get('/set','SetController@set');
@@ -164,3 +165,11 @@ Route::group(['middleware' => ['auth','role:Admin|Dealer'] ], function () {
     Route::get('/priceEdit/{id}' , 'PriceController@priceEdit');// 編修價格
     Route::post('/priceEditDo' ,'PriceController@priceEditDo');
 });    
+
+
+/*----------------------------------------------------------------
+ | 購物車相關
+ |----------------------------------------------------------------
+ |
+ */
+Route::get('/{name}','CartController@index')->middleware(['cart']);;
