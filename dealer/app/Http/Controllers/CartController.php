@@ -21,6 +21,7 @@ use App\Dealer;
 use App\Purchase;
 use App\PurchaseGoods;
 use App\GoodsStock;
+use App\GoodsPrice;
 use App\PurchaseLog;
 use App\Category;
 use \Exception;
@@ -35,7 +36,6 @@ class CartController extends Controller
      */
     public function index( Request $request){
 
-        $pageTitle = '';
         
         if( $request->session()->has('cartUser') ){
 
@@ -55,16 +55,91 @@ class CartController extends Controller
         
         //var_dump($categorys);
 
-        return view('cartIndex')->with([ 'title'   => $pageTitle,
+        return view('cartIndex')->with([ 
         	                             'cartUser' =>$cartUser,
         	                             'dealerDatas' => $dealerDatas,
         	                             'categorys' => $categorys
                                         ]);     	
     }
+    
 
 
 
+    /*----------------------------------------------------------------
+     | 商品內頁
+     |----------------------------------------------------------------
+     |
+     */
+     public function viewGoods( Request $request ){
 
+        if( $request->session()->has('cartUser') ){
+
+            $cartUser =  $request->session()->pull('cartUser');
+
+        }else{
+
+            exit;
+        }
+        
+        // 取出經銷商資料
+        $dealerDatas = $this->getDealer( $cartUser );
+        if(!$dealerDatas){ exit; }
+
+        // 取出所有分類
+        $categorys = $this->getCategory();
+        
+        //判斷經銷商有無此商品 , 如果沒有直接跳回上一頁
+        if( !$this->chkStock( $cartUser , $request->goodsId ) ){
+
+            return back();
+
+        }else{
+
+            $stock = GoodsStock::where( 'dealer_id',$cartUser )->where( 'goods_id' , $request->goodsId )->first();
+            $stock = $stock->toArray();
+        }
+
+
+        // 取出商品資訊
+        $goods = Goods::find( $request->goodsId );
+        $goods = $goods->toArray();
+        
+        // 確認經銷商有無設定價格
+        $goodsPrice = GoodsPrice::where('dealer_id',$cartUser)->where('goods_id',$request->goodsId)->first();
+        
+        if( $goodsPrice == NULL){
+
+            $goodsPrice = round($dealerDatas['multiple'] * $goods['w_price']);
+
+        }else{
+
+            $goodsPrice ->toArray();
+            $goodsPrice = $goodsPrice->price;
+        }
+        
+        $goods['dealerPrice'] = $goodsPrice;
+
+        $goods['stock']       = $stock['goods_num'];
+
+        return view('cartGoods')->with([ 
+                                         'cartUser' =>$cartUser,
+                                         'dealerDatas' => $dealerDatas,
+                                         'categorys' => $categorys,
+                                         'goods' => $goods
+                                        ]); 
+     }
+
+
+
+    /*----------------------------------------------------------------
+     | 添加至購物車
+     |----------------------------------------------------------------
+     |
+     */
+     public function addToCart( Request $request ){
+        
+     }
+    
     /*----------------------------------------------------------------
      | 取出經銷商資料
      |----------------------------------------------------------------
@@ -170,5 +245,18 @@ class CartController extends Controller
 
             return $tmpArr;
         }
-    }    
+    }  
+
+
+
+
+    /*----------------------------------------------------------------
+     | 確認經銷商有無指定商品庫存
+     |----------------------------------------------------------------
+     |
+     */
+    public function chkStock( $_dealerId ,$_goodsId ){
+        
+        return GoodsStock::where( 'dealer_id',$_dealerId )->where( 'goods_id' , $_goodsId)->exists();
+    }  
 }

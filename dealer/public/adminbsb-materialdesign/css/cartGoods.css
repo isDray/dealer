@@ -1,0 +1,83 @@
+#goodsBox{
+    margin-top: 150px;
+}
+
+#goodsInfo{
+    margin-top: 40px;
+    height: 400px;
+    background-color: white;
+    padding-top: 15px;
+
+/*    border: 6px solid transparent;
+    -moz-border-image: -webkit-linear-gradient(#f93434 0%, #e26fa7 100%);
+    -moz-border-image: -o-linear-gradient(#f93434 0%, #e26fa7 100%);
+    -moz-border-image: linear-gradient(#f93434 0%, #e26fa7 100%);
+    -webkit-border-image: -webkit-linear-gradient(left, #f93434 0%, #e26fa7 100%);
+    border-image: linear-gradient(to right, #f93434 0%, #e26fa7 100%);
+    border-image-slice: 1; */   
+}
+#goodsPic{
+	height: calc( 100% - 30px);
+}
+#goodsPic > img{
+	object-fit:contain;
+	width: 100%;
+	max-height: 100%;
+}
+
+#goodsDesc{
+	margin-top: 10px;
+	margin-bottom: 40px;
+	background-color: white;
+	overflow: hidden;
+}
+#goodsDesc img{
+	object-fit:contain;
+	max-width: 100%;
+	max-height: 100%;	
+}
+
+.goodsLabel{
+	position: relative;
+	border-radius: 50%;
+	height: 3px;
+	margin-top: 100px;
+	background-image: rgb(249,52,52); /* Old browsers */
+ background-image: -moz-linear-gradient(45deg, rgba(249,52,52,1) 0%, rgba(226,111,167,1) 100%); /* FF3.6-15 */
+background-image: -webkit-linear-gradient(45deg, rgba(249,52,52,1) 0%,rgba(226,111,167,1) 100%); /* Chrome10-25,Safari5.1-6 */
+background-image: linear-gradient(45deg, rgba(249,52,52,1) 0%,rgba(226,111,167,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f93434', endColorstr='#e26fa7',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+
+}
+.goodsLabel::after{
+	position: absolute;
+	content: attr(label);
+	/*background-color: #1e1f26;*/
+	text-align: center;
+	width: 160px;
+	height: 40px;
+	line-height: 36px;
+	left:calc(50% - 80px);
+	top:-40px;
+	font-weight: 900;
+	font-size: 24px;
+	color: #ee526d;
+	/*border:2px solid #e8308c;*/
+}
+@media (max-width: 767px) {
+#goodsInfo{
+	height: auto;
+	padding-top: 15px;
+	padding-bottom: 15px;
+}
+}
+@media (min-width: 768px) and (max-width: 991px) {
+#goodsInfo{
+	height: auto;
+	padding-top: 15px;
+	padding-bottom: 15px;	
+}
+}
+@media (min-width: 992px) {
+
+}

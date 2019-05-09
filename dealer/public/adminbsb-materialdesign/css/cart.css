@@ -2,18 +2,53 @@
 /*----------------------------------------------------------------
  | 購物車css
  |----------------------------------------------------------------
- |
+ | 常用色碼
+ | #94084e
+ | #e8308c
+ | #ff55aa
  */
 body{
 
-    background: #1e1f26;
+    /*background: #1e1f26;*/
     font-family: '微軟正黑體';
     /*overflow-x:hidden;*/
+/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#3a3847+0,1e1f26+100 */
+background: rgb(58,56,71); /* Old browsers */
+background: -moz-radial-gradient(center, ellipse cover, rgba(58,56,71,1) 0%, rgba(30,31,38,1) 100%); /* FF3.6-15 */
+background: -webkit-radial-gradient(center, ellipse cover, rgba(58,56,71,1) 0%,rgba(30,31,38,1) 100%); /* Chrome10-25,Safari5.1-6 */
+background: radial-gradient(ellipse at center, rgba(58,56,71,1) 0%,rgba(30,31,38,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3a3847', endColorstr='#1e1f26',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */  
 }
 ._np{
 	padding: 0px!important;
 }
+._p{
+	display: none;
+}
+._w{
+	display: block;
+}
+a:link {
+  text-decoration: none;
+}
+
+a:visited {
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+a:active {
+  text-decoration: none;
+}
 #logoBox{
+	position: fixed;
+	top:0px;
+	left:0px;
+	width: 100%;
+	z-index: 99;
     height: 100px;
 /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ff55aa+0,e8308c+100 */
 background: #94084e; /* Old browsers */
@@ -21,31 +56,75 @@ background: -moz-linear-gradient(top, #94084e 0%, #e8308c 100%); /* FF3.6-15 */
 background: -webkit-linear-gradient(top, #94084e 0%,#e8308c 100%); /* Chrome10-25,Safari5.1-6 */
 background: linear-gradient(to bottom, #94084e 0%,#e8308c 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff55aa', endColorstr='#e8308c',GradientType=0 ); /* IE6-9 */
-}
+    padding-top: 10px;
 
+/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#f93434+0,e26fa7+100 */
+background: rgb(249,52,52); /* Old browsers */
+background: -moz-linear-gradient(45deg, rgba(249,52,52,1) 0%, rgba(226,111,167,1) 100%); /* FF3.6-15 */
+background: -webkit-linear-gradient(45deg, rgba(249,52,52,1) 0%,rgba(226,111,167,1) 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(45deg, rgba(249,52,52,1) 0%,rgba(226,111,167,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f93434', endColorstr='#e26fa7',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+}
+#webLogo{
+	height:80px;
+}
 #webLogo  img {
     object-fit:contain;
-    max-height: 100px;
+    height: 100%;
+    max-width: 100%;
     display:block;
     margin:auto;    
 }
 #cartNav{
+	height: 50px;
+	position: fixed;
+	top:100px;
+	left:0px;
+	width: 100%;
+	z-index: 99;
+
 	border:0px;
 	border-radius: 0px;
 	background-color: #3a3a3a;
 	margin-bottom: 0px;
 	/*box-shadow: 0px 2px 13px -3px #eb74f3;*/
 }
+#bs-example-navbar-collapse-1{
+	background-color: #3a3a3a;
+}
+.navbar-form{
+	border:0px!important;
+	border-color:#3a3a3a!important;
+	box-shadow: 0px 0px 0px  #3a3a3a;
+}
+.navbar-toggle{
+	border-color: #ee526d!important;
+	float:left!important;
+	margin-left: 15px;
+}
+.icon-bar{
+	border:0px;
+	height: 1px;
+background: rgb(249,52,52); /* Old browsers */
+background: -moz-linear-gradient(45deg, rgba(249,52,52,1) 0%, rgba(226,111,167,1) 100%); /* FF3.6-15 */
+background: -webkit-linear-gradient(45deg, rgba(249,52,52,1) 0%,rgba(226,111,167,1) 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(45deg, rgba(249,52,52,1) 0%,rgba(226,111,167,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f93434', endColorstr='#e26fa7',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */	
+}
+
+.navbar-toggle:focus{
+	background-color: #3a3a3a!important;
+}
 #navItem > li > a{
 	font-weight: 900;
 	font-size: 20px;
-	color:#ff55aa;
+	color:#ee526d;
 }
 .dropdown-menu{
 	padding: 0px;
 }
 .dropdown-menu{
-	background-color: #9f9f9f;
+	/*background-color: #9f9f9f;*/
 }
 .dropdown-menu > li > a{
 	font-weight: 900;
@@ -59,34 +138,39 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff55aa', end
     height: 100%;
     object-position:center center;
 }
-/* 區塊標籤 */
-.boxLabel > span{
-	border-radius: 5px 5px 0px 0px;
-	background-color: #ff55aa;
-	color: white;
-	font-size: 24px;
-	font-weight: 900;
+#carouselBox{
+    margin-top: 150px;
 }
 
+/* 區塊標籤 */
 .boxLabel{
 	position: relative;
-	border-top: 2px solid white;
+	border-radius: 50%;
+	height: 3px;
 	margin-top: 20px;
-	margin-bottom: 20px;
+	margin-bottom: 40px;
+	background-image: rgb(249,52,52); /* Old browsers */
+ background-image: -moz-linear-gradient(45deg, rgba(249,52,52,1) 0%, rgba(226,111,167,1) 100%); /* FF3.6-15 */
+background-image: -webkit-linear-gradient(45deg, rgba(249,52,52,1) 0%,rgba(226,111,167,1) 100%); /* Chrome10-25,Safari5.1-6 */
+background-image: linear-gradient(45deg, rgba(249,52,52,1) 0%,rgba(226,111,167,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f93434', endColorstr='#e26fa7',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+
 }
 .boxLabel::after{
 	position: absolute;
 	content: attr(label);
-	background-color: #1e1f26;
+	/*background-color: #1e1f26;*/
 	text-align: center;
 	width: 160px;
 	height: 40px;
-	line-height: 40px;
+	line-height: 36px;
 	left:calc(50% - 80px);
-	top:-20px;
+	top:-40px;
 	font-weight: 900;
 	font-size: 24px;
-	color: white;
+	color: #ee526d;
+	/*border:2px solid #e8308c;*/
+
 }
 
 /* /區塊標籤 */
@@ -117,25 +201,157 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff55aa', end
 
 /* 頁腳 */
 #footer{
-	border-top:2px solid #ff55aa;
+	border-top:2px solid #252525;
 	height: 250px;
-	background-color: #111212;
+	background-color: #131313;
+	/*box-shadow: 10px 2px 40px -21px #e8308c;*/
+	padding-top: 25px;
+}
+#footerLogo{
+	height: 200px;
+}
+#footerLogo  img {
+    object-fit:contain;
+    height: 100%;
+    max-width: 100%;
+    display:block;
+    margin:auto;    
+}
+#dealerInfo>h3{
+	font-weight: 900;
+}
+#dealerInfo>ul>li{
+	list-style: none;
+	font-weight: 900;
+	font-size: 18px;
 }
 /* 頁腳 */
+.btn-view {
+  font-family: '微軟正黑體';
+  font-size: 13px;
+  color: rgba(58, 133, 191, 0.75);
+  letter-spacing: 1px;
+  line-height: 15px;
+  border: 2px solid rgba(58, 133, 191, 0.75);
+  border-radius: 5px;
+  background: transparent;
+  transition: all 0.3s ease 0s;
+}
+
+.btn-view:hover {
+  color: #FFF;
+  background: rgba(58, 133, 191, 0.75);
+  border: 2px solid rgba(58, 133, 191, 0.75);
+}
+
+.btn-add {
+  font-family: '微軟正黑體';
+  font-size: 13px;
+  color: rgba(58, 133, 191, 0.75);
+  letter-spacing: 1px;
+  line-height: 15px;
+  border: 2px solid rgba(58, 133, 191, 0.75);
+  border-radius: 5px;
+  background: transparent;
+  transition: all 0.3s ease 0s;
+}
+
+.btn-add:hover {
+  color: #FFF;
+  background: rgba(58, 133, 191, 0.75);
+  border: 2px solid rgba(58, 133, 191, 0.75);
+}
+.itemBtn > a{
+	font-size: 16px;
+}
+#cartBox{
+	display: block;
+	float: right;
+	margin-left: 15px;
+    cursor: pointer;
+    background-color: #ee526d;
+    height: 34px;
+    margin-top: 8px;
+    border-radius: 20px;
+}
+#cartLabel{
+	height: 50px;
+	line-height: 34px;
+	padding-left: 15px;
+	padding-right: 15px;
+	font-weight: 900;
+	font-size: 16px;
+
+}
+
+#cartBox > .dropdown-menu{
+	background-color: white;
+	border-radius: 0px;
+	min-height: 20px;
+	min-width: 200px;
+}
+
+
+.btn-basic {
+  font-family: '微軟正黑體';
+  font-weight: 900;
+  /*color: rgba(58, 133, 191, 0.75);*/
+  color:#e26fa7;
+  letter-spacing: 1px;
+  /*  line-height: 15px;*/
+  /* border: 2px solid rgba(58, 133, 191, 0.75);*/
+
+  background: transparent;
+  transition: all 0.3s ease 0s;
+}
+
+.btn-basic:hover {
+  color: #FFF;
+  background: #f93434;
+
+}
+
 
 
 @media (max-width: 767px) {
 ._w{
 	display: none!important;
 }
-
+._p{
+	display: block;
+}
+#footer{
+    height:auto;
+}
+#dealerInfo>h3 {
+	text-align: center;
+}
+#cartBox{
+	margin-right: 15px;
+}
 }
 @media (min-width: 768px) and (max-width: 991px) {
 ._w{
 	display: none!important;
 }
-
+._p{
+	display: block;
 }
-/*@media (min-width: 992px) {
-
-}*/
+#footer{
+    height:auto;
+}
+#dealerInfo>h3{
+	text-align: center;
+}
+#cartBox{
+	margin-right: 15px;
+}
+.navbar-header{
+	float:right;
+}
+}
+@media (min-width: 992px) {
+.navbar-header{
+	float:right;
+}
+}

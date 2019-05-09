@@ -41,11 +41,11 @@ class CartMiddleware
                 
             }else{
 
-                exit;
+                abort(404);
             }
 
         }else{
-            exit;
+            abort(404);
         }
 
         return $next($request);

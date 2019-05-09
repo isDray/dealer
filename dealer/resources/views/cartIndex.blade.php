@@ -19,7 +19,7 @@
 <div class="container-fluid _np" style='margin-bottom:40px;'>
 
 <!-- 輪播 -->
-<div class='col-md-12 col-sm-12 col-xs-12 _np'>
+<div id='carouselBox' class='col-md-12 col-sm-12 col-xs-12 _np'>
 <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
   <!-- Indicators -->
   <ol class="carousel-indicators">
@@ -67,9 +67,9 @@
 
 <!-- 最新商品 -->
 <div class="container-fluid">
-    <div class='boxLabel _np col-md-10 col-md-offset-1 col-sm-12 col-xs-12' label='最新商品'></div>
+    <div class='boxLabel _np col-md-8 col-md-offset-2 col-sm-12 col-xs-12' label='最新商品'></div>
     
-    <div id='newGoods' class='col-md-10 col-md-offset-1 col-sm-12 col-xs-12 _np'>
+    <div id='newGoods' class='col-md-8 col-md-offset-2 col-sm-12 col-xs-12 _np'>
         @for( $i=0; $i<8 ; $i++)
         <div class="col-md-3 col-sm-4 col-xs-6 ">
             <div class="thumbnail">
@@ -78,7 +78,9 @@
             
                 <h3>商品名稱</h3>
                 <p>$560</p>
-                <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>
+                <p class='itemBtn'><a href="#" class="btn btn-view" role="button"><span class="glyphicon glyphicon-search"></span>查看商品</a> 
+                   <a href="#" class="btn btn-add" role="button"><span class="glyphicon glyphicon-shopping-cart"></span>加入購物車</a>
+                </p>
                 </div>
             </div>
         </div>
@@ -102,7 +104,7 @@
             
                 <h3>商品名稱</h3>
                 <p>$560</p>
-                <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>
+                <p><a href="#" class="btn btn-primary" role="button">加入購物車</a> <a href="#" class="btn btn-default" role="button">Button</a></p>
                 </div>
             </div>
         </div>

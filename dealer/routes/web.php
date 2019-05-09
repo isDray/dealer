@@ -172,4 +172,6 @@ Route::group(['middleware' => ['auth','role:Admin|Dealer'] ], function () {
  |----------------------------------------------------------------
  |
  */
-Route::get('/{name}','CartController@index')->middleware(['cart']);;
+Route::get('/{name}','CartController@index')->middleware(['cart']);
+Route::get('/{name}/goods/{goodsId}','CartController@viewGoods')->middleware(['cart']);
+Route::post('/{name}/addToCart/','CartController@addToCart')->middleware(['cart']);

@@ -24,9 +24,9 @@
     <!-- Custom Css -->
     <!-- <link href="{{asset('/adminbsb-materialdesign/css/style.css')}}" rel="stylesheet"> -->
 
-    <link href="{{asset('/adminbsb-materialdesign/css/cart.css')}}" rel="stylesheet">
-    
     <link href="{{asset('/adminbsb-materialdesign/plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css')}}" rel="stylesheet">
+
+    <link href="{{asset('/adminbsb-materialdesign/css/cart.css')}}" rel="stylesheet">
     <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
     <link href="{{asset('/adminbsb-materialdesign/css/themes/all-themes.css')}}" rel="stylesheet" />
 
@@ -60,6 +60,9 @@
         <div id="webLogo" class='col-md-4 col-md-offset-4 _w'>
             <img src="{{url('logo')}}/{{$cartUser}}/{{$dealerDatas['logo1']}}">
         </div>
+        <div id="webLogo" class='col-md-4 col-md-offset-4 _p'>
+            <img src="{{url('logo')}}/{{$cartUser}}/{{$dealerDatas['logo2']}}">
+        </div>        
     </div>
 
     <nav id='cartNav' class="navbar navbar-default ">
@@ -72,6 +75,18 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
+
+          <div id='cartBox' class="dropdown">
+            
+            <span id="cartLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <span class="glyphicon glyphicon-shopping-cart"></span>購物車
+              <!-- <span class="caret"></span> -->
+            </span>
+
+            <ul class="dropdown-menu dropdown-menu-right cartList" aria-labelledby="dLabel">
+            目前暫無商品
+            </ul>
+          </div>
 
         </div>
     
@@ -129,12 +144,19 @@
             </li>
 
           </ul>
+          
+
+
+
+
           <form class="navbar-form navbar-right">
             <div class="form-group">
               <input type="text" class="form-control" placeholder="搜尋商品">
             </div>
             <button type="submit" class="btn btn-primary">搜尋</button>
           </form>
+
+
 
 
 
@@ -147,7 +169,19 @@
 
     <!-- footer -->
     <div id='footer' class="container-fluid">
-     
+
+        <div id='footerLogo' class='col-md-3 col-md-offset-2 col-sm-12 col-xs-12'>
+            <img src="{{url('logo')}}/{{$cartUser}}/{{$dealerDatas['logo1']}}">
+        </div>
+
+        <div id='dealerInfo' class='col-md-4 col-md-offset-1 col-sm-12 col-xs-12'>
+            <h3>{{$dealerDatas['hotel_name']}}</h3>
+            <ul>
+                <li><p><span class="glyphicon glyphicon-map-marker"></span> {{$dealerDatas['hotel_address']}}</p></li>
+                <li><p><span class="glyphicon glyphicon-earphone"></span> {{$dealerDatas['hotel_tel']}}</p></li>
+            </ul>
+
+        </div>
     </div>
     <!-- /footer -->
 
