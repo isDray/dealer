@@ -83,7 +83,7 @@ class CartController extends Controller
                 
                 if( $goodsPrice == NULL){
         
-                    $goodsPrice = round($dealerDatas['multiple'] * $goods['w_price']);
+                    $goodsPrice = round($dealerDatas['multiple'] * $goodsPrice['w_price']);
         
                 }else{
         
