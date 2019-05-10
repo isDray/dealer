@@ -53,7 +53,7 @@
                         </td>
                         <td>{{$cart['goodsPrice']}}</td>
                         <td>
-                            <select class='form-control'>
+                            <select class='form-control checkoutNum' goodsId="{{$cart['id']}}" >
                                 @for( $i = 0 ; $i<= $cart['stock'] ; $i++)
                                 <option value="{{$i}}" 
                                 @if( $cart['num'] == $i)
@@ -90,33 +90,16 @@
 <script type="text/javascript">
 $(function(){
 
-$("#addCartForm").submit(function(e) {
+$(document).on( 'change', '.checkoutNum', function(e){
+    
+    if (e.handled !== true) {
+        e.handled = true;
 
-    e.preventDefault(); // avoid to execute the actual submit of the form.
-
-    var form = $(this);
-    var url = form.attr('action');
-
-    $.ajax({
-            type: "POST",
-            url: url,
-            dataType: 'json',
-            data: form.serialize(), // serializes the form's elements.
-            success: function(data){
-                
-                if( data['res'] == true){
-                    refreshItem( data['cartDatas'] );
-                    cusMsg( data['res'] , data['msg'] );
-
-                }else{
-
-                    cusMsg( data['res'] , data['msg'] );
-                }
-            }
-    });
-
+    }
 
 });
+
+
 
 
 })

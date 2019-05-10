@@ -244,6 +244,7 @@ class CartController extends Controller
             $tmpcart = $request->session()->get('carts');
             
             // 判斷是否已經存在購物車
+            
             if( array_key_exists("$request->goodsId", $tmpcart) ) {
 
                 $totalNum = $tmpcart[$request->goodsId]['num'] + $request->goodsNum;
