@@ -95,66 +95,7 @@ $("#addCartForm").submit(function(e) {
 
 })
 
-/*----------------------------------------------------------------
- | 加入購物車回饋訊息
- |----------------------------------------------------------------
- |
- */
-function cusMsg( _res , _msg ){
 
-    if( _res == true){
-
-        var msgTile = '執行成功';
-        var msgType ='success';
-
-    }else{
-
-        var msgTile = '執行失敗';
-        var msgType ='error';
-    }
-
-    swal.fire({
-        
-        title: msgTile,
-        html: _msg,
-        type:msgType
-    
-    });
-}
-
-
-
-
-/*----------------------------------------------------------------
- | 刷新購物車清單
- |----------------------------------------------------------------
- |
- */
-function refreshItem( _datas ){
-
-    // 先將購物車清單清空
-    $("#cartItem").empty();
-
-    $.each( _datas , function( index , element ) {
-               
-        htmlCode = '';
-
-        htmlCode += "<div class='media' style='border-bottom:1px solid #333;padding-bottom:4px;'><div class='media-left'>";
-        htmlCode += "<img src='{{url('images')}}"+"/"+element['thumbnail']+"' style='width:60px;height:60px;'>";
-        htmlCode += "</div><div class='media-body' >";
-        htmlCode += "<div class='col-md-12 col-sm-12 col-xs-12'>"
-        htmlCode += "<h5>"+element['name']+"</h5>";
-        htmlCode += "<h6>"+element['subTotal']+"</h6>";
-        htmlCode += "</div>";
-        htmlCode += "<div class='col-md-12 col-sm-12 col-xs-12'>"
-        htmlCode += "<button class='btn btn-danger cartDelete' style='width:100%' goodsID='"+element['id']+"'>移除</button>";
-        htmlCode += "</div>"
-        htmlCode += "</div></div>";
-
-    });
-
-    $("#cartItem").append(htmlCode);
-}
 
 </script>
 <!-- /專屬js -->

@@ -55,7 +55,7 @@ class CartController extends Controller
         
         //var_dump($categorys);
 
-        return view('cartIndex')->with([ 
+        return view('cartIndex')->with([ 'dealerDetect' => $request->name,
         	                             'cartUser' =>$cartUser,
         	                             'dealerDatas' => $dealerDatas,
         	                             'categorys' => $categorys
@@ -173,6 +173,12 @@ class CartController extends Controller
             }
         }
 
+        if( $request->goodsNum <= 0 ){
+
+            echo json_encode( ['res'=>False , 'msg'=>'尚未選取數量無法加入購物車' , ] );
+            exit;            
+        }
+
         // 確認經銷商有無設定價格
         $goodsPrice = GoodsPrice::where('dealer_id',$cartUser)->where('goods_id',$request->goodsId)->first();
         
@@ -242,7 +248,49 @@ class CartController extends Controller
             return json_encode( ['res'=>True , 'msg'=>'添加至購物車成功' , 'cartDatas'=> $tmpcart ] );
         }
     }
-    
+
+
+
+
+    /*----------------------------------------------------------------
+     | 移除購物車商品
+     |----------------------------------------------------------------
+     |
+     */
+    public function deleteItem( Request $request){
+        
+        if( $request->session()->has('cartUser') ){
+
+            $cartUser =  $request->session()->pull('cartUser');
+
+        }else{
+
+            exit;
+        } 
+
+
+        if( $request->session()->has('carts') ){
+            
+            $tmpcart = $request->session()->get('carts');
+            
+
+            if( array_key_exists($request->goodsId, $tmpcart) ){
+                
+
+                unset( $tmpcart[ $request->goodsId ] );
+
+                $request->session()->put('carts', $tmpcart);
+            
+            }
+
+            return json_encode( ['res'=>True , 'msg'=>'購物車項目刪除成功' , 'cartDatas'=> $tmpcart ] );
+
+        }else{
+            
+            return json_encode( ['res'=>False , 'msg'=>'購物車目前無商品' , ] );
+        }
+
+    }
     /*----------------------------------------------------------------
      | 取出經銷商資料
      |----------------------------------------------------------------

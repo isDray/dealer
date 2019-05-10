@@ -78,7 +78,8 @@
 
           <div id='cartBox' class="dropdown">
             
-            <span id="cartLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span id="cartLabel" type="button"  aria-haspopup="true" aria-expanded="false">
+              <!-- data-toggle="dropdown" -->
               <span class="glyphicon glyphicon-shopping-cart"></span>購物車
               <!-- <span class="caret"></span> -->
             </span>
@@ -87,7 +88,37 @@
                 <button type="submit" class="btn btn-primary">去結帳</button>
                 
                 <div id='cartItem'>
-                <h4>目前無商品</h4>
+
+                @if(Session::has('carts'))
+                
+                @php
+                    $cartsItems = Session::get('carts');
+                    $cartAmount = 0;
+                @endphp
+                    @foreach($cartsItems as $cartsItem)
+
+                        <div class='media' style='border-bottom:1px solid #333;padding-bottom:4px;'><div class='media-left'>
+                        <img src="{{url('images')}}/{{$cartsItem['thumbnail']}}" style='width:60px;height:60px;'>
+                        </div><div class='media-body' >
+                        <div class='col-md-12 col-sm-12 col-xs-12'>
+                        <h5>{{$cartsItem['name']}}</h5>
+                        <h6>{{$cartsItem['goodsPrice']}}*{{$cartsItem['num']}}={{$cartsItem['subTotal']}}</h6>
+                        </div>
+                        <div class='col-md-12 col-sm-12 col-xs-12'>
+                        <button class='btn btn-danger cartDelete' style='width:100%' goodsID="{{$cartsItem['id']}}">移除</button>
+                        </div>
+                        </div></div>    
+
+                        @php
+                            $cartAmount += $cartsItem['subTotal'];
+                        @endphp              
+                    @endforeach
+                    <p>{{$cartAmount}}</p>
+                @else
+                    <h4>目前無商品</h4>
+                @endif
+
+
                 </div>
 
             </ul>
@@ -233,6 +264,132 @@
     </script>
 
     @endif
+
+    <!-- 移除購物車項目 -->
+    <script type="text/javascript">
+        
+        $(function(){
+            
+            $('#cartLabel').on('click', function (event) {
+                $(this).parent().toggleClass('open');
+            });
+            
+            $('body').on('click', function (e) {
+
+                if (!$('.cartList').is(e.target) 
+                    && $('.cartList').has(e.target).length === 0 
+                    && $('.open').has(e.target).length === 0
+                ) {
+                    $('.cartList').removeClass('open');
+                }
+            });   
+                     
+            $(document).on( 'click', '.cartDelete', function(){
+                 
+                var request = $.ajax({
+                    url: "{{url('/')}}"+"/{{$dealerDetect}}"+"/deleteItem",
+                    method: "POST",
+                    data: { goodsId : $(this).attr('goodsID'),
+                            _token:"{{ csrf_token() }}"
+                    },
+                    dataType: "json"
+                });
+ 
+                request.done(function( data ) {
+                    
+                    if( data['res'] == true){
+                        
+                        refreshItem( data['cartDatas'] );
+                        cusMsg( data['res'] , data['msg'] );
+                    }
+                });
+                 
+                request.fail(function( jqXHR, textStatus ) {
+                  //alert( "Request failed: " + textStatus );
+                });                
+
+            });
+        });
+
+/*----------------------------------------------------------------
+ | 加入購物車回饋訊息
+ |----------------------------------------------------------------
+ |
+ */
+function cusMsg( _res , _msg ){
+
+    if( _res == true){
+
+        var msgTile = '執行成功';
+        var msgType ='success';
+
+    }else{
+
+        var msgTile = '執行失敗';
+        var msgType ='error';
+    }
+
+    swal.fire({
+        
+        title: msgTile,
+        html: _msg,
+        type:msgType
+    
+    });
+}
+
+
+
+
+/*----------------------------------------------------------------
+ | 刷新購物車清單
+ |----------------------------------------------------------------
+ |
+ */
+function refreshItem( _datas ){
+    //alert('SS');
+    // 先將購物車清單清空
+    $("#cartItem").empty();
+    
+    htmlCode = '';
+
+
+    if( _datas.length == 0 ){
+        
+        htmlCode = '<h4>目前無商品</h4>';
+    }
+
+    var amount = 0;
+
+    $.each( _datas , function( index , element ) {
+        
+        htmlCode += "<div class='media' style='border-bottom:1px solid #333;padding-bottom:4px;'><div class='media-left'>";
+        htmlCode += "<img src='{{url('images')}}"+"/"+element['thumbnail']+"' style='width:60px;height:60px;'>";
+        htmlCode += "</div><div class='media-body' >";
+        htmlCode += "<div class='col-md-12 col-sm-12 col-xs-12'>"
+        htmlCode += "<h5>"+element['name']+"</h5>";
+        htmlCode += "<h6>"+element['goodsPrice']+'*'+element['num']+'='+element['subTotal']+"</h6>";
+        htmlCode += "</div>";
+        htmlCode += "<div class='col-md-12 col-sm-12 col-xs-12'>"
+        htmlCode += "<button class='btn btn-danger cartDelete' style='width:100%' goodsID='"+element['id']+"'>移除</button>";
+        htmlCode += "</div>"
+        htmlCode += "</div></div>";
+
+        amount += element['subTotal'];
+
+    });
+    
+    
+    if( Object.keys(_datas).length > 0 ){
+
+        htmlCode += "<p>總金額:"+amount+"</p>";
+    }
+
+    $("#cartItem").append(htmlCode);
+}
+
+    </script>
+    <!-- /移除購物車項目 -->
 </body>
 
 </html>
