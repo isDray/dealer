@@ -53,12 +53,57 @@ class CartController extends Controller
         // 取出所有分類
         $categorys = $this->getCategory();
         
-        //var_dump($categorys);
+        // 取出最新商品
+        // 取出代理商有庫存之商品
+        $haveStockGoods = GoodsStock::where('dealer_id',$cartUser)->where('goods_num','>',0)->get();
+
+        if( count($haveStockGoods) > 0 ){
+
+            $haveStockGoods = json_decode($haveStockGoods,true);
+        }
+
+        $goodsCanShow = [];
+
+        foreach ($haveStockGoods as $haveStockGood) {
+
+            array_push( $goodsCanShow , $haveStockGood['goods_id'] );
+
+        }
+        
+        $newGoods = Goods::whereIn('id',$goodsCanShow)->orderBy('created_at', 'desc')->limit(8)->get();
+
+        if( count($newGoods) > 0){
+
+            $newGoods = json_decode($newGoods,true);
+
+            foreach ($newGoods as $newGoodk=> $newGood) {
+
+                // 確認經銷商有無設定價格
+                $goodsPrice = GoodsPrice::where('dealer_id',$cartUser)->where('goods_id',$newGood['id'])->first();
+                
+                if( $goodsPrice == NULL){
+        
+                    $goodsPrice = round($dealerDatas['multiple'] * $goods['w_price']);
+        
+                }else{
+        
+                    $goodsPrice ->toArray();
+                    $goodsPrice = $goodsPrice->price;
+                }
+                
+                $newGoods[$newGoodk]['goodsPrice'] = $goodsPrice;
+            }
+
+        }else{
+            $newGoods = [];
+        }
+
 
         return view('cartIndex')->with([ 'dealerDetect' => $request->name,
         	                             'cartUser' =>$cartUser,
         	                             'dealerDatas' => $dealerDatas,
-        	                             'categorys' => $categorys
+        	                             'categorys' => $categorys,
+                                         'newGoods'=>$newGoods
                                         ]);     	
     }
     
@@ -291,6 +336,89 @@ class CartController extends Controller
         }
 
     }
+
+
+
+
+    /*----------------------------------------------------------------
+     | 結帳頁面 
+     |----------------------------------------------------------------
+     |
+     */
+    public function checkout( Request $request ){
+
+        if( $request->session()->has('cartUser') ){
+
+            $cartUser =  $request->session()->pull('cartUser');
+
+        }else{
+
+            exit;
+        } 
+
+        // 取出經銷商資料
+        $dealerDatas = $this->getDealer( $cartUser );
+        if(!$dealerDatas){ exit; }
+
+        // 取出所有分類
+        $categorys = $this->getCategory();
+
+        // 購物車
+        $carts = [];
+
+        if( $request->session()->has('carts') ){
+            
+            $carts = $request->session()->get('carts');
+            
+            /*foreach ($carts as $cartk => $cart) {
+
+                // 確認經銷商有無設定價格
+                $goodsPrice = GoodsPrice::where('dealer_id',$cartUser)->where('goods_id',$cart['id'])->first();
+                
+                if( $goodsPrice == NULL){
+        
+                    $goodsPrice = round($dealerDatas['multiple'] * $goods['w_price']);
+        
+                }else{
+        
+                    $goodsPrice ->toArray();
+                    $goodsPrice = $goodsPrice->price;
+                }
+
+                $carts[$cartk]['goodsPrice'] = $goodsPrice;
+            }*/
+
+            // 取出經銷商目前庫存
+            foreach ($carts as $cartk => $cart) {
+
+                $tmpStock = GoodsStock::where('dealer_id',$cartUser)->where('goods_id',$cart['id'])->first();
+
+                if( $tmpStock != NULL){
+
+                    $tmpStock = $tmpStock->goods_num;
+
+                }else{
+
+                    $tmpStock = 0;
+                }
+
+                $carts[$cartk]['stock'] = $tmpStock;
+            }
+            
+        }
+        
+        return view('cartCheckout')->with([ 'dealerDetect' => $request->name,
+                                            'cartUser'     => $cartUser, 
+                                            'dealerDatas'  => $dealerDatas,
+                                            'categorys'    => $categorys,
+                                            'carts'=> $carts
+                                        ]); 
+
+    }
+ 
+
+
+
     /*----------------------------------------------------------------
      | 取出經銷商資料
      |----------------------------------------------------------------
@@ -307,7 +435,10 @@ class CartController extends Controller
 
         	return $dealerDatas = $dealerDatas->toArray();
         }
+        
+        if( $request->session()->has('carts') ){
 
+        }
         
     }
 

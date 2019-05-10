@@ -85,7 +85,8 @@
             </span>
 
             <ul class="dropdown-menu dropdown-menu-right cartList" aria-labelledby="dLabel">
-                <button type="submit" class="btn btn-primary">去結帳</button>
+
+                <a href="{{url('')}}/{{$dealerDetect}}/checkout" class="btn btn-primary">去結帳</a>
                 
                 <div id='cartItem'>
 
@@ -94,6 +95,10 @@
                 @php
                     $cartsItems = Session::get('carts');
                     $cartAmount = 0;
+                    if( count($cartsItems) <= 0){
+
+                        $cartAmount = '目前無商品';
+                    }
                 @endphp
                     @foreach($cartsItems as $cartsItem)
 
@@ -113,7 +118,13 @@
                             $cartAmount += $cartsItem['subTotal'];
                         @endphp              
                     @endforeach
-                    <p>{{$cartAmount}}</p>
+                    <h4>
+                        @if( $cartAmount == '目前無商品')
+                        {{$cartAmount}}
+                        @else
+                        總金額:{{$cartAmount}}
+                        @endif
+                    </h4>
                 @else
                     <h4>目前無商品</h4>
                 @endif
@@ -309,6 +320,42 @@
                 });                
 
             });
+            
+
+
+            /*----------------------------------------------------------------
+             | 加入單筆商品
+             |----------------------------------------------------------------
+             |
+             */
+
+            $(document).on( 'click', '.addone', function(){
+                 
+                var request = $.ajax({
+                    url: "{{url('/')}}"+"/{{$dealerDetect}}"+"/addToCart",
+                    method: "POST",
+                    data: { goodsId : $(this).attr('goodsId'),
+                            goodsNum : 1,
+                            _token:"{{ csrf_token() }}"
+                    },
+                    dataType: "json"
+                });
+ 
+                request.done(function( data ) {
+                    
+                    if( data['res'] == true){
+                        
+                        refreshItem( data['cartDatas'] );
+                        cusMsg( data['res'] , data['msg'] );
+                    }
+                });
+                 
+                request.fail(function( jqXHR, textStatus ) {
+                    //alert( "Request failed: " + textStatus );
+                });                
+
+            });             
+            
         });
 
 /*----------------------------------------------------------------
@@ -382,7 +429,7 @@ function refreshItem( _datas ){
     
     if( Object.keys(_datas).length > 0 ){
 
-        htmlCode += "<p>總金額:"+amount+"</p>";
+        htmlCode += "<h4>總金額:"+amount+"</h4>";
     }
 
     $("#cartItem").append(htmlCode);

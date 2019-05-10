@@ -176,3 +176,4 @@ Route::get('/{name}','CartController@index')->middleware(['cart']);
 Route::get('/{name}/goods/{goodsId}','CartController@viewGoods')->middleware(['cart']);
 Route::post('/{name}/addToCart/','CartController@addToCart')->middleware(['cart']);
 Route::post('/{name}/deleteItem/','CartController@deleteItem')->middleware(['cart']);
+Route::get('/{name}/checkout/','CartController@checkout')->middleware(['cart']);

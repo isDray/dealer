@@ -70,21 +70,22 @@
     <div class='boxLabel _np col-md-8 col-md-offset-2 col-sm-12 col-xs-12' label='最新商品'></div>
     
     <div id='newGoods' class='col-md-8 col-md-offset-2 col-sm-12 col-xs-12 _np'>
-        @for( $i=0; $i<8 ; $i++)
+        @foreach($newGoods as $newGood)
         <div class="col-md-3 col-sm-4 col-xs-6 ">
             <div class="thumbnail">
-                <img src="https://***REMOVED***.com/***REMOVED***/images/201505/thumb_img/9407_thumb_G_1432062363451.gif" alt="...">
+                <img src="{{url('images')}}/{{$newGood['thumbnail']}}" alt="...">
                 <div class="caption">
             
-                <h3>商品名稱</h3>
-                <p>$560</p>
-                <p class='itemBtn'><a href="#" class="btn btn-view" role="button"><span class="glyphicon glyphicon-search"></span>查看商品</a> 
-                   <a href="#" class="btn btn-add" role="button"><span class="glyphicon glyphicon-shopping-cart"></span>加入購物車</a>
+                <h5> {{ $newGood['name'] }} </h5>
+                <h4>價格:{{$newGood['goodsPrice'] }}</h4>
+                <p class='itemBtn'>
+                  <!-- <a href="#" class="btn btn-view" role="button"><span class="glyphicon glyphicon-search"></span>查看商品</a>  -->
+                   <button class="btn btn-primary addone" role="button" goodsId="{{$newGood['id']}}"><span class="glyphicon glyphicon-shopping-cart"></span>加入購物車</button>
                 </p>
                 </div>
             </div>
         </div>
-        @endfor
+        @endforeach
     </div>
     
     </div>
