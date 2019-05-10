@@ -121,11 +121,11 @@ class CartController extends Controller
 
         $goods['stock']       = $stock['goods_num'];
 
-        return view('cartGoods')->with([ 
-                                         'cartUser' =>$cartUser,
-                                         'dealerDatas' => $dealerDatas,
-                                         'categorys' => $categorys,
-                                         'goods' => $goods
+        return view('cartGoods')->with([ 'dealerDetect' => $request->name,
+                                         'cartUser'     => $cartUser, 
+                                         'dealerDatas'  => $dealerDatas,
+                                         'categorys'    => $categorys,
+                                         'goods'        => $goods
                                         ]); 
      }
 
@@ -136,9 +136,112 @@ class CartController extends Controller
      |----------------------------------------------------------------
      |
      */
-     public function addToCart( Request $request ){
+    public function addToCart( Request $request ){
         
-     }
+        if( $request->session()->has('cartUser') ){
+
+            $cartUser =  $request->session()->pull('cartUser');
+
+        }else{
+
+            exit;
+        }
+        
+        // 取出商品相關資訊
+        $goodsDetail = Goods::find( $request->goodsId);
+        
+        if( $goodsDetail == NUll){
+
+            echo json_encode( ['res'=>False , 'msg'=>'查無此商品' , ] );
+            exit;
+        }
+
+        // 檢查是否有數量
+        $goodsStock = GoodsStock::where('dealer_id',$cartUser)->where('goods_id',$request->goodsId)->first();
+
+        if( $goodsStock == NUll){
+
+            echo json_encode( ['res'=>False , 'msg'=>'此商品目前無庫存' , ] );
+            exit;
+
+        }else{
+            
+            if( ($goodsStock->goods_num - $request->goodsNum ) < 0 ){
+                echo json_encode( ['res'=>False , 'msg'=>'目前此商品庫存只剩'.$goodsStock->goods_num.'個 , 請調整訂購數量' , ] );
+                exit;
+
+            }
+        }
+
+        // 確認經銷商有無設定價格
+        $goodsPrice = GoodsPrice::where('dealer_id',$cartUser)->where('goods_id',$request->goodsId)->first();
+        
+        if( $goodsPrice == NULL){
+
+            $goodsPrice = round($dealerDatas['multiple'] * $goods['w_price']);
+
+        }else{
+
+            $goodsPrice ->toArray();
+            $goodsPrice = $goodsPrice->price;
+        }
+
+
+        // 先判斷SESSION 存不存在 , 如果存在就直接更改 , 如果不存在就新增一組
+        if( $request->session()->has('carts') ){ 
+ 
+            $tmpcart = $request->session()->get('carts');
+            
+            // 判斷是否已經存在購物車
+            if( array_key_exists("$request->goodsId", $tmpcart) ) {
+
+                $totalNum = $tmpcart[$request->goodsId]['num'] + $request->goodsNum;
+                
+                if( ($goodsStock->goods_num - $totalNum ) < 0 ){
+                
+                    echo json_encode( ['res'=>False , 'msg'=>'目前此商品庫存只剩'.$goodsStock->goods_num.'個 , 請調整訂購數量' , ] );
+                    exit;
+
+                }
+                
+                $tmpcart[$request->goodsId]['num'] = $totalNum;
+                $tmpcart[$request->goodsId]['goodsPrice'] = $goodsPrice;
+                $tmpcart[$request->goodsId]['subTotal'] = round($goodsPrice * $totalNum);
+
+            }else{
+
+                $tmpcart[$request->goodsId] = [ 'name' => $goodsDetail->name,
+                                                'thumbnail' =>$goodsDetail->thumbnail,
+                                                'num' =>$request->goodsNum,
+                                                'goodsSn'=>$goodsDetail->goods_sn,
+                                                'goodsPrice'=>$goodsPrice,
+                                                'subTotal'=> round($request->goodsNum * $goodsPrice),
+                                                'id'=>$goodsDetail['id'],
+                                              ];
+            }
+
+            $request->session()->put('carts', $tmpcart);
+
+            return json_encode( ['res'=>True , 'msg'=>'添加至購物車成功' , 'cartDatas'=> $tmpcart ] );
+
+        }else{
+
+            $tmpcart = [];
+
+            $tmpcart[$request->goodsId] = [ 'name' => $goodsDetail->name,
+                                            'thumbnail' =>$goodsDetail->thumbnail,
+                                            'num' =>$request->goodsNum,
+                                            'goodsSn'=>$goodsDetail->goods_sn,
+                                            'goodsPrice'=>$goodsPrice,
+                                            'subTotal'=> round($request->goodsNum * $goodsPrice),
+                                            'id'=>$goodsDetail['id'],
+                                          ];
+
+            $request->session()->put('carts', $tmpcart);
+
+            return json_encode( ['res'=>True , 'msg'=>'添加至購物車成功' , 'cartDatas'=> $tmpcart ] );
+        }
+    }
     
     /*----------------------------------------------------------------
      | 取出經銷商資料

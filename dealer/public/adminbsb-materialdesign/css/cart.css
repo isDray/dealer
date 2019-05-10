@@ -311,7 +311,11 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f93434', end
 
 }
 
-
+#cartItem{
+	margin-top: 4px;
+	border-top: 1px solid #333;
+	padding-top: 4px;
+}
 
 @media (max-width: 767px) {
 ._w{
@@ -328,6 +332,10 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f93434', end
 }
 #cartBox{
 	margin-right: 15px;
+}
+.cartList{
+	width: 300px!important;
+	padding: 15px;	
 }
 }
 @media (min-width: 768px) and (max-width: 991px) {
@@ -349,9 +357,17 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f93434', end
 .navbar-header{
 	float:right;
 }
+.cartList{
+	width: 300px!important;
+	padding: 15px;	
+}
 }
 @media (min-width: 992px) {
 .navbar-header{
 	float:right;
+}
+.cartList{
+	width: 450px;
+	padding: 15px;
 }
 }

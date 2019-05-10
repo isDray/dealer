@@ -84,7 +84,12 @@
             </span>
 
             <ul class="dropdown-menu dropdown-menu-right cartList" aria-labelledby="dLabel">
-            目前暫無商品
+                <button type="submit" class="btn btn-primary">去結帳</button>
+                
+                <div id='cartItem'>
+                <h4>目前無商品</h4>
+                </div>
+
             </ul>
           </div>
 
