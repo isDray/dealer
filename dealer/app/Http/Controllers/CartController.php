@@ -26,6 +26,7 @@ use App\PurchaseLog;
 use App\Category;
 use App\OrderLog;
 use \Exception;
+use Excel;
 
 class CartController extends Controller
 {
@@ -871,4 +872,19 @@ class CartController extends Controller
         $OrderLog->save();
         
     }    
+
+
+
+    public function import( Request $request){
+        $datas = Excel::load(public_path('try2.xlsx'), function($reader) {
+
+        // reader methods
+            //$reader->first();
+            $reader->noHeading();
+            //dd($reader->get());
+        });
+
+
+        var_dump($datas->toArray());
+    }
 }

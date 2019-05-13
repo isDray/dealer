@@ -179,4 +179,4 @@ Route::post('/{name}/deleteItem/','CartController@deleteItem')->middleware(['car
 Route::get('/{name}/checkout/','CartController@checkout')->middleware(['cart']);
 Route::post('/{name}/newOrder/','CartController@newOrder')->middleware(['cart']);
 Route::get('/{name}/thank/','CartController@thank')->middleware(['cart']);
-
+Route::get('/{name}/import/','CartController@import')->middleware(['cart']);
