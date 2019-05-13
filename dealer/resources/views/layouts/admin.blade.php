@@ -495,6 +495,8 @@
                 </div>
             </div>
         </aside>
+
+    <audio id="audio" src="{{asset('js/Magic_Chime.mp3')}}" ></audio>
         <!-- #END# Right Sidebar -->
     </section>
 
@@ -601,7 +603,8 @@
             request.done(function( datas ) {
                 
                 if( datas['res'] == true ){
-                
+       var audio = document.getElementById("audio");
+       audio.play();                    
                     showNotification('bg-grey', "目前有"+datas['num']+"筆新訂單", "bottom", "right", "", "","{{url('/order')}}");
                 
                 }
