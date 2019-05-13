@@ -6,94 +6,24 @@
 <link href="{{asset('adminbsb-materialdesign/plugins/bootstrap-select/css/bootstrap-select.css')}}" rel="stylesheet" />
 <link href="{{asset('adminbsb-materialdesign/plugins/jquery-spinner/css/bootstrap-spinner.css')}}" rel="stylesheet" />
 <link href="{{asset('adminbsb-materialdesign/plugins/dropzone/dropzone.css')}}" rel="stylesheet" />
-<link href="{{asset('/adminbsb-materialdesign/css/cartCheckout.css')}}" rel="stylesheet">
+<link href="{{asset('/adminbsb-materialdesign/css/cartThank.css')}}" rel="stylesheet">
 <script src="{{asset('adminbsb-materialdesign/plugins/dropzone/dropzone.js')}}"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="{{asset('adminbsb-materialdesign/plugins/ckeditor/ckeditor.js')}}"></script>
 
-<div id='checkoutBox' class="container-fluid _np">
+<div id='thankBox' class="container-fluid _np">
 
-    <div class='checkoutLabel _np col-md-8 col-md-offset-2 col-sm-12 col-xs-12' label='購買清單'></div>
+    <div class='thankLabel _np col-md-8 col-md-offset-2 col-sm-12 col-xs-12' label='訂購成功'></div>
 
-    <div id='checkoutList' class='col-md-8 col-md-offset-2 col-sm-12 col-xs-12'> 
-        
-        <form action="{{url('')}}/{{$dealerDetect}}/newOrder" method='POST'>
-        {{ csrf_field() }}
-        <div class="table">
-            <table class="table">
+    <div id='thankMsgBox' class='col-md-8 col-md-offset-2 col-sm-12 col-xs-12'> 
 
-                <thead>
-                    <tr>
-                        <th width='40%'>商品名稱</th>
-                        <th>售價</th>
-                        <th>數量</th>
-                        <th>小計</th>
-                        <th>操作</th>
-                    </tr>
-                </thead>
-                
-                <tbody id='checkoutItem'>
-                @php
-                    $checkAmount = 0;
-                @endphp
-                @foreach( $carts as $cart)
-                    <tr>
-                        <td>
-                            <div class="media">
-
-                                <div class="media-left checkoutImgBox">
-                                    <img class="media-object" src="{{url('images')}}/{{$cart['thumbnail']}}" alt="">
-                                </div> 
-
-                                <div class="media-body">
-                                <!-- <h4 class="media-heading">Media heading</h4> -->
-                                {{$cart['name']}}
-                                </div>
-                            </div>
-                        
-                        </td>
-                        <td>{{$cart['goodsPrice']}}</td>
-                        <td>
-                            <select class='form-control checkoutNum' goodsId="{{$cart['id']}}" >
-                                @for( $i = 1 ; $i<= $cart['stock'] ; $i++)
-                                <option value="{{$i}}" 
-                                @if( $cart['num'] == $i)
-                                    SELECTED
-                                @endif
-                                >{{$i}}</option>
-                                @endfor
-                            </select>
-                        </td>
-                        <td>{{$cart['subTotal']}}</td>
-                        <td>
-                            <span class='btn btn-danger deleteCheckoutItem ' goodsId="{{$cart['id']}}" >刪除</span>
-                        </td>
-                    </tr>
-                    @php
-                        $checkAmount += $cart['subTotal'];
-                    @endphp
-                @endforeach
-                    <tr>
-                        <td colspan='4'></td>
-                        <td >總價:{{$checkAmount}}</td>
-                    </tr>
-                </tbody>
-                <tbody style="border-top:1px solid #ddd">
-                    <tr>
-                        <td colspan='5' class='text-center' >房號<input type='text' class='form-control' name="room" style="margin:0 auto;width:30%" ></td>
-                    </tr>        
-                    <tr>
-                        <td colspan='5' class='text-center'>
-
-                            <input type="submit" class="btn btn-primary" value='送出訂單'>
-
-                        </td>
-                    </tr>             
-                </body>
-            </table>
-        </div>
-        </form>
-
+        <h3 style='font-weight:900;'>感謝您的購買 , 以下為您的購買相關資料:</h3>
+        <br>
+        <h4 style='font-weight:900;'>訂單編號:{{$orderSn}}, 訂單金額:{{$orderAmount}}元</h4>
+        <br>
+        <h4 style='color:red;font-weight:900;'>** 請撥打服務電話告知已訂購商品 , 以利旅館服務人員處理訂單 , 謝謝</h4>
+        <br><br>
+        <a href="{{url('')}}/{{$dealerDetect}}" class='btn btn-primary'>回首頁</a>
     </div>
 </div>
 

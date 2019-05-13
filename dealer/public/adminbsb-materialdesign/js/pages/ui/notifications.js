@@ -10,7 +10,7 @@ $(function () {
     });
 });
 
-function showNotification(colorName, text, placementFrom, placementAlign, animateEnter, animateExit) {
+function showNotification(colorName, text, placementFrom, placementAlign, animateEnter, animateExit ,link) {
     if (colorName === null || colorName === '') { colorName = 'bg-black'; }
     if (text === null || text === '') { text = 'Turning standard Bootstrap alerts'; }
     if (animateEnter === null || animateEnter === '') { animateEnter = 'animated fadeInDown'; }
@@ -24,7 +24,7 @@ function showNotification(colorName, text, placementFrom, placementAlign, animat
             type: colorName,
             allow_dismiss: allowDismiss,
             newest_on_top: true,
-            timer: 1000,
+            timer: 10000,
             placement: {
                 from: placementFrom,
                 align: placementAlign
@@ -35,13 +35,14 @@ function showNotification(colorName, text, placementFrom, placementAlign, animat
             },
             template: '<div data-notify="container" class="bootstrap-notify-container alert alert-dismissible {0} ' + (allowDismiss ? "p-r-35" : "") + '" role="alert">' +
             '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+            '<i class="material-icons">fiber_new</i>'+
             '<span data-notify="icon"></span> ' +
             '<span data-notify="title">{1}</span> ' +
             '<span data-notify="message">{2}</span>' +
             '<div class="progress" data-notify="progressbar">' +
             '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
             '</div>' +
-            '<a href="{3}" target="{4}" data-notify="url"></a>' +
+            '<a href="'+link+'" target="_black" data-notify="url">點此查看</a>' +
             '</div>'
         });
 }

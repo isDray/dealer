@@ -125,7 +125,7 @@ Route::group(['middleware' => ['auth','role:Admin|Dealer'] ], function () {
     Route::post('/orderAddGoods','OrderController@addGoods');
     Route::post('/orderEditGoods','OrderController@editGoods');
     Route::post('/orderDeleteGoods','OrderController@deleteGoods');
-    
+    Route::post('/orderCheck','OrderController@orderCheck');
 
     // 進貨單管理
     Route::get('/purchaseEstimate','PurchaseController@estimate');
@@ -177,3 +177,6 @@ Route::get('/{name}/goods/{goodsId}','CartController@viewGoods')->middleware(['c
 Route::post('/{name}/addToCart/','CartController@addToCart')->middleware(['cart']);
 Route::post('/{name}/deleteItem/','CartController@deleteItem')->middleware(['cart']);
 Route::get('/{name}/checkout/','CartController@checkout')->middleware(['cart']);
+Route::post('/{name}/newOrder/','CartController@newOrder')->middleware(['cart']);
+Route::get('/{name}/thank/','CartController@thank')->middleware(['cart']);
+

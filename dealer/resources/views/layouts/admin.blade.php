@@ -519,6 +519,10 @@
 
     <script src="{{asset('sweetalert2/dist/sweetalert2.js')}}"></script>
 
+    <script src="{{asset('adminbsb-materialdesign/plugins/bootstrap-notify/bootstrap-notify.js')}}"></script>
+
+    <script src="{{asset('adminbsb-materialdesign/js/pages/ui/notifications.js')}}"></script>
+
     <section class="content">
         <div class="container-fluid">
             <div class="block-header">
@@ -574,6 +578,44 @@
     </script>
 
     @endif
+
+    @role('Dealer')
+    <script type="text/javascript">
+        $(document).ready(function () {
+            setInterval(function () {
+            checkOrder();
+        }, 300000); // 1000 ==> 1 second
+        
+        });
+
+        function checkOrder() {
+
+            var request = $.ajax({
+                url: "{{url('')}}/orderCheck",
+                method: "POST",
+                data: { _token: "{{ csrf_token() }}",
+                },
+                dataType: "JSON"
+            });
+             
+            request.done(function( datas ) {
+                
+                if( datas['res'] == true ){
+                
+                    showNotification('bg-grey', "目前有"+datas['num']+"筆新訂單", "bottom", "right", "", "","{{url('/order')}}");
+                
+                }
+            });
+             
+            request.fail(function( jqXHR, textStatus ) {
+
+                console.log( "Request failed: " + textStatus );
+
+            });
+
+        }
+    </script>
+    @endrole
 </body>
 
 </html>

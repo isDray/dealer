@@ -1628,8 +1628,35 @@ class OrderController extends Controller
         }
      }
 
+
+
+
+    /*----------------------------------------------------------------
+     |
+     |----------------------------------------------------------------
+     |
+     */
+    public function orderCheck( Request $request ){
+        
+        if( Auth::user()->hasRole('Dealer') ){
+            
+
+            $orderNum = Order::where('dealer_id',Auth::id())->where('status',2)->count();
+            
+            if( $orderNum > 0){
+                return json_encode(['res'=>true , 'num'=>$orderNum]);
+            }else{
+                return json_encode(['res'=>false  , 'num'=>0]);
+            }
+        }else{
+
+            return json_encode(['res'=>false  , 'num'=>0]);
+        }
+    }
     
     
+
+
     /*----------------------------------------------------------------
      | 確認該商品是否已經存在於訂單內
      |----------------------------------------------------------------
@@ -1727,6 +1754,7 @@ class OrderController extends Controller
         
 
     }
+
 
 
 

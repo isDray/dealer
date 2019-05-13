@@ -24,6 +24,7 @@ use App\GoodsStock;
 use App\GoodsPrice;
 use App\PurchaseLog;
 use App\Category;
+use App\OrderLog;
 use \Exception;
 
 class CartController extends Controller
@@ -200,6 +201,8 @@ class CartController extends Controller
             echo json_encode( ['res'=>False , 'msg'=>'查無此商品' , ] );
             exit;
         }
+        
+
 
         // 檢查是否有數量
         $goodsStock = GoodsStock::where('dealer_id',$cartUser)->where('goods_id',$request->goodsId)->first();
@@ -212,6 +215,7 @@ class CartController extends Controller
         }else{
             
             if( ($goodsStock->goods_num - $request->goodsNum ) < 0 ){
+
                 echo json_encode( ['res'=>False , 'msg'=>'目前此商品庫存只剩'.$goodsStock->goods_num.'個 , 請調整訂購數量' , ] );
                 exit;
 
@@ -246,8 +250,17 @@ class CartController extends Controller
             // 判斷是否已經存在購物車
             
             if( array_key_exists("$request->goodsId", $tmpcart) ) {
+                
+                // 如果有接收到完成數則直接用完成數做最後訂單數即可
+                if( isset($request->complete) && $request->complete == True ){
+                    
+                    $totalNum =$request->goodsNum;
+                    
+                }else{
 
-                $totalNum = $tmpcart[$request->goodsId]['num'] + $request->goodsNum;
+                    $totalNum = $tmpcart[$request->goodsId]['num'] + $request->goodsNum;
+                }
+                
                 
                 if( ($goodsStock->goods_num - $totalNum ) < 0 ){
                 
@@ -259,7 +272,7 @@ class CartController extends Controller
                 $tmpcart[$request->goodsId]['num'] = $totalNum;
                 $tmpcart[$request->goodsId]['goodsPrice'] = $goodsPrice;
                 $tmpcart[$request->goodsId]['subTotal'] = round($goodsPrice * $totalNum);
-
+                $tmpcart[$request->goodsId]['stock'] = $goodsStock->goods_num;
             }else{
 
                 $tmpcart[$request->goodsId] = [ 'name' => $goodsDetail->name,
@@ -269,13 +282,20 @@ class CartController extends Controller
                                                 'goodsPrice'=>$goodsPrice,
                                                 'subTotal'=> round($request->goodsNum * $goodsPrice),
                                                 'id'=>$goodsDetail['id'],
+                                                'stock'=>$goodsStock->goods_num,
                                               ];
             }
 
             $request->session()->put('carts', $tmpcart);
+            
+            if( isset($request->complete) && $request->complete == True ){
+                
+                return json_encode( ['res'=>True , 'msg'=>'編輯購物車成功' , 'cartDatas'=> $tmpcart ] );
 
-            return json_encode( ['res'=>True , 'msg'=>'添加至購物車成功' , 'cartDatas'=> $tmpcart ] );
+            }else{
 
+                return json_encode( ['res'=>True , 'msg'=>'添加至購物車成功' , 'cartDatas'=> $tmpcart ] );
+            }
         }else{
 
             $tmpcart = [];
@@ -287,6 +307,7 @@ class CartController extends Controller
                                             'goodsPrice'=>$goodsPrice,
                                             'subTotal'=> round($request->goodsNum * $goodsPrice),
                                             'id'=>$goodsDetail['id'],
+                                            'stock'=>$goodsStock->goods_num,
                                           ];
 
             $request->session()->put('carts', $tmpcart);
@@ -419,6 +440,211 @@ class CartController extends Controller
  
 
 
+    /*----------------------------------------------------------------
+     | 新增訂單
+     |----------------------------------------------------------------
+     |
+     */
+    public function newOrder( Request $request ){
+        
+
+        if( $request->session()->has('cartUser') ){
+
+            $cartUser =  $request->session()->pull('cartUser');
+
+        }else{
+
+            exit;
+        }
+        
+        // 取出經銷商資料
+        $dealerDatas = $this->getDealer( $cartUser );
+        if(!$dealerDatas){ exit; }
+
+        // 取出所有分類
+        $categorys = $this->getCategory();
+        
+        // 檢驗資料
+        $validator = Validator::make($request->all(), [
+            'room'    => 'required',
+        ],[
+            'room.required' => '房號為必填',
+
+        ]  );
+        
+        $errText = '';
+        
+        if ($validator->fails()) {
+                
+            $errors = $validator->errors();
+                
+            foreach( $errors->all() as $message ){
+                    
+                $errText .= "$message<br>";
+            }
+
+        }        
+        
+        // 檢查是否有購物車
+        if( $request->session()->has('carts') ){ 
+ 
+            $tmpcarts = $request->session()->get('carts');
+
+            if( count($tmpcarts) == 0){
+
+                $errText .= "購物車為空<br>";
+            }
+        
+        }else{
+
+            $errText .= "購物車為空<br>";
+        }
+
+        // 檢查是否每個商品庫存都足夠
+        foreach ($tmpcarts as $tmpcartK => $tmpcart) {
+
+            // 檢查是否有數量
+            $goodsStock = GoodsStock::where('dealer_id',$cartUser)->where('goods_id',$tmpcart['id'])->first();
+            
+            if( $goodsStock == NULL){
+
+                $errText .= "商品:{$tmpcart['name']} 目前庫存為 0 , 請修改購買數量";
+
+            }else{
+
+                if( $tmpcart['num'] > $goodsStock->goods_num){
+
+                    $errText .= "商品:{$tmpcart['name']} 目前庫存為 {$$goodsStock->goods_num} , 請修改購買數量";
+                }
+
+            }
+        }
+
+        if( !empty( $errText ) ){
+
+            return redirect("/{$request->name}/checkout")->with('errorMsg', $errText );
+
+        }    
+        
+        // 開始新增訂單
+        DB::beginTransaction();
+        
+        $orderId = $this->createOrder( $cartUser , $request->room );
+
+        try {
+            
+            // 迴圈寫入商品
+            foreach ($tmpcarts as $tmpcartK => $tmpcart) {
+                
+                // 如果商品數量小於等於0 , 商品直接跳過
+                if( $tmpcart['num'] <= 0){
+
+                    continue;
+
+                }
+
+                $OrderGoods           = new OrderGoods;
+
+                $OrderGoods->oid      = $orderId;
+    
+                $OrderGoods->gid      = $tmpcart['id'];
+            
+                $OrderGoods->goods_sn = $tmpcart['goodsSn'];
+            
+                $OrderGoods->name     = $tmpcart['name'];
+                
+                $OrderGoods->price    = $tmpcart['goodsPrice'];
+                  
+                $OrderGoods->num      = $tmpcart['num'];
+                
+                $OrderGoods->subtotal = round( $tmpcart['goodsPrice'] * $tmpcart['num'] );
+
+                $OrderGoods->save();
+                
+            }
+            
+            // 重新計算訂單總價
+            $OrderGoods = OrderGoods::where( 'oid' , $orderId)->get();
+            $OrderGoods = $OrderGoods->toArray();
+                
+            $orderAmount = 0;
+
+            foreach ( $OrderGoods as $OrderGood ) {
+                    
+                $orderAmount += $OrderGood['subtotal'];
+
+            }
+                
+            $Order = Order::find( $orderId );
+            $Order->amount = $orderAmount;
+
+            $Order->save();
+
+            DB::commit();
+
+            $request->session()->flash('orderSn', $Order->order_sn);
+            $request->session()->flash('orderAmount', $Order->amount);
+            $request->session()->forget('carts');
+
+            return redirect("/{$request->name}/thank")->with('successMsg', '訂單已送出');
+
+        }catch(\Exception $e){
+                
+            DB::rollback();
+            //$e->getMessage();
+
+            // 寫入錯誤代碼後轉跳
+            
+            logger("{$e->getMessage()} \n\n-----------------------------------------------\n\n"); 
+            
+            return redirect("/{$request->name}/checkout")->with('errorMsg', '訂單新增失敗,請重新下單');
+        }
+
+        /*return view('cartCheckout')->with([ 'dealerDetect' => $request->name,
+                                            'cartUser'     => $cartUser, 
+                                            'dealerDatas'  => $dealerDatas,
+                                            'categorys'    => $categorys,
+                                        ]);
+        */
+    }
+    
+
+
+
+    /*----------------------------------------------------------------
+     | 感謝訂購畫面
+     |----------------------------------------------------------------
+     |
+     */
+    public function thank( Request $request ){
+
+        if( $request->session()->has('cartUser') ){
+
+            $cartUser =  $request->session()->pull('cartUser');
+
+        }else{
+
+            exit;
+        }
+        
+        // 取出經銷商資料
+        $dealerDatas = $this->getDealer( $cartUser );
+        if(!$dealerDatas){ exit; }
+
+        // 取出所有分類
+        $categorys = $this->getCategory(); 
+        
+        return view('cartThank')->with([ 'dealerDetect' => $request->name,
+                                         'cartUser'     => $cartUser, 
+                                         'dealerDatas'  => $dealerDatas,
+                                         'categorys'    => $categorys,
+                                         'orderSn'      => $request->session()->get('orderSn'),
+                                         'orderAmount'  => $request->session()->get('orderAmount'),
+                                       ]);           
+    }
+
+
+
 
     /*----------------------------------------------------------------
      | 取出經銷商資料
@@ -541,5 +767,108 @@ class CartController extends Controller
     public function chkStock( $_dealerId ,$_goodsId ){
         
         return GoodsStock::where( 'dealer_id',$_dealerId )->where( 'goods_id' , $_goodsId)->exists();
-    }  
+    } 
+
+
+
+
+    /*
+    */
+    public function createOrder( $_dealerId , $_room ){
+        
+        $retrunID = '';
+
+        $createSwitch = True; 
+
+        while( $createSwitch ){
+            
+            //$orderSn =
+            
+            $radmonNUm = rand(0,999999);
+            $radmonNUm = str_pad($radmonNUm,6,'0',STR_PAD_LEFT);
+            
+            try {
+            
+
+                $Order = new Order;
+
+                $Order->dealer_id  = "$_dealerId";
+                $Order->order_sn   = date("Ymd").$radmonNUm;
+                $Order->room       = $_room;
+                $Order->amount     = 0;
+                $Order->status     = '2';
+                $Order->source     = '1'; 
+                $Order->note       = '';
+                $Order->is_new     = true;
+
+                $Order->save();
+            
+                $retrunID = $Order->id;
+
+                $this->orderLog( $retrunID , 2 );
+                $createSwitch = False;
+
+
+            } catch (Exception $e) {
+
+
+                
+                // 判斷是否是因為訂單號碼重複 
+                if( $e->errorInfo[1] != 1062){
+
+                    $createSwitch = False;
+
+                }
+                
+            }
+        }
+
+        return $retrunID;
+    }
+    
+
+
+
+    /*----------
+     |
+     |
+     |
+     */
+    public function orderLog( $_orderId , $_orderStatus ,$_operation = 0 ){
+  
+        $operationDesc = '';
+
+        // 將操作代碼轉換為文字描述
+        switch ( $_operation ) {
+            case '1':
+                $operationDesc = '編輯訂單基本資料';
+            break;
+            
+            case '2':
+                $operationDesc = '編輯訂單商品';
+            break;   
+            
+            case '3':
+                $operationDesc = '修改訂單狀態';
+            break;                   
+
+            default:
+                $operationDesc = '新增訂單';
+            break;
+        }
+
+        $roleName = 'General';
+        
+        $OrderLog = new OrderLog;
+
+        $OrderLog->user_id      = 0;
+        $OrderLog->user_name    = '一般用戶';
+        $OrderLog->user_role    = $roleName;
+        $OrderLog->order_id     = $_orderId;
+        $OrderLog->order_status = $_orderStatus;
+        $OrderLog->desc         = $operationDesc;
+
+        $OrderLog->save();
+        
+    }    
 }
