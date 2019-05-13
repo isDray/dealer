@@ -316,7 +316,10 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f93434', end
 	border-top: 1px solid #333;
 	padding-top: 4px;
 }
-
+.thumbnail h5{
+	height: 60px;
+	overflow-y: hidden; 
+}
 @media (max-width: 767px) {
 ._w{
 	display: none!important;

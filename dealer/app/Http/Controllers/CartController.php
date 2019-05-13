@@ -71,7 +71,7 @@ class CartController extends Controller
 
         }
         
-        $newGoods = Goods::whereIn('id',$goodsCanShow)->orderBy('created_at', 'desc')->limit(8)->get();
+        $newGoods = Goods::/*whereIn('id',$goodsCanShow)->*/orderBy('created_at', 'desc')/*->limit(8)*/->get();
 
         if( count($newGoods) > 0){
 

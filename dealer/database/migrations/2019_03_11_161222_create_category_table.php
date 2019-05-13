@@ -36,7 +36,7 @@ class CreateCategoryTable extends Migration
             $table->char('name', 255)->comment('商品名稱');
             // 分類 ( 關聯鍵 , 參考分類)
             $table->integer('cid')->unsigned();
-            $table->foreign('cid')->references('id')->on('category')->onDelete('cascade');
+            /*$table->foreign('cid')->references('id')->on('category');*/
 
             $table->char('thumbnail', 191)->comment('縮圖');
             $table->char('main_pic', 191)->comment('主圖');
@@ -69,7 +69,7 @@ class CreateCategoryTable extends Migration
             $table->foreign('gid')->references('id')->on('goods')->onDelete('cascade');
             
             $table->integer('cid')->unsigned()->comment('分類id');
-            $table->foreign('cid')->references('id')->on('category')->onDelete('cascade');   
+            /*$table->foreign('cid')->references('id')->on('category')->onDelete('cascade');*/
             
             $table->primary(['gid', 'cid']);
 
