@@ -47,7 +47,9 @@ class CreateCategoryTable extends Migration
             $table->text('desc')->comment('商品描述');
             $table->timestamp('on_date')->nullable()->comment('上架時間');
             $table->timestamp('off_date')->nullable()->comment('下架時間');
+            $table->boolean('confirmed')->default(0)->comment('推薦商品');
             $table->timestamps();
+            
         });
         
         // 商品圖擴張表

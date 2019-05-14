@@ -42,7 +42,7 @@
                             <div class="media">
 
                                 <div class="media-left checkoutImgBox">
-                                    <img class="media-object" src="{{url('images')}}/{{$cart['thumbnail']}}" alt="">
+                                    <img class="media-object _w" src="{{url('images')}}/{{$cart['thumbnail']}}" alt="" >
                                 </div> 
 
                                 <div class="media-body">

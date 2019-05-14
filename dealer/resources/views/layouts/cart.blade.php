@@ -168,7 +168,7 @@
               
               <ul class="dropdown-menu">
                 @foreach( $category['child'] as $subchild)
-                <li><a href="#">{{$subchild['name']}}</a></li>
+                <li><a href="{{url('')}}/{{$dealerDetect}}/cartCategory/{{$subchild['id']}}/1">{{$subchild['name']}}</a></li>
                 @endforeach
               </ul>              
               
@@ -196,9 +196,10 @@
 
 
 
-          <form class="navbar-form navbar-right">
+          <form class="navbar-form navbar-right" action="{{url('')}}/{{$dealerDetect}}/cartSearch/1/" method="get">
+            {{ csrf_field() }}
             <div class="form-group">
-              <input type="text" class="form-control" placeholder="搜尋商品">
+              <input type="text" class="form-control" placeholder="搜尋商品" name='keyword'>
             </div>
             <button type="submit" class="btn btn-primary">搜尋</button>
           </form>
@@ -346,6 +347,8 @@
                     if( data['res'] == true){
                         
                         refreshItem( data['cartDatas'] );
+                        cusMsg( data['res'] , data['msg'] );
+                    }else{
                         cusMsg( data['res'] , data['msg'] );
                     }
                 });

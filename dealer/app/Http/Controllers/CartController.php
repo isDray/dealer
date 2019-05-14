@@ -30,6 +30,8 @@ use Excel;
 use App\GoodsPic;
 use App\GoodsCat;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Input;
+
 class CartController extends Controller
 {
     public static $categorySelect = [];
@@ -51,6 +53,8 @@ class CartController extends Controller
         }
         
         // 取出經銷商資料
+
+
         $dealerDatas = $this->getDealer( $cartUser );
         if(!$dealerDatas){ exit; }
 
@@ -86,9 +90,9 @@ class CartController extends Controller
                 $goodsPrice = GoodsPrice::where('dealer_id',$cartUser)->where('goods_id',$newGood['id'])->first();
                 
                 if( $goodsPrice == NULL){
-        
-                    $goodsPrice = round($dealerDatas['multiple'] * $goodsPrice['w_price']);
-        
+
+                    $goodsPrice = round($dealerDatas['multiple'] * $newGood['w_price']);
+
                 }else{
         
                     $goodsPrice ->toArray();
@@ -196,6 +200,13 @@ class CartController extends Controller
             exit;
         }
         
+        // 取出經銷商資料
+        $dealerDatas = $this->getDealer( $cartUser );
+        if(!$dealerDatas){ exit; }
+
+        // 取出所有分類
+        $categorys = $this->getCategory();
+
         // 取出商品相關資訊
         $goodsDetail = Goods::find( $request->goodsId);
         
@@ -236,7 +247,7 @@ class CartController extends Controller
         
         if( $goodsPrice == NULL){
 
-            $goodsPrice = round($dealerDatas['multiple'] * $goods['w_price']);
+            $goodsPrice = round($dealerDatas['multiple'] * $goodsDetail['w_price']);
 
         }else{
 
@@ -645,6 +656,214 @@ class CartController extends Controller
                                          'orderAmount'  => $request->session()->get('orderAmount'),
                                        ]);           
     }
+    
+
+
+
+    /*----------------------------------------------------------------
+     | 分類搜尋
+     |----------------------------------------------------------------
+     |
+     */
+    public function cartCategory( Request $request ){
+        
+        if( $request->session()->has('cartUser') ){
+
+            $cartUser =  $request->session()->pull('cartUser');
+
+        }else{
+
+            exit;
+        }
+        
+        // 取出經銷商資料
+        $dealerDatas = $this->getDealer( $cartUser );
+        if(!$dealerDatas){ exit; }
+
+        // 取出所有分類
+        $categorys = $this->getCategory();         
+        
+        // 確認頁數
+        $page = 1;
+
+        if( isset($request->page) && !empty($request->page)){
+
+            $page = $request->page;
+        }
+        
+        // 先取出有庫存之商品存成陣列
+        $tmpRes = GoodsStock::where('dealer_id',$cartUser)->where("goods_num",">=",0)->get();
+        $canSells = [];
+        if( count( $tmpRes) > 0 ){
+            $tmpRes = json_decode($tmpRes,True);
+
+            foreach ($tmpRes as $tmpRe) {
+                array_push($canSells, $tmpRe['goods_id']);
+            }
+        }
+
+        $showNum = 20;
+        
+        $start = ( $page - 1 ) * $showNum;
+        
+        $orderBy = 'created_at';
+
+        // 計算總筆數
+        $total = Goods::where('cid',$request->cid)->whereIn('id',$canSells)->count();
+        
+        // 計算總頁數
+        $totalPage = ceil($total/$showNum);
+
+        // 取出要呈現的商品
+        $goods = Goods::where('cid',$request->cid)->whereIn('id',$canSells)->offset( $start )->limit( $showNum )->orderBy( $orderBy )->get();
+        
+        // 計算價格
+        foreach ($goods as $goodk => $good) {
+            
+            $goodsPrice = GoodsPrice::where('dealer_id',$cartUser)->where('goods_id',$good['id'])->first();
+                
+                if( $goodsPrice == NULL){
+
+                    $goodsPrice = round($dealerDatas['multiple'] * $good['w_price']);
+
+                }else{
+
+                    $goodsPrice ->toArray();
+
+                    $goodsPrice = $goodsPrice->price;
+                }
+                
+                $goods[$goodk]['goodsPrice'] = $goodsPrice;
+        }
+    
+        $plist= $this->createPlist(url("/{$request->name}/cartCategory/$request->cid") , $page , $totalPage);
+
+        // 取出分類名稱 
+        $cateName = '無此分類';
+        $category = Category::find( $request->cid );
+        if( $category != NULL ){
+            $cateName = $category->name;
+        }
+
+        return view('cartCategory')->with([ 'dealerDetect' => $request->name,
+                                            'cartUser'     => $cartUser, 
+                                            'dealerDatas'  => $dealerDatas,
+                                            'categorys'    => $categorys,
+                                            'goods'        => $goods,
+                                            'plist'        => $plist,
+                                            'cateName'     => $cateName,
+                                        ]);
+    }
+
+    
+
+
+    /*----------------------------------------------------------------
+     | 關鍵字搜尋
+     |----------------------------------------------------------------
+     |
+     */
+    public function cartSearch( Request $request ){
+
+        if( $request->session()->has('cartUser') ){
+
+            $cartUser =  $request->session()->pull('cartUser');
+
+        }else{
+
+            exit;
+        }
+        
+        // 取出經銷商資料
+        $dealerDatas = $this->getDealer( $cartUser );
+        if(!$dealerDatas){ exit; }
+
+        // 取出所有分類
+        $categorys = $this->getCategory();         
+        
+        // 確認頁數
+        $page = 1;
+
+        if( isset($request->page) && !empty($request->page)){
+
+            $page = $request->page;
+        }
+        
+        // 先取出有庫存之商品存成陣列
+        $tmpRes = GoodsStock::where('dealer_id',$cartUser)->where("goods_num",">=",0)->get();
+        $canSells = [];
+        if( count( $tmpRes) > 0 ){
+            $tmpRes = json_decode($tmpRes,True);
+
+            foreach ($tmpRes as $tmpRe) {
+                array_push($canSells, $tmpRe['goods_id']);
+            }
+        }
+
+        $showNum = 20;
+        
+        $start = ( $page - 1 ) * $showNum;
+        
+        $orderBy = 'created_at';
+
+        $keyword = Input::get('keyword', false);
+
+        // 計算總筆數
+        $total = Goods::where(function ($query) use ($keyword) {
+                      
+                      $query->where('name','like', "%{$keyword}%"  )
+                      ->orWhere('goods_sn', 'like', "%{$keyword}%" );
+
+                 })->whereIn('id',$canSells)->count();
+        
+        // 計算總頁數
+        $totalPage = ceil($total/$showNum);
+
+        
+
+
+        // 取出要呈現的商品
+        $goods = Goods::where(function ($query) use ($keyword) {
+                      
+                      $query->where('name','like', "%{$keyword}%"  )
+                      ->orWhere('goods_sn', 'like', "%{$keyword}%" );
+
+                 })->whereIn('id',$canSells)->offset( $start )->limit( $showNum )->orderBy( $orderBy )->get();
+        
+        // 計算價格
+        foreach ($goods as $goodk => $good) {
+            
+            $goodsPrice = GoodsPrice::where('dealer_id',$cartUser)->where('goods_id',$good['id'])->first();
+                
+                if( $goodsPrice == NULL){
+
+                    $goodsPrice = round($dealerDatas['multiple'] * $good['w_price']);
+
+                }else{
+
+                    $goodsPrice ->toArray();
+
+                    $goodsPrice = $goodsPrice->price;
+                }
+                
+                $goods[$goodk]['goodsPrice'] = $goodsPrice;
+        }
+    
+        $plist= $this->createPlist(url("/{$request->name}/cartSearch/") , $page , $totalPage , '' , "/?keyword=$keyword");
+
+        // 取出分類名稱 
+        $cateName = "搜尋:$keyword - 結果";
+
+
+        return view('cartCategory')->with([ 'dealerDetect' => $request->name,
+                                            'cartUser'     => $cartUser, 
+                                            'dealerDatas'  => $dealerDatas,
+                                            'categorys'    => $categorys,
+                                            'goods'        => $goods,
+                                            'plist'        => $plist,
+                                            'cateName'     => $cateName,
+                                        ]);
+    }
 
 
 
@@ -874,10 +1093,88 @@ class CartController extends Controller
         $OrderLog->save();
         
     }    
+    
 
 
 
-    public function import( Request $request){
+    /*----------------------------------------------------------------
+     | 產生分頁表
+     |----------------------------------------------------------------
+     |
+     */
+    public function createPlist( $url , $now , $totalPage , $length = 2 , $add = ''){
+        
+        if( empty($length) ){
+
+            $length = 5;
+        }
+        $plist = '<nav aria-label="Page navigation"><ul class="pagination">
+                  <li>
+                  <a href="'.$url.'/1'.$add.'" aria-label="Previous">
+                  <span aria-hidden="true">&laquo;</span>
+                  </a>
+                  </li>';
+        for ($i=$length; $i > 0 ; $i--) { 
+            
+            if( ($now - $i) > 0 ){
+
+                $tmpPage = $now - $i;
+
+                $plist .='<li><a href="'.$url.'/'.$tmpPage.$add.'">'.$tmpPage.'</a></li>';
+            }
+
+        }
+        
+        $plist .='<li class="active" ><a href="'.$url.'/'.$now.$add.'">'.$now.'</a></li>';
+        
+        for ($i=1 ;$i <= $length ; $i++) { 
+
+            if( ($now + $i) <= $totalPage ){
+                
+                $tmpPage = $now + $i;
+
+                $plist .='<li><a href="'.$url.'/'.$tmpPage.$add.'">'.$tmpPage.'</a></li>';
+            }
+
+        }        
+
+        $plist .='<li>
+                  <a href="'.$url.'/'.$totalPage.$add.'" aria-label="Next">
+                  <span aria-hidden="true">&raquo;</span>
+                  </a>
+                  </li>
+                  </ul>
+                  </nav>';
+        
+        return $plist;
+
+    }
+
+
+
+    public function stock( Request $request ){
+        exit;
+
+        //  DB::beginTransaction();
+
+        // try {
+            $date = date("Y-m-d H:i:s");
+            for ($i=1; $i <= 164 ; $i++) { 
+                
+                GoodsStock::updateOrCreate(
+                    ['dealer_id' => 12, 'goods_id' => $i],
+                    ['goods_num' => 3]
+                );
+                
+            }
+
+        //     DB::commit();
+        // } catch (Exception $e) {
+                
+        //     logger("{$e->getMessage()} \n\n-----------------------------------------------\n\n"); 
+        // }
+    }
+    public function import( Request $request ){
         exit;
         $datas = Excel::load(public_path('goods.xlsx'), function($reader) {
 

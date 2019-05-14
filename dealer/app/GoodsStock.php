@@ -8,4 +8,10 @@ class GoodsStock extends Model
 {
     //
     protected $table = 'goods_stock';
+    protected $fillable = [
+        'dealer_id', 
+        'goods_id',
+        'goods_num',
+    ];
+
 }
