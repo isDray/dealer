@@ -233,6 +233,27 @@
     </div>
     <!-- /footer -->
 
+    <div id='phoneBar' class="container-fluid _p">
+        <a href="{{url('')}}/{{$dealerDetect}}">
+        <div class="col-xs-4 col-sm-4 text-center">
+            <i class="glyphicon glyphicon-home"></i><br>
+            首頁
+        </div>
+        </a>
+        <a href="{{url('')}}/{{$dealerDetect}}">
+        <div class="col-xs-4 col-sm-4 text-center">
+            <i class="glyphicon glyphicon-info-sign"></i><br>
+            購物流程
+        </div>
+        </a>        
+        <a href="{{url('')}}/{{$dealerDetect}}/checkout">
+        <div class="col-xs-4 col-sm-4 text-center">
+            <i class="glyphicon glyphicon-shopping-cart"></i><br>
+            結帳
+        </div>
+        </a>        
+    </div>
+
 
 
     @if(session()->has('successMsg'))
