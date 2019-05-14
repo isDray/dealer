@@ -257,11 +257,18 @@ class CartController extends Controller
 
         $goods['stock']       = $stock['goods_num'];
 
+        //取出所有附圖
+        $goodPics = GoodsPic::where('gid',$request->goodsId) ->orderBy('sort', 'asc')->get();
+        if( count($goodPics) > 0){
+            $goodPics = json_decode($goodPics ,true);
+        }
+
         return view('cartGoods')->with([ 'dealerDetect' => $request->name,
                                          'cartUser'     => $cartUser, 
                                          'dealerDatas'  => $dealerDatas,
                                          'categorys'    => $categorys,
-                                         'goods'        => $goods
+                                         'goods'        => $goods,
+                                         'goodPics'     => $goodPics,
                                         ]); 
      }
 

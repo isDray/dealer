@@ -53,6 +53,9 @@
 
     <div class='goodsLabel _np col-md-8 col-md-offset-2 col-sm-12 col-xs-12' label='商品描述'></div>
     <div id='goodsDesc' class='col-md-8 col-md-offset-2 col-sm-12 col-xs-12 '>
+        @foreach($goodPics as $goodPic)
+        <img src="{{url('')}}/{{$goodPic['pic']}}">
+        @endforeach
         {!!$goods['desc']!!}
     </div>
 
