@@ -27,7 +27,9 @@ use App\Category;
 use App\OrderLog;
 use \Exception;
 use Excel;
-
+use App\GoodsPic;
+use App\GoodsCat;
+use Illuminate\Support\Facades\Storage;
 class CartController extends Controller
 {
     public static $categorySelect = [];
@@ -876,7 +878,8 @@ class CartController extends Controller
 
 
     public function import( Request $request){
-        $datas = Excel::load(public_path('try2.xlsx'), function($reader) {
+        exit;
+        $datas = Excel::load(public_path('goods.xlsx'), function($reader) {
 
         // reader methods
             //$reader->first();
@@ -884,7 +887,285 @@ class CartController extends Controller
             //dd($reader->get());
         });
 
+        //$mainpicExtension = $request->file('mainpic')->extension();
+        //$request->file('mainpic')->storeAs("logo/{$user->id}/","wlogo.$mainpicExtension",'goodsImage');
 
-        var_dump($datas->toArray());
+        $rows = $datas->toArray();
+        $today = '20190514';
+        // dd($rows);
+        DB::beginTransaction();
+        // 女性gigh
+        $type1 = ['85','86','87','88','89','90','91','92','94','95','96','98','99','105','106','107','108','109','110','111','112','114','115','116','121','122','123','125','126','127','128','129','130','131','132','134','135','136','137','138','139','140','141','144','146','147','148','149','150','151','152','153','156','157','159','160','161','162','164'];
+
+        // 男性增強
+        $type2 = ['93','100','113','117','118','120','124','142','143','145','163'];
+        // 另類
+        $type3 = ['97','101','102','103','104','119','133','54','55','158'];
+        // 睡衣
+        $type4 = ['35','36','37','38','39','40','41','42','43','44','45','46','47','48','49','50','51','52','53','54','55','56','57','58','59','60','61','62','63','64','65','66','67','68','69','70','71','72','73','74','75','76','77','78','79','80','81','82','83','84'];
+        // 內褲
+        $type5 = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34'];
+
+        try {
+            
+            foreach ($rows as $rowk => $row) {
+                if( in_array($rowk, $type1)){
+                    $class='2';
+                }elseif(in_array($rowk, $type2)){
+                    $class='3';
+                }elseif(in_array($rowk, $type3)){
+                    $class='4';
+                }elseif(in_array($rowk, $type4)){
+                    $class='6';
+                }elseif(in_array($rowk, $type5)){
+                    $class='7';
+                }else{
+                    $class='2';
+                }                    
+            if( $rowk > 0){
+                
+                $goods = new Goods;
+
+                $goods->name       = $row['1'];
+
+                $goods->goods_sn   = $row['3'];
+
+                $goods->cid        = $class;
+
+                $goods->price      = intval($row['5']);
+
+                $goods->w_price    = intval($row['4']);
+                
+                $tmpExtension1 = explode('.', $row['7'])[1];
+
+                $goods->main_pic  = "main/{$today}/{$today}_{$rowk}.{$tmpExtension1}";
+
+                $tmpExtension0 = explode('.', $row['6'])[1];
+
+                $goods->thumbnail = "thumbnail/{$today}/{$today}_{$rowk}.{$tmpExtension0}";
+                $goods->status = 1;
+                $goods->created_at = date("Y-m-d H:i:s");
+
+                $goods->updated_at = date("Y-m-d H:i:s");
+                $goods->desc = '首批商品';
+
+                $goods->save();
+
+                if( !empty($row['8']) ){
+
+                    $tmpExtension = explode('.', $row['8'])[1];
+
+                    $goodsPic = new GoodsPic;
+
+                    $goodsPic->gid       = $goods->id;
+
+                    $goodsPic->pic       = "images/other/{$today}/{$today}_{$rowk}".'_'."1.$tmpExtension";
+
+                    $goodsPic->sort      = 1;
+
+                    $goodsPic->save();                    
+                }
+                if( !empty($row['9']) ){
+
+                    $tmpExtension = explode('.', $row['9'])[1];
+
+                    $goodsPic = new GoodsPic;
+
+                    $goodsPic->gid       = $goods->id;
+
+                    $goodsPic->pic       = "images/other/{$today}/{$today}_{$rowk}".'_'."2.$tmpExtension";
+
+                    $goodsPic->sort      = 2;
+
+                    $goodsPic->save();                    
+                }
+                if( !empty($row['10']) ){
+
+                    $tmpExtension = explode('.', $row['10'])[1];
+
+                    $goodsPic = new GoodsPic;
+
+                    $goodsPic->gid       = $goods->id;
+
+                    $goodsPic->pic       = "images/other/{$today}/{$today}_{$rowk}".'_'."3.$tmpExtension";
+
+                    $goodsPic->sort      = 3;
+
+                    $goodsPic->save();                    
+                }                                
+                if( !empty($row['11']) ){
+
+                    $tmpExtension = explode('.', $row['11'])[1];
+
+                    $goodsPic = new GoodsPic;
+
+                    $goodsPic->gid       = $goods->id;
+
+                    $goodsPic->pic       = "images/other/{$today}/{$today}_{$rowk}".'_'."4.$tmpExtension";
+
+                    $goodsPic->sort      = 4;
+
+                    $goodsPic->save();                    
+                }  
+                if( !empty($row['12']) ){
+
+                    $tmpExtension = explode('.', $row['12'])[1];
+
+                    $goodsPic = new GoodsPic;
+
+                    $goodsPic->gid       = $goods->id;
+
+                    $goodsPic->pic       = "images/other/{$today}/{$today}_{$rowk}".'_'."5.$tmpExtension";
+
+                    $goodsPic->sort      = 5;
+
+                    $goodsPic->save();                    
+                }  
+                if( !empty($row['13']) ){
+
+                    $tmpExtension = explode('.', $row['13'])[1];
+
+                    $goodsPic = new GoodsPic;
+
+                    $goodsPic->gid       = $goods->id;
+
+                    $goodsPic->pic       = "images/other/{$today}/{$today}_{$rowk}".'_'."6.$tmpExtension";
+
+                    $goodsPic->sort      = 6;
+
+                    $goodsPic->save();                    
+                } 
+                if( !empty($row['14']) ){
+
+                    $tmpExtension = explode('.', $row['14'])[1];
+
+                    $goodsPic = new GoodsPic;
+
+                    $goodsPic->gid       = $goods->id;
+
+                    $goodsPic->pic       = "images/other/{$today}/{$today}_{$rowk}".'_'."7.$tmpExtension";
+
+                    $goodsPic->sort      = 7;
+
+                    $goodsPic->save();                    
+                }
+                if( !empty($row['15']) ){
+
+                    $tmpExtension = explode('.', $row['15'])[1];
+
+                    $goodsPic = new GoodsPic;
+
+                    $goodsPic->gid       = $goods->id;
+
+                    $goodsPic->pic       = "images/other/{$today}/{$today}_{$rowk}".'_'."8.$tmpExtension";
+
+                    $goodsPic->sort      = 8;
+
+                    $goodsPic->save();                    
+                }                                                                                               
+            }
+
+            }
+
+            DB::commit();
+        
+        } catch (Exception $e) {
+
+            logger("{$e->getMessage()} \n\n-----------------------------------------------\n\n"); 
+        }
+
+        
     }
 }
+
+            // 確認檔案存在(縮圖)
+                // if( Storage::disk('small')->exists($row['6']) ){
+    
+                //     $tmpExtension = explode('.', $row['6'])[1];
+    
+                //     $contents = Storage::disk('small')->get($row['6']);
+    
+                //     Storage::disk("goodsImage")->put("/images/thumbnail/{$today}/{$today}_{$rowk}.{$tmpExtension}", $contents);
+                  
+                // }
+                // if( Storage::disk('commom')->exists($row['7']) ){
+    
+                //     $tmpExtension = explode('.', $row['7'])[1];
+    
+                //     $contents = Storage::disk('commom')->get($row['7']);
+    
+                //     Storage::disk("goodsImage")->put("/images/main/{$today}/{$today}_{$rowk}.{$tmpExtension}", $contents);
+                  
+                // }   
+                // if( Storage::disk('commom')->exists($row['8']) && !empty($row['8'])){
+    
+                //     $tmpExtension = explode('.', $row['8'])[1];
+    
+                //     $contents = Storage::disk('commom')->get($row['8']);
+    
+                //     Storage::disk("goodsImage")->put("/images/other/{$today}/{$today}_{$rowk}_1.{$tmpExtension}", $contents);
+                  
+                // }
+                // if( Storage::disk('commom')->exists($row['9']) && !empty($row['9'])){
+    
+                //     $tmpExtension = explode('.', $row['9'])[1];
+    
+                //     $contents = Storage::disk('commom')->get($row['9']);
+    
+                //     Storage::disk("goodsImage")->put("/images/other/{$today}/{$today}_{$rowk}_2.{$tmpExtension}", $contents);
+                  
+                // }
+                // if( Storage::disk('commom')->exists($row['10']) && !empty($row['10'])){
+    
+                //     $tmpExtension = explode('.', $row['10'])[1];
+    
+                //     $contents = Storage::disk('commom')->get($row['10']);
+    
+                //     Storage::disk("goodsImage")->put("/images/other/{$today}/{$today}_{$rowk}_3.{$tmpExtension}", $contents);
+                  
+                // }            
+                // if( Storage::disk('commom')->exists($row['11']) && !empty($row['11'])){
+    
+                //     $tmpExtension = explode('.', $row['11'])[1];
+    
+                //     $contents = Storage::disk('commom')->get($row['11']);
+    
+                //     Storage::disk("goodsImage")->put("/images/other/{$today}/{$today}_{$rowk}_4.{$tmpExtension}", $contents);
+                  
+                // }
+                // if( Storage::disk('commom')->exists($row['12']) && !empty($row['12'])){
+    
+                //     $tmpExtension = explode('.', $row['12'])[1];
+    
+                //     $contents = Storage::disk('commom')->get($row['12']);
+    
+                //     Storage::disk("goodsImage")->put("/images/other/{$today}/{$today}_{$rowk}_5.{$tmpExtension}", $contents);
+                  
+                // }     
+                // if( Storage::disk('commom')->exists($row['13']) && !empty($row['13'])){
+    
+                //     $tmpExtension = explode('.', $row['13'])[1];
+    
+                //     $contents = Storage::disk('commom')->get($row['13']);
+    
+                //     Storage::disk("goodsImage")->put("/images/other/{$today}/{$today}_{$rowk}_6.{$tmpExtension}", $contents);
+                  
+                // }     
+                // if( Storage::disk('commom')->exists($row['14']) && !empty($row['14'])){
+    
+                //     $tmpExtension = explode('.', $row['14'])[1];
+    
+                //     $contents = Storage::disk('commom')->get($row['14']);
+    
+                //     Storage::disk("goodsImage")->put("/images/other/{$today}/{$today}_{$rowk}_7.{$tmpExtension}", $contents);
+                  
+                // }     
+                // if( Storage::disk('commom')->exists($row['15']) && !empty($row['15'])){
+    
+                //     $tmpExtension = explode('.', $row['15'])[1];
+    
+                //     $contents = Storage::disk('commom')->get($row['15']);
+    
+                //     Storage::disk("goodsImage")->put("/images/other/{$today}/{$today}_{$rowk}_8.{$tmpExtension}", $contents);
+                  
+                // }  

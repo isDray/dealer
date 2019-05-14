@@ -31,7 +31,8 @@ class GoodsController extends Controller
      */
 
     public function index(){
-        
+
+
         if( !Auth::user()->can('goodsList') ){
         
         }

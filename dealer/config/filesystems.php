@@ -47,6 +47,14 @@ return [
             'driver' => 'local',
             'root' => public_path(),
         ],
+        'commom'=>[
+            'driver' => 'local',
+            'root' => public_path()."/goods",
+        ],        
+        'small'=>[
+            'driver' => 'local',
+            'root' => public_path()."/goods/s_images/",
+        ],        
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app'),

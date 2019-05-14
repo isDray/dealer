@@ -172,6 +172,7 @@ Route::group(['middleware' => ['auth','role:Admin|Dealer'] ], function () {
  |----------------------------------------------------------------
  |
  */
+
 Route::get('/{name}','CartController@index')->middleware(['cart']);
 Route::get('/{name}/goods/{goodsId}','CartController@viewGoods')->middleware(['cart']);
 Route::post('/{name}/addToCart/','CartController@addToCart')->middleware(['cart']);
@@ -179,4 +180,4 @@ Route::post('/{name}/deleteItem/','CartController@deleteItem')->middleware(['car
 Route::get('/{name}/checkout/','CartController@checkout')->middleware(['cart']);
 Route::post('/{name}/newOrder/','CartController@newOrder')->middleware(['cart']);
 Route::get('/{name}/thank/','CartController@thank')->middleware(['cart']);
-Route::get('/{name}/import/','CartController@import')->middleware(['cart']);
+//Route::get('/{name}/import/','CartController@import')->middleware(['cart']);
