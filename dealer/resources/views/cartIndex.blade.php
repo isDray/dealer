@@ -73,7 +73,10 @@
         @foreach($newGoods as $newGood)
         <div class="col-md-3 col-sm-4 col-xs-6 ">
             <div class="thumbnail">
+                <a href="{{url('')}}/{{$dealerDetect}}/goods/{{$newGood['id']}}" target="_blank">
                 <img src="{{url('images')}}/{{$newGood['thumbnail']}}" alt="...">
+                </a>
+
                 <div class="caption">
             
                 <h5> {{ $newGood['name'] }} </h5>
@@ -96,20 +99,26 @@
 <div class="container-fluid">
     <div class='boxLabel _np col-md-8 col-md-offset-2 col-sm-12 col-xs-12' label='熱銷商品'></div>
     
-    <div id='hotGoods' class='col-md-8 col-md-offset-2 col-sm-12 col-xs-12'>
-        @for( $i=0; $i<8 ; $i++)
-        <div class="col-md-3 col-sm-4 col-xs-6">
+    <div id='hotGoods' class='col-md-8 col-md-offset-2 col-sm-12 col-xs-12 _np'>
+        @foreach($hots as $newGood)
+        <div class="col-md-3 col-sm-4 col-xs-6 ">
             <div class="thumbnail">
-                <img src="https://***REMOVED***.com/***REMOVED***/images/201505/thumb_img/9407_thumb_G_1432062363451.gif" alt="...">
+                <a href="{{url('')}}/{{$dealerDetect}}/goods/{{$newGood['id']}}" target="_blank">
+                <img src="{{url('images')}}/{{$newGood['thumbnail']}}" alt="...">
+                </a>
+                
                 <div class="caption">
             
-                <h3>商品名稱</h3>
-                <p>$560</p>
-                <p><a href="#" class="btn btn-primary" role="button">加入購物車</a> <a href="#" class="btn btn-default" role="button">Button</a></p>
+                <h5> {{ $newGood['name'] }} </h5>
+                <h4>價格:{{$newGood['goodsPrice'] }}</h4>
+                <p class='itemBtn'>
+                  <!-- <a href="#" class="btn btn-view" role="button"><span class="glyphicon glyphicon-search"></span>查看商品</a>  -->
+                   <button class="btn btn-primary addone" role="button" goodsId="{{$newGood['id']}}"><span class="glyphicon glyphicon-shopping-cart"></span>加入購物車</button>
+                </p>
                 </div>
             </div>
         </div>
-        @endfor
+        @endforeach
     </div>
     
     </div>
@@ -120,20 +129,26 @@
 <div class="container-fluid">
     <div class='boxLabel _np col-md-8 col-md-offset-2 col-sm-12 col-xs-12' label='推薦商品'></div>
     
-    <div id='recommendGoods' class='col-md-8 col-md-offset-2 col-sm-12 col-xs-12'>
-        @for( $i=0; $i<8 ; $i++)
-        <div class="col-md-3 col-sm-4 col-xs-6">
+    <div id='recommendGoods' class='col-md-8 col-md-offset-2 col-sm-12 col-xs-12 _np'>
+        @foreach($recommendGoods as $newGood)
+        <div class="col-md-3 col-sm-4 col-xs-6 ">
             <div class="thumbnail">
-                <img src="https://***REMOVED***.com/***REMOVED***/images/201505/thumb_img/9407_thumb_G_1432062363451.gif" alt="...">
+                <a href="{{url('')}}/{{$dealerDetect}}/goods/{{$newGood['id']}}" target="_blank">
+                <img src="{{url('images')}}/{{$newGood['thumbnail']}}" alt="...">
+                </a>
+                
                 <div class="caption">
             
-                <h3>商品名稱</h3>
-                <p>$560</p>
-                <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>
+                <h5> {{ $newGood['name'] }} </h5>
+                <h4>價格:{{$newGood['goodsPrice'] }}</h4>
+                <p class='itemBtn'>
+                  <!-- <a href="#" class="btn btn-view" role="button"><span class="glyphicon glyphicon-search"></span>查看商品</a>  -->
+                   <button class="btn btn-primary addone" role="button" goodsId="{{$newGood['id']}}"><span class="glyphicon glyphicon-shopping-cart"></span>加入購物車</button>
+                </p>
                 </div>
             </div>
         </div>
-        @endfor
+        @endforeach
     </div>
     
     </div>

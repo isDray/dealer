@@ -78,7 +78,8 @@ class CartController extends Controller
 
         }
         
-        $newGoods = Goods::/*whereIn('id',$goodsCanShow)->*/orderBy('created_at', 'desc')/*->limit(8)*/->get();
+        // 最新商品
+        $newGoods = Goods::whereIn('id',$goodsCanShow)->orderBy('created_at', 'desc')->limit(8)->get();
 
         if( count($newGoods) > 0){
 
@@ -105,13 +106,95 @@ class CartController extends Controller
         }else{
             $newGoods = [];
         }
+        
+        // 熱銷商品
+        $allOrders = Order::where('dealer_id',$cartUser)->get();
+        $allOrderArr = [];
+        if( count($allOrders) > 0 ){
 
+            foreach ($allOrders as $allOrder ) {
+
+                array_push($allOrderArr, $allOrder['id']);
+
+            }
+ 
+             //
+            $hots = OrderGoods::whereIn('oid',$allOrderArr)->groupBy('gid')->orderBy('total','DESC')->limit(8)->selectRaw('gid, SUM(num) as total')->get();
+            
+            if( count($hots) > 0){
+
+                $hots = json_decode($hots,true);
+                $hotArr = [];
+                foreach ($hots as $hot) {
+
+                    array_push($hotArr, $hot['gid']);
+                }
+                
+                $hots = Goods::whereIn('id',$hotArr)->limit(8)->get();
+
+                foreach ($hots as $hotk=> $hot) {
+    
+                    // 確認經銷商有無設定價格
+                    $goodsPrice = GoodsPrice::where('dealer_id',$cartUser)->where('goods_id',$hot['id'])->first();
+                    
+                    if( $goodsPrice == NULL){
+    
+                        $goodsPrice = round($dealerDatas['multiple'] * $hot['w_price']);
+    
+                    }else{
+            
+                        $goodsPrice ->toArray();
+                        $goodsPrice = $goodsPrice->price;
+                    }
+                    
+                    $hots[$hotk]['goodsPrice'] = $goodsPrice;
+                }                
+
+            }else{
+                $hots = [];
+            }
+            
+        }
+
+        // 熱銷商品結束
+
+        // 推薦商品
+        $recommendGoods = Goods::whereIn('id',$goodsCanShow)->where('recommend','1')->orderBy('created_at', 'desc')->limit(8)->get();
+        
+        if( count($recommendGoods) > 0){
+
+            $recommendGoods = json_decode($recommendGoods,true);
+
+            foreach ($recommendGoods as $recommendGoodk=> $recommendGood) {
+
+                // 確認經銷商有無設定價格
+                $goodsPrice = GoodsPrice::where('dealer_id',$cartUser)->where('goods_id',$recommendGood['id'])->first();
+                
+                if( $goodsPrice == NULL){
+
+                    $goodsPrice = round($dealerDatas['multiple'] * $recommendGood['w_price']);
+
+                }else{
+        
+                    $goodsPrice ->toArray();
+                    $goodsPrice = $goodsPrice->price;
+                }
+                
+                $recommendGoods[$recommendGoodk]['goodsPrice'] = $goodsPrice;
+            }
+
+        }else{
+
+            $recommendGoods = [];
+        }
 
         return view('cartIndex')->with([ 'dealerDetect' => $request->name,
         	                             'cartUser' =>$cartUser,
         	                             'dealerDatas' => $dealerDatas,
         	                             'categorys' => $categorys,
-                                         'newGoods'=>$newGoods
+                                         'newGoods'=>$newGoods,
+                                         'recommendGoods'=>$recommendGoods,
+                                         'hots'=>$hots,
                                         ]);     	
     }
     
