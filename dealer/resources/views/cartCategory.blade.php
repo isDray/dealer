@@ -42,7 +42,7 @@
         </div>
 
     </div>
-    </div>
+
 </div>
 
 <script src="{{asset('adminbsb-materialdesign/plugins/bootstrap-notify/bootstrap-notify.js')}}"></script>

@@ -184,3 +184,4 @@ Route::get('/{name}/thank/','CartController@thank')->middleware(['cart']);
 //Route::get('/{name}/stock/','CartController@stock')->middleware(['cart']);
 Route::get('/{name}/cartCategory/{cid}/{page?}','CartController@cartCategory')->middleware(['cart']);
 Route::get('/{name}/cartSearch/{page?}/','CartController@cartSearch')->middleware(['cart']);
+Route::get('/{name}/article/{aid}','CartController@article')->middleware(['cart']);

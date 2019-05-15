@@ -159,7 +159,7 @@
 
 
           <ul id='navItem' class="nav navbar-nav navbar-left">
-            <li><a href="#">首頁</a></li>
+            <li><a href="{{url('')}}/{{$dealerDetect}}">首頁</a></li>
 
             @foreach( $categorys as $category)
             <li class="dropdown">
@@ -178,12 +178,12 @@
             @endforeach
 
             <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">購買須知 <span class="caret"></span></a>
+              <a href="#" class="dropdown-toggle _w" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">購買須知 <span class="caret"></span></a>
 
         
               <ul class="dropdown-menu">
 
-                <li><a href="#">購買流程</a></li>
+                <li><a href="{{url('')}}/{{$dealerDetect}}/article/1">購買流程</a></li>
 
               </ul>              
             
@@ -240,7 +240,7 @@
             首頁
         </div>
         </a>
-        <a href="{{url('')}}/{{$dealerDetect}}">
+        <a href="{{url('')}}/{{$dealerDetect}}/article/1">
         <div class="col-xs-4 col-sm-4 text-center">
             <i class="glyphicon glyphicon-info-sign"></i><br>
             購物流程

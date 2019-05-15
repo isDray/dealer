@@ -954,8 +954,58 @@ class CartController extends Controller
                                             'cateName'     => $cateName,
                                         ]);
     }
+    
 
 
+
+    /*----------------------------------------------------------------
+     | 文章
+     |----------------------------------------------------------------
+     |
+     */
+    public function article( Request $request ){
+        if( $request->session()->has('cartUser') ){
+
+            $cartUser =  $request->session()->pull('cartUser');
+
+        }else{
+
+            exit;
+        }
+        
+        // 取出經銷商資料
+        $dealerDatas = $this->getDealer( $cartUser );
+        if(!$dealerDatas){ exit; }
+
+        // 取出所有分類
+        $categorys = $this->getCategory();
+        
+        if( isset($request->aid) && !empty($request->aid) ){
+            
+            $article = Article::find("$request->aid");
+            
+            if( $article != NUll){
+                 
+                $article = $article->toArray();
+            }else{
+
+                return back();
+            }
+        }else{
+
+            return back();
+        }
+        
+
+        return view('cartArticle')->with([ 'dealerDetect' => $request->name,
+                                            'cartUser'     => $cartUser, 
+                                            'dealerDatas'  => $dealerDatas,
+                                            'categorys'    => $categorys,
+                                            'article'      => $article
+
+                                        ]);
+
+    }
 
 
     /*----------------------------------------------------------------

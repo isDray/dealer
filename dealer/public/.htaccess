@@ -4,7 +4,11 @@
     </IfModule>
 
     RewriteEngine On
-
+    
+    RewriteCond %{HTTP_HOST} ^wego.test.com$
+    RewriteCond %{HTTP_HOST} !^wego.test.com/login$
+    RewriteRule ^$ http://wego.test.com/wego/ [L,QSD,R=301]
+    
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
@@ -18,4 +22,6 @@
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
+
+
 </IfModule>

@@ -16,19 +16,19 @@
     filebrowserUploadUrl: '/laravel-filemanager/upload?type=Files&_token=',
   };
 </script>
-<div class="container-fluid _np" style='margin-bottom:40px;'>
+<div id='fastBox' class="container-fluid" style='margin-bottom:40px;'>
 
 <!-- 輪播 -->
-<div id='carouselBox' class='col-md-12 col-sm-12 col-xs-12 _np'>
+<!-- <div id='carouselBox' class='col-md-12 col-sm-12 col-xs-12 _np'>
 <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
-  <!-- Indicators -->
+
   <ol class="carousel-indicators">
     <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
     <li data-target="#carousel-example-generic" data-slide-to="1"></li>
     <li data-target="#carousel-example-generic" data-slide-to="2"></li>
   </ol>
 
-  <!-- Wrapper for slides -->
+
   <div class="carousel-inner" role="listbox">
     <div class="item active">
       <img src="https://***REMOVED***.com/***REMOVED***/data/afficheimg/20181108siafyj.jpg" alt="...">
@@ -50,7 +50,7 @@
     </div>
   </div>
 
-  <!-- Controls -->
+
   <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
     <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
     <span class="sr-only">Previous</span>
@@ -60,9 +60,24 @@
     <span class="sr-only">Next</span>
   </a>
 </div>
-</div>
+</div> -->
 <!-- /輪播 -->
-
+    <div class='boxLabel _np col-md-8 col-md-offset-2 col-sm-12 col-xs-12' label='快速分類'></div>
+    <div id='fastInner' class='col-md-8 col-md-offset-2 col-sm-12 col-xs-12 _np' >
+        <div class='col-md-2 col-md-offset-1 col-sm-2 col-sm-offset-1 col-xs-2 col-xs-offset-1 fastItem '><div>滾珠</div></div>
+        <div class='col-md-2 col-sm-2 col-xs-2  fastItem'><div>伸縮</div></div>
+        <div class='col-md-2 col-sm-2 col-xs-2  fastItem'><div>震動</div></div>
+        <div class='col-md-2 col-sm-2 col-xs-2  fastItem'><div>逼真</div></div>
+        <div class='col-md-2 col-sm-2 col-xs-2  fastItem'><div>AV</div></div>
+        <div class='col-md-2 col-md-offset-1 col-sm-2 col-sm-offset-1 col-xs-2 col-xs-offset-1 fastItem'><div>跳蛋</div></div>
+        <div class='col-md-2 col-sm-2 col-xs-2  fastItem'><div>猛男</div></div>
+        <div class='col-md-2 col-sm-2 col-xs-2  fastItem'><div>男女</div></div>
+        <div class='col-md-2 col-sm-2 col-xs-2  fastItem'><div>特殊</div></div>
+        <div class='col-md-2 col-sm-2 col-xs-2  fastItem'><div>內衣</div></div>
+        <div class='col-md-2 col-md-offset-1 col-sm-2 col-sm-offset-1 col-xs-2 col-xs-offset-1 fastItem'><div>網襪</div></div>
+        <div class='col-md-2 col-sm-2 col-xs-2  fastItem'><div>丁字褲</div></div>
+        <div class='col-md-2 col-sm-2 col-xs-2  fastItem'><div>三角褲</div></div>
+    </div>
 </div>
 
 <!-- 最新商品 -->
