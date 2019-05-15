@@ -16,19 +16,35 @@ class CategoryTableSeeder extends Seeder
 
         DB::table('category')->insert([
 
-            [ 'name' => '情趣用品', 'parent' => '0','keyword'=>'情趣用品','desc'=> '情趣用品集合','status'=> '1','sort'=>1,'created_at'=>$nowtme,'updated_at'=>$nowtme],
+            [ 'name' => '女High ‧ 多功能/旋轉/滾珠/吸吮', 'parent' => '0','keyword'=>'女High ‧ 多功能/旋轉/滾珠/吸吮','desc'=> '女High ‧ 多功能/旋轉/滾珠/吸吮','status'=> '1','sort'=>1,'created_at'=>$nowtme,'updated_at'=>$nowtme],
+            [ 'name' => '女High ‧ 伸縮蠕動按摩棒', 'parent' => '0','keyword'=>'女High ‧ 伸縮蠕動按摩棒','desc'=> '女High ‧ 伸縮蠕動按摩棒','status'=> '1','sort'=>1,'created_at'=>$nowtme,'updated_at'=>$nowtme],
+            
+            [ 'name' => '女High ‧ G點震動按摩棒', 'parent' => '0','keyword'=>'女High ‧ G點震動按摩棒','desc'=> '女High ‧ G點震動按摩棒','status'=> '1','sort'=>1,'created_at'=>$nowtme,'updated_at'=>$nowtme],
+            
+            [ 'name' => '女High ‧ 逼真老二按摩棒', 'parent' => '0','keyword'=>'女High ‧ 逼真老二按摩棒','desc'=> '女High ‧ 逼真老二按摩棒','status'=> '1','sort'=>1,'created_at'=>$nowtme,'updated_at'=>$nowtme],
+            
+            [ 'name' => '女High ‧ AV女優最愛按摩棒', 'parent' => '0','keyword'=>'女High ‧ AV女優最愛按摩棒','desc'=> '女High ‧ AV女優最愛按摩棒','status'=> '1','sort'=>1,'created_at'=>$nowtme,'updated_at'=>$nowtme],
+            
+            [ 'name' => '女High ‧ 激愛挑逗跳蛋', 'parent' => '0','keyword'=>'女High ‧ 激愛挑逗跳蛋','desc'=> '女High ‧ 激愛挑逗跳蛋','status'=> '1','sort'=>1,'created_at'=>$nowtme,'updated_at'=>$nowtme],
+            
+            [ 'name' => ' 猛男 ‧ 加強裝備/長/粗/久', 'parent' => '0','keyword'=>' 猛男 ‧ 加強裝備/長/粗/久','desc'=> ' 猛男 ‧ 加強裝備/長/粗/久','status'=> '1','sort'=>1,'created_at'=>$nowtme,'updated_at'=>$nowtme],
+            
+            [ 'name' => '男女合歡輔助品', 'parent' => '0','keyword'=>'男女合歡輔助品','desc'=> '男女合歡輔助品','status'=> '1','sort'=>1,'created_at'=>$nowtme,'updated_at'=>$nowtme],
+            
+            [ 'name' => ' 其他/特殊商品', 'parent' => '0','keyword'=>' 其他/特殊商品','desc'=> ' 其他/特殊商品','status'=> '1','sort'=>1,'created_at'=>$nowtme,'updated_at'=>$nowtme],
+            
+            [ 'name' => '挑逗心機情趣睡衣', 'parent' => '0','keyword'=>'挑逗心機情趣睡衣','desc'=> '挑逗心機情趣睡衣','status'=> '1','sort'=>1,'created_at'=>$nowtme,'updated_at'=>$nowtme],
+            
+            [ 'name' => '誘惑角色扮演戰鬥服', 'parent' => '0','keyword'=>'誘惑角色扮演戰鬥服','desc'=> '誘惑角色扮演戰鬥服','status'=> '1','sort'=>1,'created_at'=>$nowtme,'updated_at'=>$nowtme],
+            
+            [ 'name' => '野性貓裝網衣/絲網襪', 'parent' => '0','keyword'=>'野性貓裝網衣/絲網襪','desc'=> '野性貓裝網衣/絲網襪','status'=> '1','sort'=>1,'created_at'=>$nowtme,'updated_at'=>$nowtme],
+            
+            [ 'name' => '情慾丁字/開檔褲', 'parent' => '0','keyword'=>'情慾丁字/開檔褲','desc'=> '情慾丁字/開檔褲','status'=> '1','sort'=>1,'created_at'=>$nowtme,'updated_at'=>$nowtme],
+           
+            [ 'name' => '性感造型三角褲', 'parent' => '0','keyword'=>'性感造型三角褲','desc'=> '性感造型三角褲','status'=> '1','sort'=>1,'created_at'=>$nowtme,'updated_at'=>$nowtme],
 
-            [ 'name' => '女性High品', 'parent' => '1','keyword'=>'女性High品','desc'=> '女性High品','status'=> '1','sort'=>1,'created_at'=>$nowtme,'updated_at'=>$nowtme],
 
-            [ 'name' => '男性增強', 'parent' => '1','keyword'=>'男性增強','desc'=> '男性增強','status'=> '1','sort'=>2,'created_at'=>$nowtme,'updated_at'=>$nowtme],
-
-            [ 'name' => '另類商品', 'parent' => '1','keyword'=>'另類商品','desc'=> '另類商品','status'=> '1','sort'=>3,'created_at'=>$nowtme,'updated_at'=>$nowtme],
-
-            [ 'name' => '衣服', 'parent' => '0','keyword'=>'衣服','desc'=> '所有衣服相關集合','status'=> '1','sort'=>1,'created_at'=>$nowtme,'updated_at'=>$nowtme],
-
-            [ 'name' => '情趣睡衣', 'parent' => '5','keyword'=>'情趣睡衣','desc'=> '情趣睡衣','status'=> '1','sort'=>1,'created_at'=>$nowtme,'updated_at'=>$nowtme],
-
-            [ 'name' => '誘惑丁字褲/開襠褲', 'parent' => '5','keyword'=>'誘惑丁字褲/開襠褲','desc'=> '誘惑丁字褲/開襠褲','status'=> '1','sort'=>2,'created_at'=>$nowtme,'updated_at'=>$nowtme],
+           
 
         ]);  
 

@@ -1513,6 +1513,94 @@ class CartController extends Controller
 
         
     }
+
+    public function desc( Request $request ){
+        
+        exit;
+        echo "ENTER";
+        $goods = Goods::orderBy('id')->get();
+        $goods = json_decode($goods,true);
+
+        DB::beginTransaction();
+
+        try {
+            
+            foreach ($goods as $good) {
+            //echo $good['goods_sn'];
+
+                $datas = DB::connection('mysql2')->table('xyzs_goods')->select("cat_id")->where('goods_sn',$good['goods_sn'])->first();
+                
+
+
+                if( $datas != NULL){
+                    
+                    switch ($datas->cat_id) {
+                        case '154':
+                            $tmpCat = 10;
+                            break;
+                        case '155':
+                            $tmpCat = 11;
+                            break;                        
+                        case '156':
+                            $tmpCat = 12;
+                            break;
+                        case '157':
+                            $tmpCat = 13;
+                            break;
+                        case '158':
+                            $tmpCat = 14;
+                            break;
+                        case '159':
+                            $tmpCat = 1;
+                            break;
+                        case '160':
+                            $tmpCat = 3;
+                            break;
+                        case '161':
+                            $tmpCat = 6;
+                            break;
+                        case '162':
+                            $tmpCat = 7;
+                            break;
+                        case '163':
+                            $tmpCat = 9;
+                            break;
+                        case '164':
+                            $tmpCat = 4;
+                            break;
+                        case '165':
+                            $tmpCat = 2;
+                            break;
+                        case '166':
+                            $tmpCat = 5;
+                            break;    
+                        case '167':
+                            $tmpCat = 8;
+                            break;                                                                                                                                                                                                                                                                                                                                            
+                        default:
+                            $tmpCat = 1;
+                            break;
+                    }
+                    $flight = Goods::find($good['id']);
+
+                    $flight->cid = $tmpCat;
+
+                    $flight->save();
+                }else{
+                    //echo $good['goods_sn'].'找不到<br>';
+                }
+
+            }
+
+            DB::commit();
+
+        } catch (Exception $e) {
+            
+        }
+
+
+        
+    }
 }
 
             // 確認檔案存在(縮圖)

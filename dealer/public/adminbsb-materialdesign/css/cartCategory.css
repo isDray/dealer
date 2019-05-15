@@ -21,10 +21,10 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f93434', end
 	content: attr(label);
 	/*background-color: #1e1f26;*/
 	text-align: center;
-	width: 160px;
+	width: 300px;
 	height: 40px;
 	line-height: 36px;
-	left:calc(50% - 80px);
+	left:calc(50% - 150px);
 	top:-40px;
 	font-weight: 900;
 	font-size: 24px;

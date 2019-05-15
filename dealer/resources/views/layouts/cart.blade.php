@@ -162,33 +162,27 @@
             <li><a href="{{url('')}}/{{$dealerDetect}}">首頁</a></li>
 
             @foreach( $categorys as $category)
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{$category['name']}} <span class="caret"></span></a>
-              @if( !empty($category['child']) )
+
+                <li><a href="{{url('')}}/{{$dealerDetect}}/cartCategory/{{$category['id']}}/1">{{$category['name']}}</a></li>
+
+          
+            @endforeach
+
+            <li class="dropdown _w">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">分類<span class="caret"></span></a>
+              
               
               <ul class="dropdown-menu">
-                @foreach( $category['child'] as $subchild)
-                <li><a href="{{url('')}}/{{$dealerDetect}}/cartCategory/{{$subchild['id']}}/1">{{$subchild['name']}}</a></li>
+                @foreach( $categorys as $category)
+                <li><a href="{{url('')}}/{{$dealerDetect}}/cartCategory/{{$category['id']}}/1">{{$category['name']}}</a></li>
                 @endforeach
               </ul>              
               
-              @endif
 
-            </li>            
-            @endforeach
 
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle _w" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">購買須知 <span class="caret"></span></a>
+            </li> 
 
-        
-              <ul class="dropdown-menu">
-
-                <li><a href="{{url('')}}/{{$dealerDetect}}/article/1">購買流程</a></li>
-
-              </ul>              
-            
-
-            </li>
+            <li class='_w'><a href="{{url('')}}/{{$dealerDetect}}/article/1">購物流程</a></li>
 
           </ul>
           
@@ -196,7 +190,7 @@
 
 
 
-          <form class="navbar-form navbar-right" action="{{url('')}}/{{$dealerDetect}}/cartSearch/1/" method="get">
+          <form class="navbar-form navbar-right _w" action="{{url('')}}/{{$dealerDetect}}/cartSearch/1/" method="get">
             {{ csrf_field() }}
             <div class="form-group">
               <input type="text" class="form-control" placeholder="搜尋商品" name='keyword'>
