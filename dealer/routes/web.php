@@ -18,7 +18,7 @@
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+
 
     
 /*----------------------------------------------------------------
@@ -108,6 +108,7 @@ Route::group(['middleware' => ['auth','role:Admin'] ], function () {
  */
 Route::group(['middleware' => ['auth','role:Admin|Dealer'] ], function () {
     
+    Route::get('/home', 'HomeController@index')->name('home');
     // 訂單管理
     Route::get('/order','OrderController@index');
     Route::get('/orderNew','OrderController@new');

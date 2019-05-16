@@ -163,7 +163,7 @@
 
             @foreach( $categorys as $category)
 
-                <li><a href="{{url('')}}/{{$dealerDetect}}/cartCategory/{{$category['id']}}/1">{{$category['name']}}</a></li>
+                <li class='_p'><a href="{{url('')}}/{{$dealerDetect}}/cartCategory/{{$category['id']}}/1">{{$category['name']}}</a></li>
 
           
             @endforeach

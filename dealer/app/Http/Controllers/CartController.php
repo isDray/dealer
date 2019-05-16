@@ -1516,7 +1516,7 @@ class CartController extends Controller
 
     public function desc( Request $request ){
         
-        exit;
+       exit;
         echo "ENTER";
         $goods = Goods::orderBy('id')->get();
         $goods = json_decode($goods,true);
@@ -1533,7 +1533,8 @@ class CartController extends Controller
 
 
                 if( $datas != NULL){
-                    
+                    echo $good['id'];
+                    echo '<br>';
                     switch ($datas->cat_id) {
                         case '154':
                             $tmpCat = 10;
