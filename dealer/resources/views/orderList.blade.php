@@ -68,10 +68,10 @@ a{
                                     <p>訂單狀態</p>
                                     <select class="form-control show-tick myborder" id='status'>
                                         <option value='0' >-選擇-</option>
-                                        <option value='1' >未新增完成</option>
-                                        <option value='2' >待處理</option>
-                                        <option value='3' >已出貨</option>
-                                        <option value='4' >取消</option>
+                                        <option value='1' @if($dfStatus == '1') selected @endif>未新增完成</option>
+                                        <option value='2' @if($dfStatus == '2') selected @endif >待處理</option>
+                                        <option value='3' @if($dfStatus == '3') selected @endif >已出貨</option>
+                                        <option value='4' @if($dfStatus == '4') selected @endif >取消</option>
                                     </select>
                                 </div> 
                                 
@@ -85,7 +85,7 @@ a{
                                         
                                         <div class="form-line" id='orderSatrtBox'>
                                         
-                                            <input type="text" class="form-control myborder" placeholder="開始日期" id='orderSatrt'>
+                                            <input type="text" class="form-control myborder align-center" placeholder="開始日期" id='orderSatrt'>
                                         
                                         </div>
                                         
@@ -95,7 +95,7 @@ a{
                                         
                                         <div class="form-line" id='orderEndBox'>
                                             
-                                            <input type="text" class="form-control myborder" placeholder="結束日期" id='orderEnd'>
+                                            <input type="text" class="form-control myborder align-center" placeholder="結束日期" id='orderEnd'>
                                         
                                         </div>
                                         

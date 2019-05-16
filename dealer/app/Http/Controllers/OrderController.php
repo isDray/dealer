@@ -21,7 +21,6 @@ use App\Dealer;
 
 use \Exception;
 
-
 /*----------------------------------------------------------------------------------------------------
  | 訂單管理類別
  |----------------------------------------------------------------------------------------------------
@@ -35,7 +34,18 @@ class OrderController extends Controller
      |----------------------------------------------------------------
      |
      */
-     public function index(){
+     public function index( Request $request) {
+        
+        
+        $dfInput = $request->input();
+        
+        $dfStatus = 0;
+        
+        if( isset($dfInput['status']) ){
+
+            $dfStatus = $dfInput['status'];
+        }
+    
         
         // title 名稱
         $pageTitle = "訂單管理";
@@ -55,7 +65,7 @@ class OrderController extends Controller
             $orders = $orders->toArray();
     
             return view('orderList')->with([ 'title'  => $pageTitle,
-    
+                                             'dfStatus'=>$dfStatus,
                                             ]);
 
         }elseif( Auth::user()->hasRole('Dealer') ){
@@ -68,6 +78,7 @@ class OrderController extends Controller
             $orders = $orders->toArray();
 
             return view('orderList')->with([ 'title'  => $pageTitle,
+                                             'dfStatus'=>$dfStatus,
     
                                             ]);            
         }

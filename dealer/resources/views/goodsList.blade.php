@@ -48,14 +48,21 @@ a{
                                     <p><b>進階搜尋</b></p>
                                 </div>
                                
-                                <div class="col-sm-2">
-                                    <p>價格</p>
+                                <div class="col-sm-3">
+                                    <p>關鍵字:</p>
                                     <div class="input-group">
-                                        <div class="form-line">
+                                        <input type="text" class="form-control myborder" placeholder="" id='myKeyword' value=''>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-2">
+                                    <p>批發價</p>
+                                    <div class="input-group">
+                                        <div class="form-line myborder">
                                             <input type="text" class="form-control" placeholder="" id='min_price'>
                                         </div>
-                                        <span class="input-group-addon">~</span>
-                                        <div class="form-line">
+                                        <span class="input-group-addon" style="padding-right:10px;">~</span>
+                                        <div class="form-line myborder">
                                             <input type="text" class="form-control" placeholder="" id='max_price'>
                                         </div>                                        
                                     </div>
@@ -64,7 +71,7 @@ a{
                                 
                                 <div class="col-sm-3">
                                     <p>商品類別</p>
-                                    <select class="form-control show-tick" id='category'>
+                                    <select class="form-control show-tick myborder" id='category'>
                                         <option value='0' >-選擇-</option>
                                         @foreach( $categorys as $category)
                                         <option value="{{$category['id']}}"> {{$category['level']}}{{$category['name']}} </option>
@@ -74,10 +81,10 @@ a{
                                 
                                 <div class="col-sm-1">
                                     <p>上架</p>
-                                    <select class="form-control show-tick" id='status'>
+                                    <select class="form-control show-tick myborder" id='status'>
                                         <option value='0' >-選擇-</option>
-                                        <option value="1">啟用</option>
-                                        <option value="2">停用</option>
+                                        <option value="1" @if($dfStatus == 1) selected @endif>啟用</option>
+                                        <option value="2" @if($dfStatus == 2) selected @endif>停用</option>
                                     </select>
                                 </div>                                 
 
@@ -144,6 +151,7 @@ $(function(){
     mytable = $('.roleTable').DataTable({
         order:[[6,'desc']],
         responsive: true,
+        searching: false,
         language:{
             "processing":   "處理中...",
             "loadingRecords": "載入中...",
@@ -177,6 +185,7 @@ $(function(){
                 d.max_price = $("#max_price").val();
                 d.category  = $("#category").val();
                 d.status    = $("#status").val();
+                d.myKeyword  = $("#myKeyword").val();                
             }
         },
 
@@ -208,8 +217,13 @@ $(function(){
                 }
         
             },
+            {
+                "targets":4,
+                "visible": false,
+            },
             {   "targets" : 7 ,
                 "data": "edit",
+                "orderable": false,
                 "render" : function ( url, type, full) {
                     return  '<a href="'+"{{url('/goodsEdit')}}/"+full[7]+'">'+
                             '<button type="button" class="btn btn-success waves-effect">'+
@@ -251,6 +265,10 @@ $(function(){
         mytable.ajax.reload();
 
     });
+    $("#myKeyword").bind("keyup change", function(e) {
+        
+        mytable.ajax.reload();
+    });    
 
     /*----------------------------------------------------------------
      | 觸發刪除

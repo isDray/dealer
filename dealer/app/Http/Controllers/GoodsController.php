@@ -30,8 +30,15 @@ class GoodsController extends Controller
      |
      */
 
-    public function index(){
+    public function index( Request $request ){
+        $dfInput = $request->input();
+        
+        $dfStatus = 0;
+        
+        if( isset($dfInput['status']) ){
 
+            $dfStatus = $dfInput['status'];
+        }
 
         if( !Auth::user()->can('goodsList') ){
         
@@ -49,7 +56,8 @@ class GoodsController extends Controller
 
         return view('goodsList')->with([ 'title'     => $pageTitle,
                                          'goods'     => $goods,
-                                         'categorys' => $categorys
+                                         'categorys' => $categorys,
+                                         'dfStatus'  => $dfStatus,
                                         ]);
     }
 
@@ -791,22 +799,22 @@ class GoodsController extends Controller
         // 最低價
         if( !empty( $request->min_price )){
 
-            $query->where( 'g.price', '>=', (int)"{$request->min_price}");
+            $query->where( 'g.w_price', '>=', (int)"{$request->min_price}");
 
         }      
 
         // 最高價
         if( !empty( $request->max_price )){
 
-            $query->where( 'g.price', '<=', (int)"{$request->max_price}");
+            $query->where( 'g.w_price', '<=', (int)"{$request->max_price}");
 
         }
         
         // 關鍵字查詢
-        if( !empty($request->search['value']) ){
+        if( !empty($request->myKeyword) ){
             
 
-            $filterSearch = $request->search['value'];
+            $filterSearch = $request->myKeyword;
 
             $query->where(function ( $query_add  ) use ($filterSearch) {
                 
@@ -847,7 +855,8 @@ class GoodsController extends Controller
                 $query->where( 'g.status', '0' );
             }
         }
-
+        $suitNum = $query->count();
+        
         $query->offset( $request->start );
         
         $query->limit( $request->length );
@@ -856,8 +865,6 @@ class GoodsController extends Controller
     
         $goods = $query->get();
         
-        //if( $request)
-
         $goods = $goods->toArray();
         
         $returnData = [];
@@ -879,6 +886,6 @@ class GoodsController extends Controller
 
         }
 
-        echo json_encode( ['data'=>$returnData , 'recordsTotal'=>$recordsTotal, 'recordsFiltered'=>count($returnData)] );
+        echo json_encode( ['data'=>$returnData , 'recordsTotal'=>$recordsTotal, 'recordsFiltered'=>$suitNum] );
     }
 }

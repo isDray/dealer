@@ -43,6 +43,15 @@ class PriceController extends Controller
      */
     public function index( Request $request ){
         
+        $dfInput = $request->input();
+        
+        $dfStock = 0;
+        
+        if( isset($dfInput['stock']) ){
+
+            $dfStock = $dfInput['stock'];
+        }
+
         $pageTitle = '商品售價列表';
 
         if( Auth::user()->hasRole('Admin') ){
@@ -57,6 +66,7 @@ class PriceController extends Controller
         
         }
         return view('priceList')->with([ 'title'   => $pageTitle,
+                                         'dfStock' => $dfStock,
                                          //'goods'   => $dealers
                                        ]); 
     }
@@ -84,10 +94,44 @@ class PriceController extends Controller
         }
 
         $query = DB::table('goods');
-
+  
         $recordsTotal = $query->count();
 
+        // 針對庫存做過濾
         
+
+        if( isset($request->stock) && !empty($request->stock) ){
+
+            $stockGoodsArr = [];
+
+            if( $request->stock == 1 ){
+                
+                $stockGoods = GoodsStock::where('dealer_id',Auth::id())->where('goods_num','>',1)->get();
+            }
+
+            if( $request->stock == 2 ){
+                
+                $stockGoods = GoodsStock::where('dealer_id',Auth::id())->where('goods_num','=',1)->get();
+            }
+            
+            if( $request->stock == 3 ){
+                
+                $stockGoods = GoodsStock::where('dealer_id',Auth::id())->where('goods_num','<= ',0)->get();
+            }            
+           
+
+            if( count( $stockGoods ) > 0 ){
+
+                $stockGoods = json_decode($stockGoods,true);
+
+                foreach ($stockGoods as $stockGood) {
+
+                    array_push($stockGoodsArr, $stockGood['goods_id']);
+                }
+
+            }
+
+        }
         
         if( isset($request->myKeyword) && !empty($request->myKeyword) ){
                
@@ -100,6 +144,11 @@ class PriceController extends Controller
             });
         }
         
+        if( isset($stockGoodsArr) ){
+            
+            $query->whereIn('id',$stockGoodsArr);
+
+        }
         if( !empty( $request->start ) ){
 
             $query->offset($request->start);

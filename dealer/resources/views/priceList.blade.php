@@ -64,24 +64,25 @@ a{
                                 </div>
                                 @endrole
 
-                                <div class="col-sm-4">
+                                <div class="col-sm-3">
                                     <p>關鍵字:</p>
                                     <div class="input-group">
-                                        <input type="text" class="form-control myborder" placeholder="" id='myKeyword'>
+                                        <input type="text" class="form-control myborder" placeholder="" id='myKeyword' value=''>
                                     </div>
                                 </div>                                 
-                                <!--
+                                
+
                                 <div class="col-sm-2">
-                                    <p>進貨單狀態</p>
-                                    <select class="form-control show-tick" id='status'>
+                                    <p>商品數量</p>
+                                    <select class="form-control show-tick myborder" id='stock'>
                                         <option value='0' >-選擇-</option>
-                                        <option value='1' >待處理</option>
-                                        <option value='2' >已確認</option>
-                                        <option value='3' >已出貨</option>
-                                        <option value='4' >取消</option>
+                                        <option value='1' @if($dfStock==1) selected @endif>充足</option>
+                                        <option value='2' @if($dfStock==2) selected @endif>低庫存</option>
+                                        <option value='3' @if($dfStock==3) selected @endif>無庫存</option>
                                     </select>
                                 </div> 
 
+                                <!--
                                 <div class="col-sm-2">
                                     <p>價格</p>
                                     <div class="input-group">
@@ -224,6 +225,7 @@ $(function(){
                 d.status     = $("#status").val();
                 d.dealer     = $("#dealer").val();*/
                 d.myKeyword  = $("#myKeyword").val();
+                d.stock      = $("#stock").val();
             }
         },
         "columnDefs" : [
@@ -327,6 +329,11 @@ $(function(){
         
         orderTable.ajax.reload();
     });
+    $("#stock").bind("change", function(e) {
+        
+        orderTable.ajax.reload();
+    });
+    
     /*
     $("#max_price").bind("keyup change", function(e) {
         

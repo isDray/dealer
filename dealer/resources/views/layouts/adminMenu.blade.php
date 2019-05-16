@@ -10,6 +10,13 @@
     
     <ul class="list">
                     <li class="header">操作選單</li>
+                    
+                    <li class="@if($controller == 'HomeController') active @endif">
+                        <a href="{{url('/home')}}">
+                            <i class="material-icons">home</i>
+                            <span>起始頁面</span>
+                        </a>
+                    </li>
 
                     <!-- 商品管理 -->
                     @role('Admin')

@@ -10,7 +10,8 @@
 
                 <div class="body">
                     <div class="row clearfix">
-
+                    
+                    <a href="{{url('order')}}/?status=2">
                     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                     <div class="info-box bg-red hover-zoom-effect">
                         <div class="icon ">
@@ -22,7 +23,9 @@
                         </div>
                     </div>
                     </div>
-
+                    </a>
+                    
+                    <a href="{{url('order')}}/?status=3">
                     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                     <div class="info-box bg-red hover-zoom-effect">
                         <div class="icon">
@@ -34,6 +37,7 @@
                         </div>
                     </div>
                     </div>
+                    </a>
 
 
                     </div>
@@ -41,18 +45,35 @@
                     <!-- 商品相關 -->
                     <div class="row clearfix">
 
+                    @role('Admin')
+                    <a href="{{url('goods')}}/?status=1">                    
+                    @endrole
+
+                    @role('Dealer')
+                    <a href="{{url('price')}}/?stock=1">
+                    @endrole
+
                     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                     <div class="info-box bg-indigo hover-zoom-effect">
                         <div class="icon">
                             <i class="material-icons">view_quilt</i>
                         </div>
                         <div class="content">
+                            @role('Admin')
+                            <div class="text">上架商品數</div>
+                            @endrole
+                            @role('Dealer')
                             <div class="text">可用商品數</div>
+                            @endrole
                             <div class="number count-to" data-from="0" data-to="{{$useGoodsNum}}" data-speed="1000" data-fresh-interval="1">{{$useGoodsNum}}</div>
                         </div>
                     </div>
                     </div>
+                    </a>
+
                     @role('Admin')
+
+                    <a href="{{url('goods')}}/?status=2">                    
                     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                     <div class="info-box bg-indigo hover-zoom-effect">
                         <div class="icon">
@@ -64,9 +85,12 @@
                         </div>
                     </div>
                     </div>
+                    </a>
+            
                     @endrole
 
                     @role('Dealer')
+                    <a href="{{url('price')}}/?stock=3"> 
                     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                     <div class="info-box bg-indigo hover-zoom-effect">
                         <div class="icon">
@@ -78,8 +102,12 @@
                         </div>
                     </div>
                     </div>                    
+                    </a>
                     @endrole
-
+                                       
+                    @role('Dealer')
+                    <a href="{{url('price')}}/?stock=2">
+                    @endrole
                     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                     <div class="info-box bg-indigo hover-zoom-effect">
                         <div class="icon">
@@ -91,6 +119,7 @@
                         </div>
                     </div>
                     </div>
+                    </a>
 
                     </div>                    
                     <!--/商品相關 -->
