@@ -21,10 +21,10 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f93434', end
 	content: attr(label);
 	/*background-color: #1e1f26;*/
 	text-align: center;
-	width: 300px;
+	width: 400px;
 	height: 40px;
 	line-height: 36px;
-	left:calc(50% - 150px);
+	left:calc(50% - 200px);
 	top:-40px;
 	font-weight: 900;
 	font-size: 24px;
@@ -40,7 +40,9 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f93434', end
 }
 
 @media (max-width: 767px) {
-
+.categoryLabel{
+	margin-top: 60px;
+}
 }
 @media (min-width: 768px) and (max-width: 991px) {
 

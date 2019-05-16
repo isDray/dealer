@@ -285,7 +285,7 @@
                                 </div>
                                 <div class='col-sm-2'>
                                     <p><b>&nbsp;</b></p> 
-                                    <button type="button" class="btn btn-primary waves-effect" id='saveSort'>記憶排序</button>
+                                    <button type="button" class="btn btn-primary waves-effect" id='saveSort'>儲存排序</button>
                                 </div>
                             </div>
                             <!-- /圖片排序區塊 -->             
@@ -480,14 +480,14 @@ $(function(){
             if( msg[0] == true ){
                 Swal.fire(
                     '排序完成',
-                    '商品圖片已調整排序',
+                    '商品圖片已儲存排序',
                     'success'
                 )
 
             }else{
                 Swal.fire(
                     '排序失敗',
-                    '調整排序過程失敗',
+                    '儲存排序過程失敗',
                     'error'
                 )                
             }

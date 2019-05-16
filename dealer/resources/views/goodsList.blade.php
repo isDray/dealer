@@ -43,8 +43,8 @@ a{
             
                         <div class="body">
                             
-                            <div class="row clearfix">
-                                <div class='col-xs-12 col-sm-12 col-md-12'>
+                            <div class="row clearfix mysearchbox">
+                                <div class='col-xs-12 col-sm-12 col-md-12 bg-grey'>
                                     <p><b>進階搜尋</b></p>
                                 </div>
                                

@@ -963,13 +963,16 @@ class OrderController extends Controller
                 array_push($returnData, [
                 $value->order_sn,
                 $value->name,
+                $value->room,
                 $value->amount,
                 $value->status,
+                $value->payway,
                 $value->ship_at,
                 $value->updated_at,
                 $value->source,
                 $value->note,
-                $value->id
+                $value->id,
+                
                                     ]);
                 
             }        
@@ -1045,13 +1048,16 @@ class OrderController extends Controller
                 array_push($returnData, [
                 $value->order_sn,
                 $value->dealer_id,
+                $value->room,
                 $value->amount,
                 $value->status,
+                $value->payway,
                 $value->ship_at,
                 $value->updated_at,
                 $value->source,
                 $value->note,
-                $value->id
+                $value->id,
+
                                     ]);
                 
             }        

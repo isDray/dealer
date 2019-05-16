@@ -191,7 +191,7 @@
                             </div>
                         </div>
                         <div class="col-sm-3">
-                            <b>商品主圖</b>
+                            <b>網頁版LOGO <span style="color:red">建議尺寸(400*300)</span></b>
                             <div class="form-group">
                                 <div class="">
                                     <input type="file" class="form-control imageupload" name="mainpic" id="mainpic" placeholder="" />
@@ -205,7 +205,7 @@
                         </div>
 
                         <div class="col-sm-3">
-                            <b>商品縮圖</b>
+                            <b>手機板LOGO <span style="color:red">建議尺寸(300*200)</span></b>
                             <div class="form-group">
                                 <div class="">
                                     <input type="file" class="form-control imageupload" name="thumbnail" id="thumbnail" placeholder="" />

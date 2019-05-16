@@ -29,6 +29,9 @@ class CreateOrderTable extends Migration
             $table->timestamp('ship_at')->nullable();
             $table->tinyInteger('source')->comment('來源');
             $table->text('note')->nullable()->comment('備註');
+            $table->text('dealer_note')->nullable()->comment('經銷備註');
+            $table->text('buyer_note')->nullable()->comment('備註');
+            $table->char('payway',191)->comment('付款方式');
             $table->boolean('is_new')->comment('是否為新增階段');
             $table->timestamps();
         });        

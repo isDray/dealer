@@ -118,8 +118,10 @@ a{
                                         <tr>
                                             <th>訂單編號</th>
                                             <th>經銷商</th>
+                                            <th>房號</th>
                                             <th>總價</th>
                                             <th>狀態</th>
+                                            <th>付款方式</th>
                                             <th>出貨時間</th>
                                             <th>編修日期</th>
                                             <th>操作</th>
@@ -129,8 +131,10 @@ a{
                                         <tr>
                                             <th>訂單編號</th>
                                             <th>經銷商</th>
+                                            <th>房號</th>
                                             <th>總價</th>
                                             <th>狀態</th>
+                                            <th>付款方式</th>
                                             <th>出貨時間</th>
                                             <th>編修日期</th>
                                             <th>操作</th>
@@ -215,41 +219,47 @@ $(function(){
             },     
             {   "targets" : 2 ,
                 "orderable": false,
-            },                     
+            },  
             {   "targets" : 3 ,
                 "orderable": false,
+            },                                
+            {   "targets" : 4 ,
+                "orderable": false,
                 "render" : function ( url, type, full) {
-                    if( full[3] == 1 ){
+                    if( full[4] == 1 ){
 
                         return '<span class="label bg-grey">尚未新增完成</span>';
 
-                    }else if( full[3] == 2 ){
+                    }else if( full[4] == 2 ){
                         
                         return '<span class="label bg-teal">待處理</span>';
                     
-                    }else if( full[3] == 3 ){
+                    }else if( full[4] == 3 ){
                         
                         return '<span class="label bg-teal">已出貨</span>';
 
-                    }else if( full[3] == 4 ){
+                    }else if( full[4] == 4 ){
 
                         return '<span class="label bg-teal">取消</span>';
                     }
                 }
         
             },
-            {   "targets" : 4 ,
+            {   "targets" : 5 ,
                 "orderable": false,
             },     
-            {   "targets" : 5 ,
-                "orderable": true,
-            },                     
             {   "targets" : 6 ,
+                "orderable": true,
+            },   
+            {   "targets" : 7,
+                "orderable": true,
+            },                    
+            {   "targets" : 8 ,
                 "data": "edit",
                 "orderable": false,
                 "render" : function ( url, type, full) {
                     //console.log( full );
-                    return  '<a href="'+"{{url('/orderInfo')}}/"+full[8]+'">'+
+                    return  '<a href="'+"{{url('/orderInfo')}}/"+full[10]+'">'+
                             @role('Admin')
                             @permission('orderList')
                             '<button type="button" class="btn btn-success waves-effect">'+
@@ -266,7 +276,7 @@ $(function(){
                             @endrole
 
                             '</a>&nbsp;'+
-                            '<button type="button" class="btn btn-danger waves-effect deleteOrder" orderId="'+full[8]+'" orderName="'+full[0]+'">'+
+                            '<button type="button" class="btn btn-danger waves-effect deleteOrder" orderId="'+full[10]+'" orderName="'+full[0]+'">'+
                             '<i class="material-icons">cancel</i>'+
                             '<span>刪除</span>'+
                             '</button>'

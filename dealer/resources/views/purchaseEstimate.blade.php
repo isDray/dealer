@@ -243,7 +243,7 @@ $(function(){
                 formHtml += "<td>"+_datas['goodsName'][i]+"</td>";
                 formHtml += "<td>"+_datas['salesNum'][i]+"</td>";
                 formHtml += "<td>"+_datas['stock'][i]+"</td>";
-                formHtml += "<td><input type='number' name='needNum[]' value='"+_datas['needNum'][i]+"' class='form-control' /></td>";
+                formHtml += "<td><input type='number' name='needNum[]' value='"+_datas['needNum'][i]+"' class='form-control' min='0' /></td>";
                 formHtml += "<td>"+ _datas['needNum'][i] * _datas['w_price'][i] +"</td>";
                 formHtml += "</tr>";
 
@@ -399,7 +399,7 @@ $(function(){
 
                             existGoods.push( parseInt($(this).val()) );
                         });
-                        
+                        console.log( existGoods);
 
                         $.each( returnData['datas'] , function(index,detail){
 

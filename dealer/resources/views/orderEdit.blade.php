@@ -154,13 +154,13 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-2">
+                    <div class="col-sm-9">
                         <small>&nbsp;</small>
                         
                         <div class="form-group">
                             
                             <div class="form-line">
-                                <select id='goodsres' class="form-control show-tick myborder"  > 
+                                <select id='goodsres' class="form-control show-tick myborder"  style='width:auto;!important;'> 
                                     <option value="">請先搜尋關鍵字</option>
                                 </select>
                             </div>

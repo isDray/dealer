@@ -585,7 +585,7 @@
         $(document).ready(function () {
             setInterval(function () {
             checkOrder();
-        }, 300000); // 1000 ==> 1 second
+        }, 20000); // 1000 ==> 1 second
         
         });
 

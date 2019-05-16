@@ -74,23 +74,28 @@
                     @endphp
                 @endforeach
                     <tr>
-                        <td colspan='4'></td>
-                        <td >總價:{{$checkAmount}}</td>
+                        <td colspan='3'></td>
+                        <td colspan='2'>總價:{{$checkAmount}}</td>
                     </tr>
                 </tbody>
-                <tbody style="border-top:1px solid #ddd">
-                    <tr>
-                        <td colspan='5' class='text-center' >房號<input type='text' class='form-control' name="room" style="margin:0 auto;width:30%" ></td>
-                    </tr>        
-                    <tr>
-                        <td colspan='5' class='text-center'>
+                       
 
-                            <input type="submit" class="btn btn-primary" value='送出訂單'>
 
-                        </td>
-                    </tr>             
-                </body>
+                          
+            
+
             </table>
+            <div class="col-md-4 col-md-offset-4 col-sm-12 col-sm-12 text-center">
+                 房號:<input type='text' class='form-control' name="room" style="margin-top:10px;" >
+                付款方式: <select class='form-control' style="margin-top:10px;" name='payway'>
+                            <option value="現金付款">現金付款</option>
+                            <option value="刷卡付款">刷卡付款</option>
+                          </select>    
+                <textarea class="form-control" rows="3" placeholder="備註欄位" style="margin-top:10px;margin-bottom:10px;" name="note"></textarea>         
+                
+                <input type="submit" class="btn btn-primary" value="購買">                    
+            </div>
+            
         </div>
         </form>
 

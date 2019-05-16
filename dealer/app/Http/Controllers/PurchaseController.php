@@ -585,7 +585,7 @@ class PurchaseController extends Controller
                 $goodsStock = 0;
             }            
             $tmpNeed       = round( $saleData['total_sales'] / $reference * $safeDays  ) - $goodsStock;
-            $needNum[]     = $tmpNeed;
+            $needNum[]     = ($tmpNeed)>0? $tmpNeed:0;
             $w_price[]     = $saleData['w_price'];
 
 

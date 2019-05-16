@@ -571,9 +571,10 @@ class CartController extends Controller
         // 檢驗資料
         $validator = Validator::make($request->all(), [
             'room'    => 'required',
+            'payway'    => 'required',
         ],[
             'room.required' => '房號為必填',
-
+            'payway.required' => '付款方式為必填',
         ]  );
         
         $errText = '';
@@ -633,7 +634,7 @@ class CartController extends Controller
         // 開始新增訂單
         DB::beginTransaction();
         
-        $orderId = $this->createOrder( $cartUser , $request->room );
+        $orderId = $this->createOrder( $cartUser , $request->room , $request->payway ,$request->note );
 
         try {
             
@@ -1136,12 +1137,15 @@ class CartController extends Controller
 
     /*
     */
-    public function createOrder( $_dealerId , $_room ){
+    public function createOrder( $_dealerId , $_room , $_payway , $_note='' ){
         
         $retrunID = '';
 
         $createSwitch = True; 
-
+        $note = '';
+        if( !empty($_note) ){
+            $note = $_note;
+        }
         while( $createSwitch ){
             
             //$orderSn =
@@ -1151,7 +1155,7 @@ class CartController extends Controller
             
             try {
             
-
+              
                 $Order = new Order;
 
                 $Order->dealer_id  = "$_dealerId";
@@ -1160,7 +1164,8 @@ class CartController extends Controller
                 $Order->amount     = 0;
                 $Order->status     = '2';
                 $Order->source     = '1'; 
-                $Order->note       = '';
+                $Order->payway     = $_payway;
+                $Order->note       = $note;
                 $Order->is_new     = true;
 
                 $Order->save();
