@@ -22,7 +22,7 @@ class CategoryController extends Controller
         // 取出所有分類
         $category = categoryTool::getAllCategoryForSelect();
         
-        return view('CategoryList')->with(['title'     => $pageTitle,
+        return view('categoryList')->with(['title'     => $pageTitle,
                                            'categorys' => $category
                                          ]);
     }

@@ -792,7 +792,7 @@ class GoodsController extends Controller
         $recordsTotal = Goods::count();
          
 
-        $query = DB::table('Goods as g');
+        $query = DB::table('goods as g');
         
         $query->leftJoin('goods_cat as gc', 'g.id', '=', 'gc.gid');
 
