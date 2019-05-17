@@ -29,6 +29,9 @@ class CreateDealerTable extends Migration
             $table->text('web_url')->nullable()->comment('經銷商網站');
             $table->char('hotel_phone',20)->nullable()->comment('旅館手機');
             $table->char('hotel_tel',20)->comment('旅館電話');
+            
+            $table->char('hotel_email',191)->comment('旅館信箱');
+
             $table->text('hotel_address')->nullable()->comment('旅館地址');
 
             $table->char('user_name',30)->nullable()->comment('會員姓名');

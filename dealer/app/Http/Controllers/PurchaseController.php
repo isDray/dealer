@@ -19,7 +19,7 @@ use App\PurchaseGoods;
 use App\GoodsStock;
 use App\PurchaseLog;
 use App\Dealer;
-
+use App\Set;
 
 use \Exception;
 class PurchaseController extends Controller
@@ -319,13 +319,17 @@ class PurchaseController extends Controller
 
         $reference = (empty( $request->dayNum )  || $request->dayNum < 0 )?  30 : $request->dayNum;
         $safeDays  = (empty( $request->average ) || $request->average < 0 )? 30 : $request->average;
+        
+        $setData = DB::table('set')->find(1);
 
+    
         return view('purchaseEstimate')->with([ 'title'      => $pageTitle,
         	                                    'isAdmin'    => $isAdmin,
         	                                    'allDealers' => $allDealers,
         	                                    'DealerId'   => $DealerId,
                                                 'reference'  => $reference,
-                                                'safeDays'   => $safeDays
+                                                'safeDays'   => $safeDays,
+                                                'setData'    => $setData
 
         ]);        
     }
@@ -799,6 +803,9 @@ class PurchaseController extends Controller
         // 通過認證後開始寫入進貨單
 
         DB::beginTransaction();
+        
+        $setdata = DB::table('set')->find(1);
+        //var_dump($setdata);
 
         try {
                 
@@ -820,7 +827,16 @@ class PurchaseController extends Controller
                 }
                     
             }
+            
+            if( $purchaseAmount >= $setdata->free_price){
 
+                $shipfee = 0;
+
+            }else{
+
+                $shipfee = $setdata->free_price;
+
+            }
             $dealerData = User::find( $request->dealerId );
 
             $radmonNUm = rand(0,999999);
@@ -831,6 +847,8 @@ class PurchaseController extends Controller
             $Purchase->dealer_id    = $request->dealerId;
             $Purchase->dealer_name  = $dealerData->name;
             $Purchase->amount       = $purchaseAmount;
+            $Purchase->ship_fee     = $shipfee;
+            $Purchase->final_amount = $purchaseAmount + $shipfee;
             $Purchase->status       = 1; // 1.待處理 2.已確認 3.已出貨 4.取消
             $Purchase->consignee    = $request->name;
             $Purchase->phone        = $request->phone;

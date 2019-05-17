@@ -115,7 +115,7 @@
             </div>
             
             <div class='body'>
-
+                <h4 style='color:red;'>免運門檻:{{$setData->free_price}}</h4>
                 <form action="{{url('/purchaseAjaxOrder')}}" method='POST' id='purchaseAjaxNew'>
                     {{ csrf_field() }}
 
@@ -243,8 +243,8 @@ $(function(){
                 formHtml += "<td>"+_datas['goodsName'][i]+"</td>";
                 formHtml += "<td>"+_datas['salesNum'][i]+"</td>";
                 formHtml += "<td>"+_datas['stock'][i]+"</td>";
-                formHtml += "<td><input type='number' name='needNum[]' value='"+_datas['needNum'][i]+"' class='form-control' min='0' /></td>";
-                formHtml += "<td>"+ _datas['needNum'][i] * _datas['w_price'][i] +"</td>";
+                formHtml += "<td><input type='number' name='needNum[]' value='"+_datas['needNum'][i]+"' class='form-control changeNum' min='0' w_price='"+_datas['w_price'][i]+"' changet='total"+i+"'/></td>";
+                formHtml += "<td id='total"+i+"'>"+ _datas['needNum'][i] * _datas['w_price'][i] +"</td>";
                 formHtml += "</tr>";
 
             };
@@ -450,6 +450,20 @@ $(function(){
 
         $('#purchaseFormTable').append( formHtml );
     }
+
+
+
+
+    /*----------
+     |
+     |
+     |
+     */
+    $('body').on('click keyup', '.changeNum', function() {
+        //console.log($(this).attr('w_price'));
+        //console.log($(this).attr('changet'));
+        $("#"+$(this).attr('changet')).html( $(this).val() * $(this).attr('w_price') );
+    });
 }) 
 </script>
 <!-- /專屬js -->

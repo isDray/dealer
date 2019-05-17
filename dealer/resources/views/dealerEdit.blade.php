@@ -199,8 +199,16 @@
                                 <input type="text" class="form-control myborder" name="hotel_phone" placeholder="" value="{{  $dealer['hotel_phone']  }}" />
                             </div>
                             </div>
-                        </div>  
-                        <div class="col-md-12 col-sm-12 col-xs-12">
+                        </div> 
+                        <div class="col-md-3 col-sm-12 col-xs-12">
+                            <b>旅館信箱:</b>
+                            <div class="form-group">
+                            <div class="form-line">
+                                <input type="text" class="form-control myborder" name="hotel_email" id="hotel_email" placeholder="" value="{{  $dealer['hotel_email']  }}" />
+                            </div>
+                            </div>
+                        </div>                         
+                        <div class="col-md-9 col-sm-12 col-xs-12">
                             <b>旅館地址<span style='color:red;'>(必填)</span>:</b>
                             <div class="form-group">
                             <div class="form-line">

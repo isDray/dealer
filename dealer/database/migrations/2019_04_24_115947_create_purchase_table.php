@@ -26,6 +26,8 @@ class CreatePurchaseTable extends Migration
             $table->char('dealer_name',100)->comment('經銷商名稱');
             $table->timestamp('shipdate')->nullable()->comment('出貨時間');
             $table->integer('amount')->comment('進貨單總金額');
+            $table->unsignedInteger('ship_fee')->comment('運費');
+            $table->unsignedInteger('final_amount')->comment('應付金額');
             $table->tinyInteger('status')->comment('狀態');
             $table->char('consignee',100)->comment('收件人名稱');
             $table->char('tel',20)->nullable()->comment('連絡電話');

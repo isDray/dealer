@@ -693,7 +693,19 @@ class CartController extends Controller
             $request->session()->flash('orderSn', $Order->order_sn);
             $request->session()->flash('orderAmount', $Order->amount);
             $request->session()->forget('carts');
+            
+            // 如果有旅館信箱 , 則發信通知
+            if( !empty($dealerDatas['hotel_email']) ){
+                $to      = $dealerDatas['hotel_email'];
+                $subject = '新訂單通知';
 
+                $message = "接收到一筆新訂單 , \r\n";
+                $message .= "訂單編號:{$Order->order_sn} , 房號: {$Order->room} , 總金額: {$Order->final_amount} \r\n";
+
+                $headers = 'From: admin@ilover520.com' . "\r\n" .
+
+                mail($to, $subject, $message, $headers);
+            }
             return redirect("/{$request->name}/thank")->with('successMsg', '訂單已送出');
 
         }catch(\Exception $e){

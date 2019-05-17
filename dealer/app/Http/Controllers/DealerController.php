@@ -188,6 +188,7 @@ class DealerController extends Controller
             'ship_tel' =>'nullable|regex:/^[0-9]{9,12}$/',
             'mainpic'=>'mimes:jpeg,png',
             'thumbnail'=>'mimes:jpeg,png',
+            'hotel_email'=> 'nullable|email',
 
   
         ],[
@@ -209,6 +210,7 @@ class DealerController extends Controller
             'hotel_tel.required' => '旅館電話為必填',
             'hotel_tel.regex' => '旅館電話格式錯誤',
             'hotel_phone.regex' => '旅館手機格式錯誤',
+            'hotel_email.email'=> '旅館信箱格式錯誤',
             'hotel_address.required' => '旅館地址為必填',
             'ship_name.max'=>'預設收貨人姓名最多為64字元',
             'ship_phone.regex'=>'預設收貨手機格式錯誤',
@@ -291,6 +293,7 @@ class DealerController extends Controller
             $dealer->web_url       = isset( $request->hotel_url)? trim( $request->hotel_url):''; 
             $dealer->hotel_phone   = isset( $request->hotel_phone )? trim( $request->hotel_phone ):'';
             $dealer->hotel_tel     = isset( $request->hotel_tel )? trim( $request->hotel_tel):'';
+            $dealer->hotel_email   = isset( $request->hotel_email )? trim( $request->hotel_email):'';
             $dealer->hotel_address = isset( $request->hotel_address )? trim( $request->hotel_address ):'';
             $dealer->user_name     = isset( $request->user_name )? trim( $request->user_name ):'';
             $dealer->user_phone    = isset( $request->user_phone)? trim( $request->user_phone ):'';
@@ -462,6 +465,7 @@ class DealerController extends Controller
             'ship_tel' =>'nullable|regex:/^[0-9]{9,12}$/',
             'mainpic'=>'mimes:jpeg,png',
             'thumbnail'=>'mimes:jpeg,png',
+            'hotel_email'=> 'nullable|email',
 
   
         ],[
@@ -483,6 +487,7 @@ class DealerController extends Controller
             'hotel_name.max'=> '旅館名稱最多為64字元',
             'hotel_tel.required' => '旅館電話為必填',
             'hotel_tel.regex' => '旅館電話格式錯誤',
+            'hotel_email.email'=> '旅館信箱格式錯誤',
             'hotel_phone.regex' => '旅館手機格式錯誤',
             'hotel_address.required' => '旅館地址為必填',
             'ship_name.max'=>'預設收貨人姓名最多為64字元',
@@ -574,6 +579,7 @@ class DealerController extends Controller
             $dealer->web_url       = isset( $request->hotel_url)? trim( $request->hotel_url):''; 
             $dealer->hotel_phone   = isset( $request->hotel_phone )? trim( $request->hotel_phone ):'';
             $dealer->hotel_tel     = isset( $request->hotel_tel )? trim( $request->hotel_tel):'';
+            $dealer->hotel_email   = isset( $request->hotel_email )? trim( $request->hotel_email):'';
             $dealer->hotel_address = isset( $request->hotel_address )? trim( $request->hotel_address ):'';
             $dealer->user_name     = isset( $request->user_name )? trim( $request->user_name ):'';
             $dealer->user_phone    = isset( $request->user_phone)? trim( $request->user_phone ):'';
