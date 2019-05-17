@@ -964,7 +964,7 @@ class OrderController extends Controller
                 $value->order_sn,
                 $value->name,
                 $value->room,
-                $value->amount,
+                $value->final_amount,
                 $value->status,
                 $value->payway,
                 $value->ship_at,
@@ -1394,6 +1394,7 @@ class OrderController extends Controller
                 
                 $Order = Order::find( $request->orderid );
                 $Order->amount = $orderAmount;
+                $Order->final_amount = $orderAmount - $Order->discount;
 
                 $Order->save();
 
@@ -1474,6 +1475,7 @@ class OrderController extends Controller
                 
                 $Order = Order::find( $request->orderid );
                 $Order->amount = $orderAmount;
+                $Order->final_amount = $orderAmount - $Order->discount;
 
                 $Order->save();
 
@@ -1495,6 +1497,130 @@ class OrderController extends Controller
 
         }
     }
+    
+
+
+
+
+    /*----------------------------------------------------------------
+     | 編輯訂單費用
+     |----------------------------------------------------------------
+     |
+     */
+    public function feeEdit( Request $request ){
+        
+        $pageTitle = "編輯費用";
+
+        // 確認訂單是否存在
+        if( !$this->chkOrderExist( $request->id ) ){
+
+            return redirect('/home');
+
+        }
+        if( Auth::user()->hasRole('Admin') ){
+
+            // 如果是Admin身分 , 則需要確認是否有權限
+            if( !Auth::user()->can('orderEdit') ){
+                
+                return redirect('/home');
+
+            }
+          
+
+
+        }elseif( Auth::user()->hasRole('Dealer') ){
+            
+            if( !$this->orderBelong($request->id,Auth::id() ) ){
+
+                return back()->with('errorMsg', '訂單非此帳號訂單 , 請勿嘗試非法修改');
+            }
+        }
+
+        // 取出訂單相關資料
+        $order = Order::find( $request->id );
+        $order->toArray();
+        
+        return view('orderFeeEdit')->with([ 'title'      => $pageTitle,
+                                            'order'      => $order
+             
+                                          ]);   
+
+    } 
+
+
+
+
+    /*----------------------------------------------------------------
+     | 編輯訂單費用 實作
+     |----------------------------------------------------------------
+     |
+     */
+    public function feeEditDo( Request $request ){
+
+        $validator = Validator::make($request->all(), [
+            'orderId'      => 'required|exists:order,id'
+        ],
+        [ 
+           'orderId.required' => '遺失訂單編號遺',
+           'orderId.exists'   => '訂單不存在'
+        ]);
+        
+        $errText = '';
+
+        if ($validator->fails()) {
+                
+            $errors = $validator->errors();
+            
+            foreach( $errors->all() as $message ){
+                
+                $errText .= "$message<br>";
+            }
+               
+        }
+        
+        if( !empty($errText) ){
+
+            return back()->with('errorMsg', $errText );
+        }
+
+        if( Auth::user()->hasRole('Admin') ){
+            // 如果是Admin身分 , 則需要確認是否有權限
+            if( !Auth::user()->can('orderEdit') ){
+                
+                return redirect('/home');
+
+            }            
+
+        }elseif( Auth::user()->hasRole('Dealer') ){
+            
+            if( !$this->orderBelong($request->orderId,Auth::id() ) ){
+
+                return back()->with('errorMsg', '訂單非此帳號訂單 , 請勿嘗試非法修改');
+            }
+        }
+
+        if( !isset( $request->discount ) || empty( $request->discount) ){
+
+            $discount = 0;
+
+        }else{
+
+            $discount = $request->discount;
+        } 
+        
+        $Order = Order::find( $request->orderId );
+        $Order->discount = $discount;
+        $Order->final_amount = $Order->amount - $discount;
+
+        if( $Order->save() ){
+            return redirect("/orderInfo/{$request->orderId}")->with('successMsg', '訂單費用編輯成功');
+
+        }else{
+            return back()->with('errorMsg', '訂單費用編輯失敗');
+        }
+
+    }
+
 
 
 
@@ -1554,6 +1680,7 @@ class OrderController extends Controller
                 
                 $Order = Order::find( $request->oid );
                 $Order->amount = $orderAmount;
+                $Order->final_amount = $orderAmount - $Order->discount;
 
                 $Order->save();
 
@@ -1623,6 +1750,7 @@ class OrderController extends Controller
                 
                 $Order = Order::find( $request->oid );
                 $Order->amount = $orderAmount;
+                $Order->final_amount = $orderAmount - $Order->discount;
 
                 $Order->save();
 
@@ -1749,6 +1877,7 @@ class OrderController extends Controller
                 
                 $Order = Order::find( $_orderID );
                 $Order->amount = $orderAmount;
+                $Order->final_amount = $orderAmount - $Order->discount;
 
                 $Order->save();
 
@@ -1843,7 +1972,7 @@ class OrderController extends Controller
      */
     public function orderBelong( $_orderID , $_dealerId ){
          
-         return Order::where('id' , $_orderID)
+        return Order::where('id' , $_orderID)
                 ->where('dealer_id' , $_dealerId)
                 ->exists();
     }
@@ -1946,7 +2075,18 @@ class OrderController extends Controller
           
         }
     }
+    
 
+
+    /*----------------------------------------------------------------
+     | 確認訂單存在
+     |----------------------------------------------------------------
+     |
+     */
+    public function chkOrderExist( $_orderId ){
+
+        return Order::where('id',$_orderId)->exists();
+    }
 
 
 }

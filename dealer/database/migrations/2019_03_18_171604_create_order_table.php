@@ -24,7 +24,9 @@ class CreateOrderTable extends Migration
             $table->integer('dealer_id')->index()->comment('經銷商ID');
             $table->char('order_sn',100)->index()->comment('訂單編號');
             $table->char('room',100)->nullable()->comment('購買房號');
-            $table->integer('amount')->comment('總價');
+            $table->unsignedInteger('amount')->comment('總價');
+            $table->unsignedInteger('discount')->comment('折扣數');
+            $table->unsignedInteger('final_amount')->comment('最後總價');
             $table->tinyInteger('status')->comment('狀態');
             $table->timestamp('ship_at')->nullable();
             $table->tinyInteger('source')->comment('來源');

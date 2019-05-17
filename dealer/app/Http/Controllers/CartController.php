@@ -682,6 +682,7 @@ class CartController extends Controller
                 
             $Order = Order::find( $orderId );
             $Order->amount = $orderAmount;
+            $Order->final_amount = $orderAmount - $Order->discount;
 
             $Order->save();
 

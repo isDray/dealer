@@ -157,10 +157,10 @@
                     <div class="col-sm-9">
                         <small>&nbsp;</small>
                         
-                        <div class="form-group">
+                        <div class="form-group" style="width:auto;">
                             
-                            <div class="form-line">
-                                <select id='goodsres' class="form-control show-tick myborder"  style='width:auto;!important;'> 
+                            <div style="width:auto;">
+                                <select id='goodsres' class="form-control show-tick myborder autoSelect"> 
                                     <option value="">請先搜尋關鍵字</option>
                                 </select>
                             </div>
@@ -208,6 +208,18 @@
 </div>
 <script src="{{asset('adminbsb-materialdesign/plugins/bootstrap-notify/bootstrap-notify.js')}}"></script>
 
+<style type="text/css">
+.btn-group.autoSelect{
+   width: auto!important;  
+   border-bottom:2px solid #c4c4c4 !important;
+}
+
+.btn-group.autoSelect > button >.bs-caret > .caret{
+    right: 0px!important;
+}
+
+
+</style>
 <!-- 專屬js -->
 <script type="text/javascript">
 $(function(){
@@ -234,6 +246,7 @@ $(function(){
  
             request.done(function( res ) {
                 
+               
                 // 如果ajax回傳的陣列長度大於1(表示資料庫有對應資料) , 則重新整理
                 if( res.length > 0){
                     

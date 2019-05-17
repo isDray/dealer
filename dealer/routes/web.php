@@ -113,6 +113,10 @@ Route::group(['middleware' => ['auth','role:Admin|Dealer'] ], function () {
     Route::get('/order','OrderController@index');
     Route::get('/orderNew','OrderController@new');
     Route::get('/orderEdit/{id?}','OrderController@edit');
+    
+    Route::get('/orderFeeEdit/{id?}','OrderController@feeEdit');
+    Route::post('/orderFeeEditDo/{id?}','OrderController@feeEditDo');
+    
     //Route::post('/goodsEditDo','GoodsController@editDo');
     Route::get('/orderEditBasic/{type}/{id?}','OrderController@editBasic');
     Route::post('/orderEditBasicDo/','OrderController@editBasicDo');

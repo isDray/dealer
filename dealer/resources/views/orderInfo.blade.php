@@ -24,7 +24,7 @@
         <div class='card'>
 
             <!-- 訂單基本資料 -->
-            <div class="header">
+            <div class="header bg-red">
                 <h2>訂單基本資料</h2>
             </div>
 
@@ -79,7 +79,7 @@
             <!-- /訂單基本資料 -->
         
             <!-- 訂單明細 -->
-            <div class="header ">
+            <div class="header bg-red">
                 <h2>訂單明細</h2>
             </div>
 
@@ -138,9 +138,34 @@
                 </div>
             </div>        
             <!-- /訂單明細 --> 
-            
+
+            <!-- 訂單金額 -->
+            <div class="header bg-red">
+                <h2>費用資訊</h2>
+            </div>            
+            <div class='body'>
+                <table class="table">
+                    <thead>
+                        <tr>
+                           <td class="align-right">商品價格:{{$order['amount']}}-折扣價格:{{$order['discount']}}</td> 
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                           <td class="align-right">訂單總金額:{{$order['final_amount']}}</td> 
+                        </tr>
+                    </tbody>
+                </table>
+                <div class='row align-center'>
+                    <a href="{{url('/orderFeeEdit/'.$order['id'])}}">
+                        <span class='btn btn-primary waves-effect'>編輯費用</span>
+                    </a>
+                </div>                
+            </div>
+            <!-- /訂單金額 -->
+
             <!-- 訂單操作 -->
-            <div class="header ">
+            <div class="header bg-red">
                 <h2>訂單操作</h2>
             </div>
 
@@ -163,7 +188,7 @@
             <!-- /訂單操作 -->
 
             <!-- 訂單操作紀錄 -->
-            <div class="header ">
+            <div class="header orderInfo">
                 <h2>訂單操作紀錄</h2>
             </div>
          
