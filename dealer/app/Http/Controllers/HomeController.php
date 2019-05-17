@@ -67,7 +67,7 @@ class HomeController extends Controller
             // 低庫存商品
             $lowStaocks = GoodsStock::selectRaw(" sum(goods_num) AS goodsTotal ")->groupBy('goods_id')->get();
             $lowStaockNum = 0;
-            if( count($lowStaockNum) != 0 ){
+            if( count($lowStaocks) != 0 ){
                 foreach ($lowStaocks as $lowStaock) {
                     if($lowStaock['goodsTotal'] <= 1){
                         $lowStaockNum += 1;

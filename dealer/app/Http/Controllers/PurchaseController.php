@@ -192,7 +192,7 @@ class PurchaseController extends Controller
             $value->dealer_name,
             $value->phone,
             $value->address,            
-            $value->amount, 
+            $value->final_amount, 
             $value->status,                       
             $value->shipdate,
             $value->created_at,

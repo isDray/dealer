@@ -989,7 +989,7 @@ class OrderController extends Controller
         
             $recordsTotal = Order::where("dealer_id" , "$authId")->count();
             
-            $query = DB::table('Order');
+            $query = DB::table('order');
 
             // 如果最小值有填寫
             if( !empty($request->min_price ) ){

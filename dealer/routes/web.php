@@ -192,3 +192,4 @@ Route::get('/{name}/cartSearch/{page?}/','CartController@cartSearch')->middlewar
 Route::get('/{name}/article/{aid}','CartController@article')->middleware(['cart']);
 
 // Route::get('/{name}/desc/','CartController@desc')->middleware(['cart']);
+// Route::get('/{name}/rename/','CartController@rename')->middleware(['cart']);

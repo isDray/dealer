@@ -702,7 +702,7 @@ class CartController extends Controller
                 $message = "接收到一筆新訂單 , \r\n";
                 $message .= "訂單編號:{$Order->order_sn} , 房號: {$Order->room} , 總金額: {$Order->final_amount} \r\n";
 
-                $headers = 'From: admin@ilover520.com' . "\r\n" .
+                $headers = 'From: admin@ilover520.com' . "\r\n" ;
 
                 mail($to, $subject, $message, $headers);
             }
@@ -1535,7 +1535,31 @@ class CartController extends Controller
 
         
     }
+    public function rename( Request $request ){
+        exit
+        $goods = Goods::orderBy('id')->get();
+        $goods = json_decode($goods,true);
 
+        DB::beginTransaction();
+
+        try {
+
+        foreach ($goods as $good) {
+            
+            $newname = explode('[', $good['name'] )[0];
+            
+            $flight = Goods::find($good['id']);
+
+            $flight->name = $newname;
+
+            $flight->save();
+        
+        DB::commit();
+
+        }} catch (Exception $e) {
+            
+        }
+    }
     public function desc( Request $request ){
         
        exit;

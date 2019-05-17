@@ -132,10 +132,14 @@
                     @endphp
 
                     @endforeach
-
                     <tr>
+                        <td colspan='4' class='align-right'>運費</td>
+                        <td>{{$purchaseData['ship_fee']}}</td>
+                    </tr>
+                    <tr>
+
                         <td colspan='4' class='align-right'>總金額</td>
-                        <td>{{$total}}</td>
+                        <td>{{$purchaseData['final_amount']}}</td>
                     </tr>
 
                     </tbody>
