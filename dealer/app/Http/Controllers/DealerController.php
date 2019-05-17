@@ -246,6 +246,18 @@ class DealerController extends Controller
             $user->email =  $request->user_email;
             $user->save();
             
+            $user2 = User::find( $user->id );
+
+            if( $request->accessWay == 1){
+
+                $user2->detect = str_pad( $user->id ,4,'0',STR_PAD_LEFT);
+
+            }else{
+
+                $user2->detect = $request->account;
+            } 
+            $user2->save();
+            
             // 給身分
             $role = Role::where('name','Dealer')->first();
             $user->attachRole($role);
@@ -287,10 +299,12 @@ class DealerController extends Controller
             $dealer->ship_phone    = isset( $request->ship_phone)?trim($request->ship_phone):'';
             $dealer->ship_tel      = isset( $request->ship_tel)?trim($request->ship_tel):'';
             $dealer->ship_address  = isset( $request->ship_address)?trim($request->ship_address):'';
-            $dealer->logo1         = 'wlogo'.$mainpicExtension;
-            $dealer->logo2         = 'mlogo'.$thumbnailExtension;
+            $dealer->logo1         = 'wlogo.'.$mainpicExtension;
+            $dealer->logo2         = 'mlogo.'.$thumbnailExtension;
             $dealer->multiple      = isset( $request->multiple)?trim($request->multiple):'';
-            
+            $dealer->logo_color1   = isset( $request->logocolor1)?trim($request->logocolor1):'#fff';
+            $dealer->logo_color2   = isset( $request->logocolor2)?trim($request->logocolor2):'#fff';
+
             $dealer->save();
 
             DB::commit();
@@ -363,10 +377,37 @@ class DealerController extends Controller
         ]);
         
         $dealer = $dealer->toArray();
+        
 
+        if( empty($dealer['logo_color1']) ){
+            $dealer['logo_color1'] = '#fff';
+        }
+
+        if( empty($dealer['logo_color2']) ){
+            $dealer['logo_color2'] = '#fff';
+        }        
+
+        // 計算目前是使用哪種連結方式
+        $dealerUser = User::where('id',$request->id)->first();
+        if(  $dealerUser != NULL ){
+            $dealerUser = json_decode($dealerUser,true);
+            
+            if( $dealerUser['id'] == intval($dealerUser['detect']) ){
+                
+                $accessWay = 1;
+
+            }else{
+                
+                $accessWay = 2;
+            }
+
+        }
+
+        
     	return view('dealerEdit')->with(['title'     => $pageTitle,
     		                             'multiples' => $multiple,
-    		                             'dealer'    => $dealer
+    		                             'dealer'    => $dealer,
+                                         'accessWay' => $accessWay
     		                            ]);  
     }
 
@@ -406,6 +447,7 @@ class DealerController extends Controller
         $validator = Validator::make($request->all(), [
             'account'    => 'required|max:64',
             'password1'  => 'nullable|same:password2',
+            'accessWay'  => 'required',
             'multiple'   => 'required|exists:multiple,multiple',
             'user_name'  => 'required|max:64',
             'user_email' => 'required|email',
@@ -427,6 +469,7 @@ class DealerController extends Controller
             'account.max'      => '帳號最多為64個字元',
             'password1.required' => '密碼為必填',
             'password1.same'     => '密碼驗證不一致',
+            'accessWay.required' => '連結代碼為必填',
             'multiple.required' => '價格預設倍數為必填',
             'multiple.exists' => '價格預設倍數不存在',
             'user_name.required' => '聯絡人為必填',
@@ -486,6 +529,14 @@ class DealerController extends Controller
             if( !empty( $request->oldpassword ) ){
                 $user->password = Hash::make( $request->password1 );
             }
+            if( $request->accessWay == 1){
+
+                $user->detect = str_pad( $user->id ,4,'0',STR_PAD_LEFT);
+
+            }else{
+
+                $user->detect = $request->account;
+            }            
             $user->email =  $request->user_email;
             $user->save();
             
@@ -531,6 +582,9 @@ class DealerController extends Controller
             $dealer->ship_phone    = isset( $request->ship_phone)?trim($request->ship_phone):'';
             $dealer->ship_tel      = isset( $request->ship_tel)?trim($request->ship_tel):'';
             $dealer->ship_address  = isset( $request->ship_address)?trim($request->ship_address):'';
+            $dealer->logo_color1   = isset( $request->logocolor1)?trim($request->logocolor1):'#fff';
+            $dealer->logo_color2   = isset( $request->logocolor2)?trim($request->logocolor2):'#fff';
+
             if( $request->file('mainpic') != null){
                 $dealer->logo1         = 'wlogo.'.$mainpicExtension;
             }
@@ -540,6 +594,8 @@ class DealerController extends Controller
             $dealer->multiple      = isset( $request->multiple)?trim($request->multiple):'';
             
             $dealer->save();
+
+
 
             DB::commit();
             if( Auth::user()->hasRole('Admin') ){

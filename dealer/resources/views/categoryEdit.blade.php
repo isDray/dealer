@@ -6,7 +6,7 @@
 <link href="{{asset('adminbsb-materialdesign/plugins/bootstrap-select/css/bootstrap-select.css')}}" rel="stylesheet" />
 <div class="row clearfix">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <form action="{{url('/categoryEditDo')}}" method="POST">
+        <form action="{{url('/categoryEditDo')}}" method="POST" enctype="multipart/form-data">
         {{ csrf_field() }}
 
         <div class="card">
@@ -40,18 +40,28 @@
                     <div class="col-sm-6">
                         <b>類別名稱</b>
                         <div class="form-group">
-                            <div class="form-line">
+                            <div class="form-line myborder">
                                 <input type="text" class="form-control " name="name" placeholder="" value="{{$editCategory['name']}}"/>
                             </div>
                         </div>
                     </div>
                 </div>
-                
+
+                <div class="row clearfix">
+                    <div class="col-sm-6">
+                        <b>短名稱</b>
+                        <div class="form-group">
+                            <div class="form-line myborder">
+                                <input type="text" class="form-control " name="sortname" placeholder="" value="{{$editCategory['sortname']}}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>                
 
                 <div class="row clearfix">
                     <div class="col-sm-6">
                         <p><b>父類別</b></p>
-                        <select class="form-control show-tick" name='parents'>
+                        <select class="form-control show-tick myborder" name='parents'>
                             <option value="0">無父類別</option>
                             @foreach( $categorys as $category)
                             
@@ -75,7 +85,7 @@
                     <div class="col-sm-6">
                         <b>類別關鍵字</b>
                         <div class="form-group">
-                            <div class="form-line">
+                            <div class="form-line myborder">
                                 <input type="text" class="form-control" name="keyword" placeholder="" name='keyword' value="{{$editCategory['keyword']}}"/>
                             </div>
                         </div>
@@ -86,7 +96,7 @@
                     <div class="col-sm-6">
                         <b>類別描述</b>
                         <div class="form-group">
-                            <div class="form-line">
+                            <div class="form-line myborder">
                                 <textarea rows="4" class="form-control no-resize" placeholder="請輸入商品描述" name='desc' >{{$editCategory['desc']}}</textarea>
                             </div>
                         </div>
@@ -117,7 +127,21 @@
                     </div>   
 
                 </div>                                                   
-             
+                
+                <div class="row clearfix">
+                    <div class="col-sm-3">
+                        <b>類別表示圖</b>
+                        <div class="form-group">
+                            <div class="">
+                                <input type="file" class="form-control imageupload" name="thumbnail" id="thumbnail" placeholder="" />
+                            </div>
+                            <div id="thumbDisplay">
+                                <img src="{{url('')}}/{{$editCategory['category_pic']}}">
+                            </div>
+                        </div>
+                    </div>                     
+                </div>
+
                 <input type='hidden' name='id' value="{{$editCategory['id']}}">
                 <button class="btn btn-primary waves-effect" type="submit">編輯</button>
             </form>
@@ -166,6 +190,34 @@ $(function(){
     
     // 一開始先將全部被focus的元素解除focus
     $(".focused:not(.error)").removeClass('focused');
+
+    
+    // 圖片立即呈現
+    $(".imageupload").change(function(e) {
+
+    for (var i = 0; i < e.originalEvent.srcElement.files.length; i++) {
+
+        var file = e.originalEvent.srcElement.files[i];
+
+        var img = document.createElement("img");
+        var reader = new FileReader();
+        reader.onloadend = function() {
+             img.src = reader.result;
+        }
+        reader.readAsDataURL(file);
+        if( $(this).attr('id') == 'mainpic'){
+            
+            $("#mainDisplay").empty();
+            $("#mainDisplay").append(img);
+
+        }else if( $(this).attr('id') == 'thumbnail'){
+            
+            $("#thumbDisplay").empty();
+            $("#thumbDisplay").append(img);
+        }
+    }
+    
+    });    
 
 })
 </script>

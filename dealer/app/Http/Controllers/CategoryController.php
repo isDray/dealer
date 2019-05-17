@@ -63,15 +63,19 @@ class CategoryController extends Controller
         // 驗證規則
         $validatedData = $request->validate([
             'name'    => 'required|unique:category,name|max:100',
+            'sortname'=> "required|max:100",
             'parents' => "required|integer{$not_parent}",
             'keyword' => 'max:255',
             'desc'    => 'max:255',
-            'sort'    => 'required|integer'
+            'sort'    => 'required|integer',
+            'thumbnail' => 'required|image',
         ],
         // 錯誤訊息
         [ 'name.required' => '類別名稱為必填',
           'name.unique'   => '類別名稱重複',
           'name.max'      => '類別名稱長度過長(100字元)',
+          'sortname.required' => '短類別名為必填',
+          'sortname.max'  =>'短類別名稱長度過長(100字元)',           
           'parents.required' => '父類別不可為空值',
           'parents.integer'  => '父類別格式錯誤',
           'parents.exists'   => '父類別不存在',
@@ -79,6 +83,8 @@ class CategoryController extends Controller
           'desc.max'         => '類別描述長度過長(255字元)',
           'sort.required'    => '排序為必填',
           'sort.integer'     => '排序格式錯誤',
+          'thumbnail.required' => '類別icon必須上傳',
+          'thumbnail.image'    => '類別icon格式錯誤',             
 
         ]);
         
@@ -105,6 +111,19 @@ class CategoryController extends Controller
             $category->sort    = $request->sort;
 
             $category->save();
+            
+            if( isset($request->thumbnail) ){
+                $mainPic      = $request->file('thumbnail');
+
+                $nowExtension = $mainPic->extension();
+            
+                if( $mainPic->storeAs("images/category/","{$category->id}.$nowExtension",'goodsImage') ){
+
+                    $category->category_pic = "images/category/{$category->id}.$nowExtension";
+                    $category->save();
+                
+                }   
+            }            
 
             return redirect("/category")->with('successMsg', '新增類別成功');
 
@@ -172,15 +191,19 @@ class CategoryController extends Controller
         // 驗證規則
         $validatedData = $request->validate([
             'name'    => "required|unique:category,name,{$request->id}|max:100",
+            'sortname'=> "required|max:100",
             'parents' => "required|integer{$not_parent}",
             'keyword' => 'max:255',
             'desc'    => 'max:255',
-            'sort'    => 'required|integer'
+            'sort'    => 'required|integer',
+            'thumbnail' => 'image',
         ],
         // 錯誤訊息
         [ 'name.required' => '類別名稱為必填',
           'name.unique'   => '類別名稱重複',
           'name.max'      => '類別名稱長度過長(100字元)',
+          'sortname.required' => '短類別名為必填',
+          'sortname.max'  =>'短類別名稱長度過長(100字元)',          
           'parents.required' => '父類別不可為空值',
           'parents.integer'  => '父類別格式錯誤',
           'parents.exists'   => '父類別不存在',
@@ -188,14 +211,16 @@ class CategoryController extends Controller
           'desc.max'         => '類別描述長度過長(255字元)',
           'sort.required'    => '排序為必填',
           'sort.integer'     => '排序格式錯誤',
+          'thumbnail.image'  => '類別icon格式錯誤'
 
         ]);        
 
         // 更新
         try {
-           
+
             $category = Category::find($request->id);
             $category->name     = $request->name;
+             $category->sortname     = $request->sortname;
             $category->parent   = $request->parents;
             $category->keyword  = $request->keyword;
             $category->desc     = $request->desc;
@@ -209,6 +234,20 @@ class CategoryController extends Controller
             }            
             $category->sort     = $request->sort;
             $category->save();
+           
+            if( isset($request->thumbnail) ){
+                $mainPic      = $request->file('thumbnail');
+
+                $nowExtension = $mainPic->extension();
+            
+                if( $mainPic->storeAs("images/category/","{$category->id}.$nowExtension",'goodsImage') ){
+
+                    $category->category_pic = "images/category/{$category->id}.$nowExtension";
+                    $category->save();
+                
+                }   
+            }
+        
 
             return redirect("/categoryEdit/{$request->id}")->with('successMsg', '商品分類編輯成功');
 

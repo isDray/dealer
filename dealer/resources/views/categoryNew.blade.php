@@ -6,7 +6,7 @@
 <link href="{{asset('adminbsb-materialdesign/plugins/bootstrap-select/css/bootstrap-select.css')}}" rel="stylesheet" />
 <div class="row clearfix">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <form action="{{url('/categoryNewDo')}}" method="POST">
+        <form action="{{url('/categoryNewDo')}}" method="POST" enctype="multipart/form-data">
         {{ csrf_field() }}
 
         <div class="card">
@@ -40,18 +40,28 @@
                     <div class="col-sm-6">
                         <b>類別名稱</b>
                         <div class="form-group">
-                            <div class="form-line">
+                            <div class="form-line myborder">
                                 <input type="text" class="form-control" name="name" placeholder="" />
                             </div>
                         </div>
                     </div>
                 </div>
                 
+                <div class="row clearfix">
+                    <div class="col-sm-6">
+                        <b>短名稱</b>
+                        <div class="form-group">
+                            <div class="form-line myborder">
+                                <input type="text" class="form-control " name="sortname" placeholder="" value=""/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="row clearfix">
                     <div class="col-sm-6">
                         <p><b>父類別</b></p>
-                        <select class="form-control show-tick" name='parents'>
+                        <select class="form-control show-tick myborder" name='parents'>
                             <option value="0">無父類別</option>
                             @foreach( $categorys as $category)
                             <option value="{{$category['id']}}"> {{$category['level']}}{{$category['name']}} </option>
@@ -64,7 +74,7 @@
                     <div class="col-sm-6">
                         <b>類別關鍵字</b>
                         <div class="form-group">
-                            <div class="form-line">
+                            <div class="form-line myborder">
                                 <input type="text" class="form-control" name="keyword" placeholder="" name='keyword'/>
                             </div>
                         </div>
@@ -74,8 +84,8 @@
                 <div class="row clearfix">
                     <div class="col-sm-6">
                         <b>類別描述</b>
-                        <div class="form-group">
-                            <div class="form-line">
+                        <div class="form-group ">
+                            <div class="form-line myborder">
                                 <textarea rows="4" class="form-control no-resize" placeholder="請輸入商品描述" name='desc'></textarea>
                             </div>
                         </div>
@@ -101,8 +111,21 @@
                         <input type='hidden' id='sort' name='sort' value='1'>
                     </div>   
 
-                </div>                                                   
-             
+                </div>      
+
+                <div class="row clearfix">
+                    <div class="col-sm-3">
+                        <b>類別icon</b>
+                        <div class="form-group">
+                            <div class="">
+                                <input type="file" class="form-control imageupload" name="thumbnail" id="thumbnail" placeholder="" />
+                            </div>
+                            <div id="thumbDisplay">
+                                <img src="">
+                            </div>
+                        </div>
+                    </div>                     
+                </div>             
 
                 <button class="btn btn-primary waves-effect" type="submit">新增</button>
             </form>
@@ -143,6 +166,35 @@
         $(slider).parent().find('span.js-nouislider-value').text(val);
         $("#sort").val(val);
     });
+
+    $(function(){
+
+        $(".imageupload").change(function(e) {
+    
+        for (var i = 0; i < e.originalEvent.srcElement.files.length; i++) {
+    
+            var file = e.originalEvent.srcElement.files[i];
+    
+            var img = document.createElement("img");
+            var reader = new FileReader();
+            reader.onloadend = function() {
+                 img.src = reader.result;
+            }
+            reader.readAsDataURL(file);
+            if( $(this).attr('id') == 'mainpic'){
+                
+                $("#mainDisplay").empty();
+                $("#mainDisplay").append(img);
+    
+            }else if( $(this).attr('id') == 'thumbnail'){
+                
+                $("#thumbDisplay").empty();
+                $("#thumbDisplay").append(img);
+            }
+        }
+        
+        }); 
+    })
 }
 </script>
 @endsection

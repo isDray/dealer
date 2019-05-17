@@ -42,6 +42,10 @@ class CreateDealerTable extends Migration
 
             $table->text('logo1')->nullable()->comment('網頁版logo');
             $table->text('logo2')->nullable()->comment('手機版logo');
+
+            $table->char('logo_color1', 100)->nullable()->comment('logo區塊顏色1');
+            $table->char('logo_color2', 100)->nullable()->comment('logo區塊顏色2');
+
             $table->float('multiple', 8, 1)->comment('預設倍數');
             
             $table->timestamps();

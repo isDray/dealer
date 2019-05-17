@@ -54,6 +54,22 @@
 
     <script src="{{asset('sweetalert2/dist/sweetalert2.js')}}"></script>
 </head>
+<style type="text/css">
+#logoBox{
+    position: fixed;
+    top:0px;
+    left:0px;
+    width: 100%;
+    z-index: 99;
+    height: 100px;
+
+/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#f93434+0,e26fa7+100 */
+background: {{$dealerDatas['logo_color1']}}; /* Old browsers */
+background: -moz-linear-gradient(45deg, {{$dealerDatas['logo_color1']}} 0%, {{$dealerDatas['logo_color2']}} 100%); /* FF3.6-15 */
+background: -webkit-linear-gradient(45deg, {{$dealerDatas['logo_color1']}} 0%,{{$dealerDatas['logo_color2']}} 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(45deg, {{$dealerDatas['logo_color1']}} 0%,{{$dealerDatas['logo_color2']}} 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='{{$dealerDatas['logo_color1']}}', endColorstr='{{$dealerDatas['logo_color2']}}',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+}</style>
 
 <body class="theme-red">
     <div id='logoBox' class="container-fluid">
@@ -163,12 +179,12 @@
 
             @foreach( $categorys as $category)
 
-                <li class='_p'><a href="{{url('')}}/{{$dealerDetect}}/cartCategory/{{$category['id']}}/1">{{$category['name']}}</a></li>
+                <li class='_p _ph'><a href="{{url('')}}/{{$dealerDetect}}/cartCategory/{{$category['id']}}/1">{{$category['name']}}</a></li>
 
           
             @endforeach
 
-            <li class="dropdown _w">
+            <li class="dropdown _w _ps">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">分類<span class="caret"></span></a>
               
               

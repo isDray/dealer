@@ -92,7 +92,25 @@
                         </div>                        
                        
                     </div>                    
-
+                    
+                    <!-- 辨別代碼選擇 -->
+                    <p> 連結代碼 </p>
+                    <div class="row clearfix">
+                        <div class="col-md-3 col-sm-12 col-xs-12">
+                            <b>連結代碼<span style='color:red;'>(必填)</span>:</b>
+                            <div class="form-group">
+                                <input type="radio" class="with-gap" id="byId" name='accessWay' value="1" @if( $accessWay == 1) checked @endif
+                                >
+                                <label for="byId">依ID編號</label>
+                                <br>
+                                <input type="radio" class="with-gap" id="byName" name='accessWay' value="2" @if( $accessWay == 2) checked @endif
+                                >
+                                <label for="byName">依帳號</label>
+                                <br>
+                            </div>
+                        </div>
+                    </div>                    
+                    <!-- 辨別代碼選擇 -->
                     <p> 價格資料 </p>
                     <div class="row clearfix">
                         <div class="col-md-3 col-sm-12 col-xs-12">
@@ -218,6 +236,29 @@
                             </div>
                         </div>                                                                                                                
                     </div>
+
+                    <!-- 顏色設定 -->
+                    <p>色彩設定</p>
+                    <!-- 收貨資訊 -->
+                    <div class="row clearfix">
+                        <div class="col-md-3 col-sm-12 col-xs-12">
+                            <b>logo背景色1</b>
+                            <div class="form-group">
+                            <div class="form-line">
+                                <input type="color" class="form-control myborder" name="logocolor1" placeholder="" value="{{$dealer['logo_color1']}}"/>
+                            </div>
+                            </div>
+                        </div> 
+                        <div class="col-md-3 col-sm-12 col-xs-12">
+                            <b>logo背景色2</b>
+                            <div class="form-group">
+                            <div class="form-line">
+                                <input type="color" class="form-control myborder" name="logocolor2" placeholder="" value="{{$dealer['logo_color2']}}"/>
+                            </div>
+                            </div>
+                        </div>                                               
+                    </div>
+                    <!-- /顏色設定 -->
 
                     <p>收貨資料</p>
                     <!-- 收貨資訊 -->

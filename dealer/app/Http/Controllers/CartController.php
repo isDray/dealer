@@ -110,6 +110,7 @@ class CartController extends Controller
         // 熱銷商品
         $allOrders = Order::where('dealer_id',$cartUser)->get();
         $allOrderArr = [];
+        $hots = [];
         if( count($allOrders) > 0 ){
 
             foreach ($allOrders as $allOrder ) {
@@ -195,6 +196,7 @@ class CartController extends Controller
                                          'newGoods'=>$newGoods,
                                          'recommendGoods'=>$recommendGoods,
                                          'hots'=>$hots,
+                                         'color'=>'yellow'
                                         ]);     	
     }
     
@@ -1055,11 +1057,13 @@ class CartController extends Controller
             
             $tmp = [ 'id'   => $allParent['id'],
                      'name' => $allParent['name'],
+                     'sortname' => $allParent['sortname'],
                      'desc' => $allParent['desc'],
                      'status' => $allParent['status'],
                      'updated_at' => $allParent['updated_at'],
                      'level' => '',
                      'levelIcon' => '',
+                     'category_pic' => $allParent['category_pic'],
                      'child' => $tmpChild 
                    ];
 

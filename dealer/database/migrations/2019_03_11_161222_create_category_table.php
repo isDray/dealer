@@ -23,7 +23,8 @@ class CreateCategoryTable extends Migration
             $table->char('desc', 255)->comment('分類描述');
             $table->boolean('status')->comment('是否啟用');
             $table->smallInteger('sort')->comment('排序');
-
+            $table->char('sortname', 100)->comment('短名稱');
+            $table->char('category_pic', 191)->comment('縮圖');
             $table->timestamps();
         });
         

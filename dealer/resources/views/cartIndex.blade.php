@@ -16,6 +16,8 @@
     filebrowserUploadUrl: '/laravel-filemanager/upload?type=Files&_token=',
   };
 </script>
+
+
 <div id='fastBox' class="container-fluid" style='margin-bottom:40px;'>
 
 <!-- 輪播 -->
@@ -84,10 +86,10 @@
         <a href="{{url('')}}/{{$dealerDetect}}/cartCategory/{{$category['id']}}">
             <div class="fastItem">
                 <div>
-                <span class="glyphicon glyphicon-heart" aria-hidden="true"></span>
+                <img src="{{url('')}}/{{$category['category_pic']}}" width="100%" height="100%">
                 </div>
                 <div>
-                {{$category['name']}}
+                {{$category['sortname']}}
                 </div>
             </div>
         </a>
@@ -100,10 +102,10 @@
         <a href="{{url('')}}/{{$dealerDetect}}/cartCategory/{{$category['id']}}">
             <div class="fastItem">
                 <div>
-                <span class="glyphicon glyphicon-heart" aria-hidden="true"></span>
+                <img src="{{url('')}}/{{$category['category_pic']}}" width="100%" height="100%">
                 </div>
                 <div>
-                {{$category['name']}}
+                {{$category['sortname']}}
                 </div>
             </div>
         </a>

@@ -132,7 +132,7 @@ class ReportController extends Controller
         // 迴圈加總
         foreach ($shipDatas as $key => $shipData) {
             
-            $totalPrice   += $shipData['amount'];
+            $totalPrice   += $shipData['final_amount'];
             
             //
             $tmpRes = DB::table('order')
