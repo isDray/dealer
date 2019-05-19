@@ -383,6 +383,19 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f93434', end
 	border-radius: 4px;
 	display: none;
 }
+
+/* 下拉選單 */
+#navItem .dropdown-menu{
+	background-color: #3a3a3a;
+}
+
+#navItem .dropdown-menu>li>a{
+	color: #f5f5f5;
+}
+
+#navItem .dropdown-menu>li>a:hover{
+	color: #3a3a3a;
+}
 @media (max-width: 767px) {
 ._w{
 	display: none!important;
