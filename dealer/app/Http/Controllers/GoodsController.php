@@ -84,11 +84,10 @@ class GoodsController extends Controller
 
     // 商品新增執行
     public function newDo( Request $request){
-        
     
         $appendMessage = [];
         
-        if( count( $request->file) > 0){
+        if( isset($request->file) > 0){
             
             foreach ( $request->file as $key => $value) {
 
@@ -99,7 +98,7 @@ class GoodsController extends Controller
         
 
         // 如果有新增擴展類則需要將其作驗證
-        if( count($request->multiplCategory) > 0 ){
+        if( isset($request->multiplCategory) > 0 ){
 
             foreach ( $request->multiplCategory as $key => $value) {
                 
@@ -110,9 +109,9 @@ class GoodsController extends Controller
         }
          
         $extendCategorys = [] ;
-
+        
         // 刪除與主要分類重複的商品
-        if( count($request->multiplCategory) > 0 ){
+        if( isset($request->multiplCategory) > 0 ){
 
             foreach ( $request->multiplCategory as $key => $value) {
                 
@@ -252,7 +251,7 @@ class GoodsController extends Controller
                 $goods->save();
             }
             
-            if( count($request->file) > 0 ){
+            if( isset($request->file) > 0 ){
                 
                 foreach ( $request->file as $key => $value) {
 
@@ -856,12 +855,15 @@ class GoodsController extends Controller
                 $query->where( 'g.status', '0' );
             }
         }
+        $query->groupBy( 'id' );
         $suitNum = $query->count();
         
         $query->offset( $request->start );
         
         $query->limit( $request->length );
+
         
+
         $query->orderBy($orderBy , $orderWay );
     
         $goods = $query->get();
