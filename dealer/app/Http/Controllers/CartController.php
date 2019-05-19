@@ -1536,7 +1536,7 @@ class CartController extends Controller
         
     }
     public function rename( Request $request ){
-        exit
+        exit;
         $goods = Goods::orderBy('id')->get();
         $goods = json_decode($goods,true);
 

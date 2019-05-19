@@ -368,6 +368,21 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f93434', end
 	right: 20px;
 	z-index: 20;
 }
+
+/* 數量 */
+.carNum{
+
+	background-color: #e3e3e3;
+	display: inline-block;
+	line-height: 8px;
+	padding: 4px;
+	font-size: 12px;
+	position: absolute;
+	top:-8px;
+	right: 0px;
+	border-radius: 4px;
+	display: none;
+}
 @media (max-width: 767px) {
 ._w{
 	display: none!important;

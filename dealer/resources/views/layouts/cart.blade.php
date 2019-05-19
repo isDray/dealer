@@ -97,6 +97,24 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='{{$dealerData
             <span id="cartLabel" type="button"  aria-haspopup="true" aria-expanded="false">
               <!-- data-toggle="dropdown" -->
               <span class="glyphicon glyphicon-shopping-cart"></span>購物車
+              @if(Session::has('carts'))
+                  @php
+                      $cartsItems = Session::get('carts');
+                      $totalNum = 0;
+                      foreach( $cartsItems as $cartsItem ){
+                          $totalNum += $cartsItem['num'];
+                      }
+                  @endphp
+
+                  @if( $totalNum > 0)
+                      <span class='carNum' style='display:inline-block;'>{{$totalNum}} </span>
+                  @else
+                      <span class='carNum' style='display:none;'>0</span>
+                  @endif
+              @else
+                  <span class='carNum' style='display:none;'>0</span>
+              @endif
+              
               <!-- <span class="caret"></span> -->
             </span>
 
@@ -441,7 +459,7 @@ function refreshItem( _datas ){
     }
 
     var amount = 0;
-
+    var cartGoodsNum = 0;
     $.each( _datas , function( index , element ) {
         
         htmlCode += "<div class='media' style='border-bottom:1px solid #333;padding-bottom:4px;'><div class='media-left'>";
@@ -457,6 +475,7 @@ function refreshItem( _datas ){
         htmlCode += "</div></div>";
 
         amount += element['subTotal'];
+        cartGoodsNum += parseInt(element['num']);
 
     });
     
@@ -464,6 +483,17 @@ function refreshItem( _datas ){
     if( Object.keys(_datas).length > 0 ){
 
         htmlCode += "<h4>總金額:"+amount+"</h4>";
+    }
+
+
+    if( cartGoodsNum > 0 ){
+        $(".carNum").html('');
+        $(".carNum").html( cartGoodsNum );
+        $(".carNum").show();
+    }else{
+        $(".carNum").html('');
+        $(".carNum").html( '0' );
+        $(".carNum").hide();
     }
 
     $("#cartItem").append(htmlCode);
