@@ -207,15 +207,28 @@ class PriceController extends Controller
         $returnData = [];
 
         foreach ($goods as $key => $value) {
-        
+            
+            // 取出庫存
+            $tmpRes = GoodsStock::where('dealer_id',Auth::id())->where('goods_id',$value->id)->first();
+            
+            if( $tmpRes != NULL){
+
+                $tmpStock = $tmpRes->goods_num;
+
+            }else{
+                $tmpStock = 0;
+            }
+            
             array_push($returnData, [
             
                 $value->goods_sn,
                 $value->name,
                 $value->w_price,
                 $value->price,
+                $tmpStock,
                 $value->updated_at,
                 $value->id,
+
 
             ]);
 

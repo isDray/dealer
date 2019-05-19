@@ -83,8 +83,8 @@ a{
                                     <p>上架</p>
                                     <select class="form-control show-tick myborder" id='status'>
                                         <option value='0' >-選擇-</option>
-                                        <option value="1" @if($dfStatus == 1) selected @endif>啟用</option>
-                                        <option value="2" @if($dfStatus == 2) selected @endif>停用</option>
+                                        <option value="1" @if($dfStatus == 1) selected @endif>上架</option>
+                                        <option value="2" @if($dfStatus == 2) selected @endif>下架</option>
                                     </select>
                                 </div>                                 
 
@@ -98,14 +98,15 @@ a{
                                             <th>縮圖</th>
                                             <th>商品名稱</th>
                                             <th>商品貨號</th>
-                                            <th>是否啟用</th>
+                                            <th>上架</th>
                                             <th>售價</th>
                                             <th>批發價</th>
+                                            <th>庫存</th>
                                             <th>編修時間</th>
                                             <th>操作</th>
                                         </tr>
                                     </thead>
-                                    <tfoot>
+<!--                                     <tfoot>
                                         <tr>
                                             
                                             <th>縮圖</th>
@@ -117,7 +118,7 @@ a{
                                             <th>編修時間</th>
                                             <th>操作</th>
                                         </tr>
-                                    </tfoot>
+                                    </tfoot> -->
                                     <tbody>
                                         
 
@@ -208,11 +209,11 @@ $(function(){
                 "render" : function ( url, type, full) {
                     if( full[3] == 1 ){
 
-                        return '<i class="material-icons col-light-green">fiber_manual_record</i>';
+                        return '<i class="material-icons col-light-green">done</i>';
 
                     }else if( full[3] == 0 ){
                         
-                        return '<i class="material-icons col-red">fiber_manual_record</i>';
+                        return '<i class="material-icons col-red">clear</i>';
                     }
                 }
         
@@ -221,17 +222,23 @@ $(function(){
                 "targets":4,
                 "visible": false,
             },
-            {   "targets" : 7 ,
+            {
+                "targets":6,
+                "render" : function ( url, type, full) {
+                    return  "<p class='popup-ajax'>"+full[6]+"</p>";
+                }
+            },            
+            {   "targets" : 8 ,
                 "data": "edit",
                 "orderable": false,
                 "render" : function ( url, type, full) {
-                    return  '<a href="'+"{{url('/goodsEdit')}}/"+full[7]+'">'+
+                    return  '<a href="'+"{{url('/goodsEdit')}}/"+full[8]+'">'+
                             '<button type="button" class="btn btn-success waves-effect">'+
                             '<i class="material-icons">settings</i>'+
                             '<span>編輯  </span>'+
                             '</button>'+
                             '</a>&nbsp;'+
-                            '<button type="button" class="btn btn-danger waves-effect goodsDelete" cid="'+full[7]+'" cname="'+full[1]+'">'+
+                            '<button type="button" class="btn btn-danger waves-effect goodsDelete" cid="'+full[8]+'" cname="'+full[1]+'">'+
                             '<i class="material-icons">cancel</i>'+
                             '<span>刪除</span>'+
                             '</button>'

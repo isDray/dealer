@@ -19,6 +19,7 @@ use Validator;
 use App\Goods;
 use App\GoodsPic;
 use App\GoodsCat;
+use App\GoodsStock;
 class GoodsController extends Controller
 {
     
@@ -870,7 +871,15 @@ class GoodsController extends Controller
         $returnData = [];
 
         foreach ($goods as $key => $value) {
-        
+            
+            // 取出庫存總和
+            $tmpRes = GoodsStock::selectRaw("SUM(goods_num) as stock")->where('goods_id',$value->id)->groupBy('goods_id')->first();
+            if( $tmpRes!=NULL){
+                $tmpStock = $tmpRes->stock;
+            }else{
+                $tmpStock = 0;
+            }
+
             array_push($returnData, [
             $value->thumbnail,
             $value->name,
@@ -878,6 +887,7 @@ class GoodsController extends Controller
             $value->status,
             $value->price,
             $value->w_price,
+            $tmpStock,
             $value->updated_at,
             $value->id
                                 ]);
@@ -888,4 +898,10 @@ class GoodsController extends Controller
 
         echo json_encode( ['data'=>$returnData , 'recordsTotal'=>$recordsTotal, 'recordsFiltered'=>$suitNum] );
     }
+
+
+
+    // // public function AjaxStock( Request $request){
+    // //     return json_encode("OMGGG");
+    // }
 }

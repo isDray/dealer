@@ -143,6 +143,7 @@ a{
                                             <th>商品名稱</th>
                                             <th>批發價</th>
                                             <th>售價</th>
+                                            <th>庫存</th>   
                                             <th>編修時間</th>
                                             <th>操作</th>
                                         </tr>
@@ -153,6 +154,7 @@ a{
                                             <th>商品名稱</th>
                                             <th>批發價</th>
                                             <th>售價</th>
+                                            <th>庫存</th>  
                                             <th>編修時間</th>
                                             <th>操作</th>
                                         </tr>
@@ -279,12 +281,12 @@ $(function(){
             {   "targets" : 9 ,
                 "orderable": true,
             },*/                          
-            {   "targets" : 5 ,
+            {   "targets" : 6 ,
                 "data": "edit",
                 "orderable": false,
                 "render" : function ( url, type, full) {
                     //console.log( full );
-                    return  '<a href="'+"{{url('/priceEdit')}}/"+full[5]+'">'+
+                    return  '<a href="'+"{{url('/priceEdit')}}/"+full[6]+'">'+
 
                             @role('Dealer')
 
