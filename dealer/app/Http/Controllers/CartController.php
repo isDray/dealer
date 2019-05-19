@@ -640,7 +640,7 @@ class CartController extends Controller
 
         try {
             
-            // 迴圈寫入商品
+            // 迴圈寫入商品 & 扣除庫存
             foreach ($tmpcarts as $tmpcartK => $tmpcart) {
                 
                 // 如果商品數量小於等於0 , 商品直接跳過
@@ -667,6 +667,21 @@ class CartController extends Controller
                 $OrderGoods->subtotal = round( $tmpcart['goodsPrice'] * $tmpcart['num'] );
 
                 $OrderGoods->save();
+
+                $changeStock = GoodsStock::where('dealer_id',$cartUser)->where('goods_id',$tmpcart['id'])->first();
+
+                if( $changeStock != NULL){
+                    
+                    $reduceNum = $changeStock->goods_num - $tmpcart['num'];
+
+                    if( $reduceNum <= 0 ){
+                        $reduceNum = 0;
+                    }
+                    
+                    GoodsStock::where('dealer_id', $cartUser)
+                    ->where('goods_id', $tmpcart['id'])
+                    ->update(['goods_num' => $reduceNum]);
+                }
                 
             }
             
