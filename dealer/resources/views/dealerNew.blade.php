@@ -83,7 +83,7 @@
                             </div>
                         </div> -->
                         <div class="col-md-3 col-sm-12 col-xs-12">
-                            <b>網站代碼<span style='color:red;'>(必填)</span>:</b>
+                            <b>網站代碼:</b>
                             <div class="form-group">
                             <div class="form-line">
                                 <input type="text" class="form-control myborder" name="accessWay" id="accessWay" placeholder="" value="" />
@@ -95,7 +95,7 @@
                     <p> 價格資料 </p>
                     <div class="row clearfix">
                         <div class="col-md-3 col-sm-12 col-xs-12">
-                            <b>價格預設倍數<span style='color:red;'>(必填)</span>:</b>
+                            <b>價格預設倍數:</b>
                             <div class="form-group">
                             @foreach( $multiples as $multiple)
                                 <input type="radio" class="with-gap" id="ig_radio{{$multiple['id']}}" name='multiple' value="{{$multiple['multiple']}}"
@@ -108,49 +108,13 @@
                             @endforeach
                             </div>
                         </div>
-                    </div>                    
-                    <p>聯絡人資料</p>
+                    </div>          
 
-                    <div class="row clearfix">
-                        <div class="col-md-3 col-sm-12 col-xs-12">
-                            <b>聯絡人<span style='color:red;'>(必填)</span>:</b>
-                            <div class="form-group">
-                            <div class="form-line">
-                                <input type="text" class="form-control myborder" name="user_name" id="user_name" placeholder="" value="{{ old('user_name') }}" />
-                            </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-12 col-xs-12">
-                            <b>信箱<span style='color:red;'>(必填)</span>:</b>
-                            <div class="form-group">
-                            <div class="form-line">
-                                <input type="email" class="form-control myborder" name="user_email" placeholder="" value="{{ old('user_email') }}" />
-                            </div>
-                            </div>
-                        </div>                          
-                        <div class="col-md-3 col-sm-12 col-xs-12">
-                            <b>聯絡人手機<span style='color:red;'>(必填)</span>:</b>
-                            <div class="form-group">
-                            <div class="form-line">
-                                <input type="text" class="form-control myborder" name="user_phone" id="user_phone" placeholder="" value="{{ old('user_phone') }}"/>
-                            </div>
-                            </div>
-                        </div>   
-                        <div class="col-md-3 col-sm-12 col-xs-12">
-                            <b>聯絡人電話:</b>
-                            <div class="form-group">
-                            <div class="form-line">
-                                <input type="text" class="form-control myborder" name="user_tel" id="user_tel" placeholder="" value="{{ old('user_tel') }}"/>
-                            </div>
-                            </div>
-                        </div>                                             
-                    </div>                    
-                    
                     <p>旅館資料</p>
                     <!-- 收貨資訊 -->
                     <div class="row clearfix">
                         <div class="col-md-3 col-sm-12 col-xs-12">
-                            <b>旅館名稱<span style='color:red;'>(必填)</span>:</b>
+                            <b>旅館名稱:</b>
                             <div class="form-group">
                             <div class="form-line">
                                 <input type="text" class="form-control myborder" name="hotel_name" placeholder="" value="{{ old('hotel_name') }}" />
@@ -166,7 +130,7 @@
                             </div>
                         </div>   
                         <div class="col-md-3 col-sm-12 col-xs-12">
-                            <b>旅館電話<span style='color:red;'>(必填)</span>:</b>
+                            <b>旅館電話:</b>
                             <div class="form-group">
                             <div class="form-line">
                                 <input type="text" class="form-control myborder" name="hotel_tel" placeholder="" value="{{ old('hotel_tel') }}" />
@@ -190,7 +154,7 @@
                             </div>
                         </div>                        
                         <div class="col-md-9 col-sm-12 col-xs-12">
-                            <b>旅館地址<span style='color:red;'>(必填)</span>:</b>
+                            <b>旅館地址:</b>
                             <div class="form-group">
                             <div class="form-line">
                                 <input type="text" class="form-control myborder" name="hotel_address" id="hotel_address" placeholder="" value="{{ old('hotel_address') }}" />
@@ -198,7 +162,7 @@
                             </div>
                         </div>
                         <div class="col-sm-3">
-                            <b>網頁版LOGO</b>
+                            <b>網頁版LOGO <span style="color:red">建議尺寸(400*300)</span></b>
                             <div class="form-group">
                                 <div class="">
                                     <input type="file" class="form-control imageupload" name="mainpic" id="mainpic" placeholder="" />
@@ -210,7 +174,7 @@
                         </div>
 
                         <div class="col-sm-3">
-                            <b>手機板LOGO</b>
+                            <b>手機板LOGO <span style="color:red">建議尺寸(300*200)</span></b>
                             <div class="form-group">
                                 <div class="">
                                     <input type="file" class="form-control imageupload" name="thumbnail" id="thumbnail" placeholder="" />
@@ -221,6 +185,45 @@
                             </div>
                         </div>                                                                                                                
                     </div>
+
+                    <p>聯絡人資料</p>
+
+                    <div class="row clearfix">
+                        <div class="col-md-3 col-sm-12 col-xs-12">
+                            <b>聯絡人<span style='color:red;'>(必填)</span>:</b>
+                            <div class="form-group">
+                            <div class="form-line">
+                                <input type="text" class="form-control myborder" name="user_name" id="user_name" placeholder="" value="{{ old('user_name') }}" />
+                            </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-12 col-xs-12">
+                            <b>信箱:</b>
+                            <div class="form-group">
+                            <div class="form-line">
+                                <input type="email" class="form-control myborder" name="user_email" placeholder="" value="{{ old('user_email') }}" />
+                            </div>
+                            </div>
+                        </div>                          
+                        <div class="col-md-3 col-sm-12 col-xs-12">
+                            <b>聯絡人手機:</b>
+                            <div class="form-group">
+                            <div class="form-line">
+                                <input type="text" class="form-control myborder" name="user_phone" id="user_phone" placeholder="" value="{{ old('user_phone') }}"/>
+                            </div>
+                            </div>
+                        </div>   
+                        <div class="col-md-3 col-sm-12 col-xs-12">
+                            <b>聯絡人電話:</b>
+                            <div class="form-group">
+                            <div class="form-line">
+                                <input type="text" class="form-control myborder" name="user_tel" id="user_tel" placeholder="" value="{{ old('user_tel') }}"/>
+                            </div>
+                            </div>
+                        </div>                                             
+                    </div>                    
+                    
+
                     <!-- 顏色設定 -->
                     <p>色彩設定</p>
                     <!-- 收貨資訊 -->

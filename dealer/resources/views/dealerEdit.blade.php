@@ -93,22 +93,13 @@
                        
                     </div>                    
                     
+                   
                     <!-- 辨別代碼選擇 -->
+                    @role('Admin')
                     <p> 網站資料 </p>
+
+                    
                     <div class="row clearfix">
-<!--                         <div class="col-md-3 col-sm-12 col-xs-12">
-                            <b>連結代碼<span style='color:red;'>(必填)</span>:</b>
-                            <div class="form-group">
-                                <input type="radio" class="with-gap" id="byId" name='accessWay' value="1" @if( $accessWay == 1) checked @endif
-                                >
-                                <label for="byId">依ID編號</label>
-                                <br>
-                                <input type="radio" class="with-gap" id="byName" name='accessWay' value="2" @if( $accessWay == 2) checked @endif
-                                >
-                                <label for="byName">依帳號</label>
-                                <br>
-                            </div>
-                        </div> -->
 
                         <div class="col-md-3 col-sm-12 col-xs-12">
                             <b>網站代碼<span style='color:red;'>(必填)</span>:</b>
@@ -118,7 +109,8 @@
                             </div>
                             </div>
                         </div>
-                    </div>                    
+                    </div>
+                    @endrole
                     <!-- 辨別代碼選擇 -->
                     <p> 價格資料 </p>
                     <div class="row clearfix">
@@ -136,49 +128,13 @@
                             @endforeach
                             </div>
                         </div>
-                    </div>                    
-                    <p>聯絡人資料</p>
-
-                    <div class="row clearfix">
-                        <div class="col-md-3 col-sm-12 col-xs-12">
-                            <b>聯絡人<span style='color:red;'>(必填)</span>:</b>
-                            <div class="form-group">
-                            <div class="form-line">
-                                <input type="text" class="form-control myborder" name="user_name" id="user_name" placeholder="" value="{{ $dealer['user_name'] }}" />
-                            </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-12 col-xs-12">
-                            <b>信箱<span style='color:red;'>(必填)</span>:</b>
-                            <div class="form-group">
-                            <div class="form-line">
-                                <input type="email" class="form-control myborder" name="user_email" placeholder="" value="{{ $dealer['email'] }}" />
-                            </div>
-                            </div>
-                        </div>                          
-                        <div class="col-md-3 col-sm-12 col-xs-12">
-                            <b>聯絡人手機<span style='color:red;'>(必填)</span>:</b>
-                            <div class="form-group">
-                            <div class="form-line">
-                                <input type="text" class="form-control myborder" name="user_phone" id="user_phone" placeholder="" value="{{ $dealer['user_phone'] }}"/>
-                            </div>
-                            </div>
-                        </div>   
-                        <div class="col-md-3 col-sm-12 col-xs-12">
-                            <b>聯絡人電話:</b>
-                            <div class="form-group">
-                            <div class="form-line">
-                                <input type="text" class="form-control myborder" name="user_tel" id="user_tel" placeholder="" value="{{ $dealer['user_tel'] }}"/>
-                            </div>
-                            </div>
-                        </div>                                             
-                    </div>                    
-                    
+                    </div>   
+                    @role('Admin')
                     <p>旅館資料</p>
                     <!-- 收貨資訊 -->
                     <div class="row clearfix">
                         <div class="col-md-3 col-sm-12 col-xs-12">
-                            <b>旅館名稱<span style='color:red;'>(必填)</span>:</b>
+                            <b>旅館名稱:</b>
                             <div class="form-group">
                             <div class="form-line">
                                 <input type="text" class="form-control myborder" name="hotel_name" placeholder="" value="{{ $dealer['hotel_name'] }}" />
@@ -194,7 +150,7 @@
                             </div>
                         </div>   
                         <div class="col-md-3 col-sm-12 col-xs-12">
-                            <b>旅館電話<span style='color:red;'>(必填)</span>:</b>
+                            <b>旅館電話:</b>
                             <div class="form-group">
                             <div class="form-line">
                                 <input type="text" class="form-control myborder" name="hotel_tel" placeholder="" value="{{  $dealer['hotel_tel']  }}" />
@@ -218,7 +174,7 @@
                             </div>
                         </div>                         
                         <div class="col-md-9 col-sm-12 col-xs-12">
-                            <b>旅館地址<span style='color:red;'>(必填)</span>:</b>
+                            <b>旅館地址:</b>
                             <div class="form-group">
                             <div class="form-line">
                                 <input type="text" class="form-control myborder" name="hotel_address" id="hotel_address" placeholder="" value="{{  $dealer['hotel_address']  }}" />
@@ -252,8 +208,43 @@
                                 </div>
                             </div>
                         </div>                                                                                                                
-                    </div>
-
+                    </div>                                     
+                    <p>聯絡人資料</p>
+                    <div class="row clearfix">
+                        <div class="col-md-3 col-sm-12 col-xs-12">
+                            <b>聯絡人<span style='color:red;'>(必填)</span>:</b>
+                            <div class="form-group">
+                            <div class="form-line">
+                                <input type="text" class="form-control myborder" name="user_name" id="user_name" placeholder="" value="{{ $dealer['user_name'] }}" />
+                            </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-12 col-xs-12">
+                            <b>信箱:</b>
+                            <div class="form-group">
+                            <div class="form-line">
+                                <input type="email" class="form-control myborder" name="user_email" placeholder="" value="{{ $dealer['email'] }}" />
+                            </div>
+                            </div>
+                        </div>                          
+                        <div class="col-md-3 col-sm-12 col-xs-12">
+                            <b>聯絡人手機:</b>
+                            <div class="form-group">
+                            <div class="form-line">
+                                <input type="text" class="form-control myborder" name="user_phone" id="user_phone" placeholder="" value="{{ $dealer['user_phone'] }}"/>
+                            </div>
+                            </div>
+                        </div>   
+                        <div class="col-md-3 col-sm-12 col-xs-12">
+                            <b>聯絡人電話:</b>
+                            <div class="form-group">
+                            <div class="form-line">
+                                <input type="text" class="form-control myborder" name="user_tel" id="user_tel" placeholder="" value="{{ $dealer['user_tel'] }}"/>
+                            </div>
+                            </div>
+                        </div>                                             
+                    </div>                    
+                    
                     <!-- 顏色設定 -->
                     <p>色彩設定</p>
                     <!-- 收貨資訊 -->
@@ -276,7 +267,7 @@
                         </div>                                               
                     </div>
                     <!-- /顏色設定 -->
-
+                    @endrole
                     <p>收貨資料</p>
                     <!-- 收貨資訊 -->
                     <div class="row clearfix">
