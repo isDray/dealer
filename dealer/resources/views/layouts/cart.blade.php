@@ -247,14 +247,27 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='{{$dealerData
     <div id='footer' class="container-fluid">
 
         <div id='footerLogo' class='col-md-3 col-md-offset-2 col-sm-12 col-xs-12'>
-            <img src="{{url('logo')}}/{{$cartUser}}/{{$dealerDatas['logo1']}}">
+            <!-- <img src="{{url('logo')}}/{{$cartUser}}/{{$dealerDatas['logo1']}}"> -->
         </div>
 
         <div id='dealerInfo' class='col-md-4 col-md-offset-1 col-sm-12 col-xs-12'>
             <h3>{{$dealerDatas['hotel_name']}}</h3>
             <ul>
+                @if( !empty($dealerDatas['hotel_address']) )
                 <li><p><span class="glyphicon glyphicon-map-marker"></span> {{$dealerDatas['hotel_address']}}</p></li>
+                @endif
+
+                @if( !empty($dealerDatas['hotel_tel']) )
                 <li><p><span class="glyphicon glyphicon-earphone"></span> {{$dealerDatas['hotel_tel']}}</p></li>
+                @endif
+
+                @if( !empty($dealerDatas['hotel_email']) )
+                <li><p><span class="glyphicon glyphicon-envelope"></span> {{$dealerDatas['hotel_email']}}</p></li>
+                @endif
+
+                @if( !empty($dealerDatas['web_url']) )
+                <li><p><span class="glyphicon glyphicon-globe"></span> {{$dealerDatas['web_url']}}</p></li>
+                @endif                                
             </ul>
 
         </div>

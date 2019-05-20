@@ -191,13 +191,14 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f93434', end
 /* 頁腳 */
 #footer{
 	border-top:2px solid #252525;
-	height: 250px;
+	height: 210px;
 	background-color: #131313;
 	/*box-shadow: 10px 2px 40px -21px #e8308c;*/
-	padding-top: 25px;
+	padding-top: 10px;
+	overflow: hidden;
 }
 #footerLogo{
-	height: 200px;
+	/*height: 200px;*/
 }
 #footerLogo  img {
     object-fit:contain;
@@ -209,10 +210,14 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f93434', end
 #dealerInfo>h3{
 	font-weight: 900;
 }
+#dealerInfo>ul{
+	padding-left: 0px;
+}
 #dealerInfo>ul>li{
 	list-style: none;
 	font-weight: 900;
 	font-size: 18px;
+	color: #bdbdbd;
 }
 /* 頁腳 */
 .btn-view {
