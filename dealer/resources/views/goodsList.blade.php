@@ -155,7 +155,8 @@ $(function(){
         order:[[6,'desc']],
         responsive: true,
         stateSave: true,
-        searching: false,
+        searching:false,
+        dom: '<"top"<"col-md-6"<"inlinebox"li>><"col-md-6"f>>rt<"bottom"p><"clear">',
         language:{
             "processing":   "處理中...",
             "loadingRecords": "載入中...",

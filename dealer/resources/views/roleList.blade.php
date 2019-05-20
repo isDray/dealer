@@ -109,7 +109,8 @@ $(function(){
 
     $('.roleTable').DataTable({
         responsive: true,
-        stateSave: true,            
+        stateSave: true, 
+        dom: '<"top"<"col-md-6"<"inlinebox"li>><"col-md-6"f>>rt<"bottom"p><"clear">',                   
         language:{
             "processing":   "處理中...",
             "loadingRecords": "載入中...",

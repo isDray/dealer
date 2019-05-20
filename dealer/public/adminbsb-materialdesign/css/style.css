@@ -8234,3 +8234,13 @@ html.ie11 .bs-searchbox .form-control {
     z-index: 200;
     display: none;
 }
+._np{
+  padding:0px!important;
+}
+.inlinebox div{
+  display: inline!important;
+}
+.inlinebox div:last-child{
+  display: inline!important;
+  padding-left: 10px;
+}
