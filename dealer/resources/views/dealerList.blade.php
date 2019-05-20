@@ -180,6 +180,7 @@ $(function(){
         order:[[2,'desc']],
         responsive: true,
         searching: false,
+        stateSave: true,            
         language:{
             "processing":   "處理中...",
             "loadingRecords": "載入中...",

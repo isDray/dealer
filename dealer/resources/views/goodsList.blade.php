@@ -154,6 +154,7 @@ $(function(){
     mytable = $('.roleTable').DataTable({
         order:[[6,'desc']],
         responsive: true,
+        stateSave: true,
         searching: false,
         language:{
             "processing":   "處理中...",

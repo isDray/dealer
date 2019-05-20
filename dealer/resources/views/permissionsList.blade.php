@@ -116,6 +116,7 @@ $(function(){
 
     $('.js-basic-example').DataTable({
         responsive: true,
+        stateSave: true,            
         language:{
             "processing":   "處理中...",
             "loadingRecords": "載入中...",

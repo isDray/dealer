@@ -27,12 +27,11 @@
                         </a>
                         <ul class="ml-menu">
                             <li>
-                                <a href="{{url('/category')}}">商品分類管理</a>
+                                <a href="{{url('/goods')}}">商品管理</a>
                             </li>                              
                             <li>
-                                <a href="{{url('/goods')}}">商品管理</a>
-                            </li>                            
-                          
+                                <a href="{{url('/category')}}">商品分類管理</a>
+                            </li>                              
                         </ul>
                     </li>
                     @endrole

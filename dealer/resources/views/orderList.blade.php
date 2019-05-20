@@ -171,6 +171,7 @@ $(function(){
     orderTable = $('.orderTable').DataTable({
         order:[[5,'desc']],
         responsive: true,
+        stateSave: true,            
         language:{
             "processing":   "處理中...",
             "loadingRecords": "載入中...",
