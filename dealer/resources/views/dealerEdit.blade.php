@@ -37,8 +37,8 @@
                 {{ csrf_field() }} 
                 <div class='col-sm-12'>
                     
-                    <p>帳號資料</p>
-
+                    <p>帳號資料(ID:{{$dealer['uid']}})</p>
+                    
                     <div class="row clearfix">
                         <div class="col-md-3 col-sm-12 col-xs-12">
                             <b>帳號<span style='color:red;'>(必填)</span>:</b>
@@ -94,9 +94,9 @@
                     </div>                    
                     
                     <!-- 辨別代碼選擇 -->
-                    <p> 連結代碼 </p>
+                    <p> 網站資料 </p>
                     <div class="row clearfix">
-                        <div class="col-md-3 col-sm-12 col-xs-12">
+<!--                         <div class="col-md-3 col-sm-12 col-xs-12">
                             <b>連結代碼<span style='color:red;'>(必填)</span>:</b>
                             <div class="form-group">
                                 <input type="radio" class="with-gap" id="byId" name='accessWay' value="1" @if( $accessWay == 1) checked @endif
@@ -107,6 +107,15 @@
                                 >
                                 <label for="byName">依帳號</label>
                                 <br>
+                            </div>
+                        </div> -->
+
+                        <div class="col-md-3 col-sm-12 col-xs-12">
+                            <b>網站代碼<span style='color:red;'>(必填)</span>:</b>
+                            <div class="form-group">
+                            <div class="form-line">
+                                <input type="text" class="form-control myborder" name="accessWay" id="accessWay" placeholder="" value="{{$accessWay}}" />
+                            </div>
                             </div>
                         </div>
                     </div>                    

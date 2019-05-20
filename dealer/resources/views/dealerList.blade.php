@@ -130,6 +130,7 @@ a{
                                 <table class="table table-bordered table-striped table-hover js-basic-example dataTable orderTable">
                                     <thead>
                                         <tr>
+                                            <th>經銷商ID</th>
                                             <th>經銷商名稱</th>
                                             <th>聯絡人</th>
                                             <th>email</th>
@@ -138,7 +139,7 @@ a{
                                             <th>操作</th>
                                         </tr>
                                     </thead>
-                                    <tfoot>
+<!--                                     <tfoot>
                                         <tr>
                                             <th>經銷商名稱</th>
                                             <th>聯絡人</th>
@@ -147,7 +148,7 @@ a{
                                             <th>加入時間</th>
                                             <th>操作</th>
                                         </tr>
-                                    </tfoot>
+                                    </tfoot> -->
                                     <tbody></tbody>
                                 </table>
                             </div>
@@ -237,6 +238,9 @@ $(function(){
             {   "targets" : 4,
                 "orderable": false,
             },
+            {   "targets" : 5,
+                "orderable": false,
+            },            
             /*                            
             {   "targets" : 7 ,
                 "orderable": false,
@@ -271,12 +275,12 @@ $(function(){
             {   "targets" : 9 ,
                 "orderable": true,
             },*/                          
-            {   "targets" : 5 ,
+            {   "targets" : 6 ,
                 "data": "edit",
                 "orderable": false,
                 "render" : function ( url, type, full) {
                     //console.log( full );
-                    return  '<a href="'+"{{url('/dealerEdit')}}/"+full[5]+'">'+
+                    return  '<a href="'+"{{url('/dealerEdit')}}/"+full[0]+'">'+
                             @role('Admin')
                             @permission('purchaseEdit')
                             '<button type="button" class="btn btn-success waves-effect">'+
@@ -293,7 +297,7 @@ $(function(){
                             @endrole
 
                             '</a>&nbsp;'+
-                            '<button type="button" class="btn btn-danger waves-effect deleteDealer" dealerId="'+full[5]+'" orderName="'+full[0]+'">'+
+                            '<button type="button" class="btn btn-danger waves-effect deleteDealer" dealerId="'+full[0]+'" orderName="'+full[1]+'">'+
                             '<i class="material-icons">cancel</i>'+
                             '<span>刪除</span>'+
                             '</button>'

@@ -97,13 +97,14 @@ class DealerController extends Controller
         foreach ($datas as $key => $value) {
         
             array_push($returnData, [
-            
+                
+                $value->uid,
                 $value->hotel_name,
                 $value->user_name,
                 $value->email,
                 $value->user_phone,
                 $value->created_at,
-                $value->uid,
+                
 
             ]);
                 
@@ -173,6 +174,7 @@ class DealerController extends Controller
         // 檢驗資料
         $validator = Validator::make($request->all(), [
             'account'    => 'required|max:64',
+            'accessWay'  => 'required',
             'password1'  => 'required|same:password2',
             'multiple'   => 'required|exists:multiple,multiple',
             'user_name'  => 'required|max:64',
@@ -194,6 +196,7 @@ class DealerController extends Controller
         ],[
             'account.required' => '帳號為必填',
             'account.max'      => '帳號最多為64個字元',
+            'accessWay.required'=> '網站代碼為必填',
             'password1.required' => '密碼為必填',
             'password1.same'     => '密碼驗證不一致',
             'multiple.required' => '價格預設倍數為必填',
@@ -250,14 +253,16 @@ class DealerController extends Controller
             
             $user2 = User::find( $user->id );
 
-            if( $request->accessWay == 1){
+            // if( $request->accessWay == 1){
 
-                $user2->detect = str_pad( $user->id ,4,'0',STR_PAD_LEFT);
+            //     $user2->detect = str_pad( $user->id ,4,'0',STR_PAD_LEFT);
 
-            }else{
+            // }else{
 
-                $user2->detect = $request->account;
-            } 
+            //     $user2->detect = $request->account;
+            // } 
+
+            $user2->detect = trim($request->accessWay);
             $user2->save();
             
             // 給身分
@@ -393,16 +398,11 @@ class DealerController extends Controller
         // 計算目前是使用哪種連結方式
         $dealerUser = User::where('id',$request->id)->first();
         if(  $dealerUser != NULL ){
-            $dealerUser = json_decode($dealerUser,true);
             
-            if( $dealerUser['id'] == intval($dealerUser['detect']) ){
-                
-                $accessWay = 1;
-
-            }else{
-                
-                $accessWay = 2;
-            }
+            $dealerUser = json_decode($dealerUser,true);
+    
+            $accessWay = $dealerUser['detect'];
+           
 
         }
 
@@ -473,7 +473,7 @@ class DealerController extends Controller
             'account.max'      => '帳號最多為64個字元',
             'password1.required' => '密碼為必填',
             'password1.same'     => '密碼驗證不一致',
-            'accessWay.required' => '連結代碼為必填',
+            'accessWay.required' => '網站代碼為必填',
             'multiple.required' => '價格預設倍數為必填',
             'multiple.exists' => '價格預設倍數不存在',
             'user_name.required' => '聯絡人為必填',
@@ -534,14 +534,15 @@ class DealerController extends Controller
             if( !empty( $request->oldpassword ) ){
                 $user->password = Hash::make( $request->password1 );
             }
-            if( $request->accessWay == 1){
+            /*if( $request->accessWay == 1){
 
                 $user->detect = str_pad( $user->id ,4,'0',STR_PAD_LEFT);
 
             }else{
 
                 $user->detect = $request->account;
-            }            
+            }*/    
+            $user->detect = trim($request->accessWay);       
             $user->email =  $request->user_email;
             $user->save();
             

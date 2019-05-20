@@ -67,9 +67,9 @@
                        
                     </div>
                     <!-- 辨別代碼選擇 -->
-                    <p> 連結代碼 </p>
+                    <p> 網站資料 </p>
                     <div class="row clearfix">
-                        <div class="col-md-3 col-sm-12 col-xs-12">
+<!--                         <div class="col-md-3 col-sm-12 col-xs-12">
                             <b>連結代碼<span style='color:red;'>(必填)</span>:</b>
                             <div class="form-group">
                                 <input type="radio" class="with-gap" id="byId" name='accessWay' value="1" checked
@@ -81,7 +81,15 @@
                                 <label for="byName">依帳號</label>
                                 <br>
                             </div>
-                        </div>
+                        </div> -->
+                        <div class="col-md-3 col-sm-12 col-xs-12">
+                            <b>網站代碼<span style='color:red;'>(必填)</span>:</b>
+                            <div class="form-group">
+                            <div class="form-line">
+                                <input type="text" class="form-control myborder" name="accessWay" id="accessWay" placeholder="" value="" />
+                            </div>
+                            </div>
+                        </div>                        
                     </div>                    
                     <!-- 辨別代碼選擇 -->                    
                     <p> 價格資料 </p>
@@ -190,7 +198,7 @@
                             </div>
                         </div>
                         <div class="col-sm-3">
-                            <b>商品主圖</b>
+                            <b>網頁版LOGO</b>
                             <div class="form-group">
                                 <div class="">
                                     <input type="file" class="form-control imageupload" name="mainpic" id="mainpic" placeholder="" />
@@ -202,7 +210,7 @@
                         </div>
 
                         <div class="col-sm-3">
-                            <b>商品縮圖</b>
+                            <b>手機板LOGO</b>
                             <div class="form-group">
                                 <div class="">
                                     <input type="file" class="form-control imageupload" name="thumbnail" id="thumbnail" placeholder="" />

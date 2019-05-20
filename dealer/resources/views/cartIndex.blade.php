@@ -65,7 +65,7 @@
 </div> -->
 <!-- /輪播 -->
     <div class='boxLabel _np col-md-8 col-md-offset-2 col-sm-12 col-xs-12 fastBar' label='快速分類'>
-        <span class='btn btn-primary fastBtn' data-toggle="collapse" data-target="#allCate">全部分類</span>
+        <!-- <span class='btn btn-primary fastBtn' data-toggle="collapse" data-target="#allCate">全部分類</span> -->
     </div>
     <div id='fastInner' class='col-md-8 col-md-offset-2 col-sm-12 col-xs-12 _np' >
 <!--         <div class='col-md-2 col-md-offset-1 col-sm-2 col-sm-offset-1 col-xs-2 col-xs-offset-1 fastItem '><div>滾珠</div></div>
@@ -82,7 +82,6 @@
         <div class='col-md-2 col-sm-2 col-xs-2  fastItem'><div>丁字褲</div></div>
         <div class='col-md-2 col-sm-2 col-xs-2  fastItem'><div>三角褲</div></div> -->
         @foreach($categorys as $categoryk =>$category)
-        @if( $categoryk < 8)
         <a href="{{url('')}}/{{$dealerDetect}}/cartCategory/{{$category['id']}}">
             <div class="fastItem">
                 <div>
@@ -92,11 +91,10 @@
                 {{$category['sortname']}}
                 </div>
             </div>
-        </a>
-        @endif            
+        </a>           
         @endforeach
 
-        <div id="allCate" class="collapse col-md-12 col-sm-12 col-xs-12 _np">
+<!--         <div id="allCate" class="collapse col-md-12 col-sm-12 col-xs-12 _np">
         @foreach($categorys as $categoryk =>$category)
         @if( $categoryk > 7)
         <a href="{{url('')}}/{{$dealerDetect}}/cartCategory/{{$category['id']}}">
@@ -111,7 +109,7 @@
         </a>
         @endif            
         @endforeach          
-        </div>
+        </div> -->
     </div>
 </div>
 
