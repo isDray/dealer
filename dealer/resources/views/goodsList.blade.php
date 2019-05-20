@@ -47,15 +47,20 @@ a{
                                 <div class='col-xs-12 col-sm-12 col-md-12 bg-grey'>
                                     <p><b>進階搜尋</b></p>
                                 </div>
-                               
-                                <div class="col-sm-3">
-                                    <p>關鍵字:</p>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control myborder" placeholder="" id='myKeyword' value=''>
-                                    </div>
-                                </div>
 
-                                <div class="col-sm-2">
+                                <div class="col-sm-3">
+                                    <p>商品類別</p>
+                                    <select class="form-control show-tick myborder" id='category'>
+                                        <option value='0' >-選擇-</option>
+                                        @foreach( $categorys as $category)
+                                        <option value="{{$category['id']}}"> {{$category['level']}}{{$category['name']}} </option>
+                                        @endforeach
+                                    </select>
+                                </div>                                
+
+
+
+<!--                                 <div class="col-sm-2">
                                     <p>批發價</p>
                                     <div class="input-group">
                                         <div class="form-line myborder">
@@ -67,17 +72,9 @@ a{
                                         </div>                                        
                                     </div>
                                 </div>
-
+ -->
                                 
-                                <div class="col-sm-3">
-                                    <p>商品類別</p>
-                                    <select class="form-control show-tick myborder" id='category'>
-                                        <option value='0' >-選擇-</option>
-                                        @foreach( $categorys as $category)
-                                        <option value="{{$category['id']}}"> {{$category['level']}}{{$category['name']}} </option>
-                                        @endforeach
-                                    </select>
-                                </div> 
+
                                 
                                 <div class="col-sm-1">
                                     <p>上架</p>
@@ -87,7 +84,12 @@ a{
                                         <option value="2" @if($dfStatus == 2) selected @endif>下架</option>
                                     </select>
                                 </div>                                 
-
+                                <div class="col-sm-3">
+                                    <p>關鍵字:</p>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control myborder" placeholder="" id='myKeyword' value=''>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="table-responsive">
@@ -128,7 +130,7 @@ a{
                         </div>
                     </div>
                 </div>
-                
+                <div id='stockContent' value=""></div>
                 <form action="{{url('/goodsDeleteDo')}}" method="POST" id='deleteForm'>
                     {{ csrf_field() }}
                     <input type='hidden' id='deleteInput' name='id'>
@@ -225,7 +227,18 @@ $(function(){
             {
                 "targets":6,
                 "render" : function ( url, type, full) {
-                    return  "<p class='popup-ajax'>"+full[6]+"</p>";
+                    var tmptable = "";
+
+                    $.each( full[9], function( tablek, tablev ) {
+
+                        tmptable +="<tr>";
+                        tmptable +="<td>"+tablev['name']+"</td>";
+                        tmptable +="<td>"+tablev['num']+"</td>";
+                        tmptable +="</tr>";
+
+                    });
+
+                    return  "<div class='stockbox' gid='"+full[8]+"'>"+full[6]+"<div><table><tr><td>經銷商</td><td>庫存</td></tr>"+tmptable+"</table></div></div>";
                 }
             },            
             {   "targets" : 8 ,
@@ -301,6 +314,55 @@ $(function(){
 
     });
 
+    $('body').on('mouseover', '.stockbox', function() {
+
+        //$(this).children().html( $("#stockContent").val() );
+        $(this).children().show();
+    });
+    
+    $('body').on('mouseleave', '.stockbox', function() {
+        
+        $(this).children().hide();
+    });    
+    function getajaxstock( _gid){
+            
+            
+            var tooltipajax = $.ajax({
+                url: "{{url('/goodsAjaxStock')}}",
+                method: "POST",
+                data: { gid : _gid ,
+                     _token : "{{csrf_token()}}" },
+                dataType: "json",
+
+            });
+ 
+            tooltipajax.done(function( returnDatas ) {
+                
+                if( returnDatas[0] == true ){
+                if( returnDatas.length > 0){
+                    var numHtml = '';
+                    numHtml += "<table><tr><td>經銷商</td><td>庫存</td></tr>";
+                    $.each( returnDatas[1], function( key, value ) {
+                        numHtml += "<tr>";
+                        numHtml += "<td>"+value['name']+"</td>";
+                        numHtml += "<td>"+value['num']+"</td>";
+                        numHtml += "</tr>";
+                    });
+
+                    numHtml += "</table>";
+
+                    $("#stockContent").val( numHtml );
+                } 
+                }
+
+            });
+ 
+            tooltipajax.fail(function( jqXHR, textStatus ) {
+                console.log( "Request failed: " + textStatus );
+            });     
+            
+
+    }
 })
 
 </script>

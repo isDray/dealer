@@ -77,7 +77,14 @@
     </div>
     <!-- #END# Search Bar -->
     <!-- Top Bar -->
-    <nav class="navbar">
+    @role('Admin')
+        <nav class="navbar bg-pink">
+    @endrole
+
+    @role('Dealer')
+        <nav class="navbar  bg-red">
+    @endrole
+
         <div class="container-fluid">
             <div class="navbar-header">
                 <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false"></a>
@@ -501,6 +508,7 @@
 
     <!-- Jquery Core Js -->
     <script src="{{asset('adminbsb-materialdesign/plugins/jquery/jquery.min.js')}}"></script>
+
     <!-- Bootstrap Core Js -->
     <script src="{{asset('adminbsb-materialdesign/plugins/bootstrap/js/bootstrap.js')}}"></script>
 

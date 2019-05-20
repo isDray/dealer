@@ -20,6 +20,7 @@ use App\Goods;
 use App\GoodsPic;
 use App\GoodsCat;
 use App\GoodsStock;
+use App\Dealer;
 class GoodsController extends Controller
 {
     
@@ -882,6 +883,36 @@ class GoodsController extends Controller
                 $tmpStock = 0;
             }
 
+            // 取出庫存來源
+            $tmpDatas = GoodsStock::where('goods_id',$value->id)->get();
+
+            if( count($tmpDatas) > 0 ){
+                
+                $returnStock = [];
+    
+                foreach ($tmpDatas as $tmpDatak => $tmpData) {
+                    
+                    $tmpDealer = Dealer::where('dealer_id',$tmpData->dealer_id)->first();
+    
+                    if( $tmpDealer != NULL ){
+    
+                        $tmpDealerName = "ID:".$tmpData->dealer_id.",".$tmpDealer->hotel_name;
+    
+                    }else{
+                        $tmpDealerName = "ID:".$tmpData->dealer_id.",";
+                    }
+    
+                    $returnStock[] = [ 'name'=> $tmpDealerName,
+                                      'num' => $tmpData->goods_num
+                                    ];
+                }
+    
+                
+            }else{
+
+                $returnStock = [];
+            }
+
             array_push($returnData, [
             $value->thumbnail,
             $value->name,
@@ -891,7 +922,8 @@ class GoodsController extends Controller
             $value->w_price,
             $tmpStock,
             $value->updated_at,
-            $value->id
+            $value->id,
+            $returnStock
                                 ]);
             
 
@@ -901,9 +933,49 @@ class GoodsController extends Controller
         echo json_encode( ['data'=>$returnData , 'recordsTotal'=>$recordsTotal, 'recordsFiltered'=>$suitNum] );
     }
 
+    
 
+    
+    /*----------------------------------------------------------------
+     | 撈出庫存細項
+     |----------------------------------------------------------------
+     |
+     */
 
-    // // public function AjaxStock( Request $request){
-    // //     return json_encode("OMGGG");
-    // }
+    public function ajaxStock( Request $request){
+        
+        if( !Auth::user()->hasRole('Admin') || empty($request->gid)){
+
+            return json_encode([false,[]]);
+        }
+        
+        $tmpDatas = GoodsStock::where('goods_id',$request->gid)->get();
+
+        if( count($tmpDatas) > 0 ){
+            
+            $returnData = [];
+
+            foreach ($tmpDatas as $tmpDatak => $tmpData) {
+                
+                $tmpDealer = Dealer::where('dealer_id',$tmpData->dealer_id)->first();
+
+                if( $tmpDealer != NULL ){
+
+                    $tmpDealerName = "ID:".$tmpData->dealer_id.",".$tmpDealer->hotel_name;
+
+                }else{
+                    $tmpDealerName = "ID:".$tmpData->dealer_id.",";
+                }
+
+                $returnData[] = [ 'name'=> $tmpDealerName,
+                                  'num' => $tmpData->goods_num
+                                ];
+            }
+
+            return json_encode([true,$returnData]);
+        }else{
+
+            return json_encode([false,[]]);
+        }
+    }
 }
