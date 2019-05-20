@@ -838,6 +838,12 @@ class CartController extends Controller
         // 取出要呈現的商品
         $goods = Goods::where('cid',$request->cid)->whereIn('id',$canSells)->offset( $start )->limit( $showNum )->orderBy( $orderBy )->get();
         
+        $goods = Goods::leftJoin('goods_cat', function($join) {
+                    $join->on('Goods.id', '=', 'goods_cat.gid');
+                })->where(function ($query) use( $request ) {
+                    $query->where('goods.cid', $request->cid)
+                    ->orWhere('goods_cat.cid',  $request->cid);
+                })->offset( $start )->limit( $showNum )->orderBy( $orderBy )->get();
         // 計算價格
         foreach ($goods as $goodk => $good) {
             

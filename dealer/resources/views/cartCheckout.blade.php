@@ -91,7 +91,7 @@
                  房號:<input type='text' class='form-control' name="room" style="margin-top:10px;" >
                 付款方式: <select class='form-control' style="margin-top:10px;" name='payway'>
                             <option value="現金付款">現金付款</option>
-                            <option value="刷卡付款">刷卡付款</option>
+                            <option value="櫃檯刷卡">櫃檯刷卡</option>
                           </select>    
                 <textarea class="form-control" rows="3" placeholder="備註欄位" style="margin-top:10px;margin-bottom:10px;" name="note"></textarea>         
                 

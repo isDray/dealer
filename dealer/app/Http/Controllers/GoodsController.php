@@ -365,7 +365,8 @@ class GoodsController extends Controller
         
         $appendMessage = [] ;
         // 如果有新增擴展類則需要將其作驗證
-        if( count($request->multiplCategory) > 0 ){
+
+        if( isset($request->multiplCategory) ){
 
             foreach ( $request->multiplCategory as $key => $value) {
                 
@@ -378,7 +379,7 @@ class GoodsController extends Controller
         $extendCategorys = [] ;
 
         // 刪除與主要分類重複的商品
-        if( count($request->multiplCategory) > 0 ){
+        if( isset($request->multiplCategory) ){
 
             foreach ( $request->multiplCategory as $key => $value) {
                 

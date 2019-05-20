@@ -408,8 +408,11 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f93434', end
 ._p{
 	display: block;
 }
+
 #navItem > li > a{
 	font-size: 14px;
+	padding-top: 5px;
+	padding-bottom: 5px;
 }
 #footer{
     height:auto;
