@@ -125,6 +125,7 @@
                             <tr class='bg-grey'>
                                 <th>貨號</th>
                                 <th>商品名稱</th>
+                                <th>總銷售數量</th>
                                 <th>銷售數量</th>
                                 <th>庫存</th>
                                 <th width='20%'>需補貨數量</th>
@@ -241,6 +242,7 @@ $(function(){
                 formHtml += "<input type='hidden' value='"+_datas['goodsId'][i]+"' name='goodsId[]' class='goodsId' />";
                 formHtml += "<td>"+_datas['goodsSn'][i]+"</td>";
                 formHtml += "<td>"+_datas['goodsName'][i]+"</td>";
+                formHtml += "<td>"+_datas['allSalesNum'][i]+"</td>";
                 formHtml += "<td>"+_datas['salesNum'][i]+"</td>";
                 formHtml += "<td>"+_datas['stock'][i]+"</td>";
                 formHtml += "<td><input type='number' name='needNum[]' value='"+_datas['needNum'][i]+"' class='form-control changeNum' min='0' w_price='"+_datas['w_price'][i]+"' changet='total"+i+"'/></td>";
@@ -259,7 +261,7 @@ $(function(){
             
             // 如果沒有商品則呈現無商品訊息
             formHtml += "<tr>";
-            formHtml += "<td colspan='5'> 無銷售紀錄 </td>";
+            formHtml += "<td colspan='6'> 無銷售紀錄,或不需要補貨 </td>";
             formHtml += "</tr>";
             // 清空所有form
             $('#purchaseFormTable').empty();

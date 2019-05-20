@@ -562,35 +562,71 @@ class PurchaseController extends Controller
         $saleDatas  = $saleDatas->toArray();
 
 
-        $goodsId    = [];
-        $goodsName  = [];
-        $goodsSn    = [];
-        $salesNum   = [];
-        $needNum    = [];
-        $w_price    = [];
-        $stock      = [];
+        $goodsId     = [];
+        $goodsName   = [];
+        $goodsSn     = [];
+        $allSalesNum = [];
+        $salesNum    = [];
+        $needNum     = [];
+        $w_price     = [];
+        $stock       = [];
 
         foreach ($saleDatas as $saleDatak => $saleData ) {
-        
-            $goodsId[]     = $saleData['gid'];
-            $goodsName[]   = $saleData['name'];
-            $goodsSn[]     = $saleData['goods_sn'];
-            $salesNum[]    = $saleData['total_sales'];
+            
             // 撈出庫存
             $tmpStock = GoodsStock::where('goods_id',$saleData['gid'])->where('dealer_id',$dealerId)->first();
-            $tmpStock = json_decode($tmpStock,true);
+            $tmpStock = $tmpStock->toArray();//json_decode($tmpStock,true);
             if( count($tmpStock) > 0 ){
 
-                $stock[] = $tmpStock['goods_num'];
+                // $stock[] = $tmpStock['goods_num'];
                 $goodsStock = $tmpStock['goods_num'];
             }else{
                 
-                $stock[] = 0;
+                // $stock[] = 0;
                 $goodsStock = 0;
-            }            
+            }        
             $tmpNeed       = round( $saleData['total_sales'] / $reference * $safeDays  ) - $goodsStock;
-            $needNum[]     = ($tmpNeed)>0? $tmpNeed:0;
-            $w_price[]     = $saleData['w_price'];
+            
+            if( $tmpNeed > 0){
+                
+                $goodsId[]     = $saleData['gid'];
+                $goodsName[]   = $saleData['name'];
+                $goodsSn[]     = $saleData['goods_sn'];
+                $salesNum[]    = $saleData['total_sales'];
+                $needNum[]     = ($tmpNeed)>0? $tmpNeed:0;
+                $w_price[]     = $saleData['w_price'];
+                if( count($tmpStock) > 0 ){
+                    $stock[] = $tmpStock['goods_num'];
+                }else{
+                    $stock[] = 0;
+                }
+                
+                // 算出會員該商品的全部銷售量(不限時間)
+                $allSalesDatas  =  Order::select('order_goods.gid',DB::raw('SUM(order_goods.num) as allSales'))
+                    ->leftJoin('order_goods', function($join) {
+                        
+                        $join->on('order.id', '=', 'order_goods.oid');
+                    })
+                    ->leftJoin('goods', function($join) {
+                        
+                        $join->on('order_goods.gid', '=', 'goods.id');
+                    })
+                    ->where('order.dealer_id',$dealerId)
+                    ->where('order_goods.gid',$saleData['gid'])
+                    ->where('order.status','3')
+                    ->groupBy('order_goods.gid')
+                    ->first(); 
+                
+           
+                if( $allSalesDatas != NULL ){
+                    $allSalesNum[] = $allSalesDatas->allSales;
+                }else{
+                    $allSalesNum[] = 0;
+                }
+
+
+            }
+
 
 
         }
@@ -603,6 +639,7 @@ class PurchaseController extends Controller
                       'needNum'   => $needNum,
                       'w_price'   => $w_price,
                       'stock'     => $stock,
+                      'allSalesNum' => $allSalesNum
                     ];
 
         // 取出經銷會員的預設配送資料
