@@ -1155,7 +1155,17 @@ class PurchaseController extends Controller
             $PurchaseLog->desc  = '新增進貨單';
 
             $PurchaseLog->save();
-
+            
+            // 判斷如果尚未填收貨資訊就填入
+            if( empty($getEnableDate->ship_name) && empty($getEnableDate->ship_phone) && empty($getEnableDate->ship_tel) && empty($getEnableDate->ship_address)){
+                
+                $getEnableDate->ship_name    = $request->name;
+                $getEnableDate->ship_phone   = $request->phone;
+                $getEnableDate->ship_tel     = $request->tel;
+                $getEnableDate->ship_address = $request->address;
+                
+                $getEnableDate->save();
+            }
             DB::commit();
                 
             return json_encode( ['res'=>true , 'msg'=>'進貨單新增成功' ]);

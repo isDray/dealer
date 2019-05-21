@@ -30,12 +30,14 @@ class CreatePurchaseTable extends Migration
             $table->unsignedInteger('tax')->comment('稅金');
             $table->unsignedInteger('final_amount')->comment('應付金額');
             $table->tinyInteger('status')->comment('狀態');
+            $table->char('company',191)->nullable()->comment('公司抬頭');
+            $table->char('ein',191)->nullable()->comment('統一編號');               
             $table->char('consignee',100)->comment('收件人名稱');
             $table->char('tel',20)->nullable()->comment('連絡電話');
             $table->char('phone',20)->comment('連絡手機');
             $table->text('address')->comment('地址');
             $table->text('admin_note')->nullable()->comment('系統方備註');
-            $table->text('dealer_note')->nullable()->comment('經銷商備註');            
+            $table->text('dealer_note')->nullable()->comment('經銷商備註');         
             $table->timestamps();
 
         });
