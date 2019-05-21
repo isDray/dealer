@@ -56,14 +56,13 @@
 </head>
 <style type="text/css">
 #logoBox{
-    position: fixed;
+    /*position: fixed;*/
     top:0px;
     left:0px;
     width: 100%;
-    z-index: 99;
-    height: 100px;
+    /*z-index: 99;*/
+    /*height: 100px;*/
 
-/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#f93434+0,e26fa7+100 */
 background: {{$dealerDatas['logo_color1']}}; /* Old browsers */
 background: -moz-linear-gradient(45deg, {{$dealerDatas['logo_color1']}} 0%, {{$dealerDatas['logo_color2']}} 100%); /* FF3.6-15 */
 background: -webkit-linear-gradient(45deg, {{$dealerDatas['logo_color1']}} 0%,{{$dealerDatas['logo_color2']}} 100%); /* Chrome10-25,Safari5.1-6 */
@@ -72,12 +71,15 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='{{$dealerData
 }</style>
 
 <body class="theme-red">
-    <div id='logoBox' class="container-fluid">
+    
+    <div id="fixBox">
+    <div id='logoBox' class="container-fluid _np">
         <div id="webLogo" class='col-md-4 col-md-offset-4 _w'>
             <img src="{{url('logo')}}/{{$cartUser}}/{{$dealerDatas['logo1']}}">
         </div>
-        <div id="webLogo" class='col-md-4 col-md-offset-4 _p'>
-            <img src="{{url('logo')}}/{{$cartUser}}/{{$dealerDatas['logo2']}}">
+        <div id="webLogo" class='col-md-4 col-md-offset-4 _p _np'>
+            <!-- <img src="{{url('logo')}}/{{$cartUser}}/{{$dealerDatas['logo2']}}"> -->
+            <img src="{{url('')}}/banner.jpg" width='100%'>
         </div>        
     </div>
 
@@ -239,6 +241,8 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='{{$dealerData
         </div><!-- /.navbar-collapse -->
       </div><!-- /.container-fluid -->
     </nav>
+
+    </div>
 
 
     @yield('content')

@@ -38,14 +38,15 @@ a:hover {
 a:active {
   text-decoration: none;
 }
+#fixBox{
+	width: 100%;
+	height: auto;
+}
 #logoBox{
-	position: fixed;
 	top:0px;
 	left:0px;
 	width: 100%;
-	z-index: 99;
-    height: 100px;
-    padding-top: 10px;
+    /*padding-top: 10px;*/
 /*
 background: rgb(249,52,52); 
 background: -moz-linear-gradient(45deg, rgba(249,52,52,1) 0%, rgba(226,111,167,1) 100%); 
