@@ -90,17 +90,18 @@
                         <div class="collapse" id="collapseExample">
 
                             <div class="well">
-                            輸入格式 : <span class='bg-teal'>商品編號</span>_<span class='bg-deep-orange'>數量</span><br>
+                            輸入格式 : <span class=''>商品編號</span>_<span class=''>數量(一組編號一列)</span><br>
                             例如:<br>
-                            <span class='bg-teal'>941688</span>_<span class='bg-deep-orange'>2</span><br>
-                            <span class='bg-teal'>511688</span>_<span class='bg-deep-orange'>8</span><br>
+                            <span class=''>941688</span>_<span class=''>2</span><br>
+                            <span class=''>511688</span>_<span class=''>8</span><br>
                             則會添加2個編號為941688的商品及8個511688的商品
                             <textarea  class="form-control" id='goodsText' rows='4'></textarea>
 
                             <button class="btn btn-primary waves-effect" id='addGoods'>追加</button> 
                             </div>
 
-                        </div>                            
+                        </div>    
+                                                 
 
                     </div> 
                     @endrole
