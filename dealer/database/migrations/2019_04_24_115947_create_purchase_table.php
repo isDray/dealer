@@ -27,6 +27,7 @@ class CreatePurchaseTable extends Migration
             $table->timestamp('shipdate')->nullable()->comment('出貨時間');
             $table->integer('amount')->comment('進貨單總金額');
             $table->unsignedInteger('ship_fee')->comment('運費');
+            $table->unsignedInteger('tax')->comment('稅金');
             $table->unsignedInteger('final_amount')->comment('應付金額');
             $table->tinyInteger('status')->comment('狀態');
             $table->char('consignee',100)->comment('收件人名稱');

@@ -719,7 +719,7 @@ class CartController extends Controller
 
                 $headers = 'From: admin@ilover520.com' . "\r\n" ;
 
-                mail($to, $subject, $message, $headers);
+                @mail($to, $subject, $message, $headers);
             }
             return redirect("/{$request->name}/thank")->with('successMsg', '訂單已送出');
 

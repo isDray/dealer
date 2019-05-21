@@ -321,7 +321,7 @@ class PurchaseController extends Controller
         $safeDays  = (empty( $request->average ) || $request->average < 0 )? 30 : $request->average;
         
         $setData = DB::table('set')->find(1);
-
+        
     
         return view('purchaseEstimate')->with([ 'title'      => $pageTitle,
         	                                    'isAdmin'    => $isAdmin,
@@ -631,7 +631,38 @@ class PurchaseController extends Controller
 
         }
 
+        // 計算適用的運費標準
+        $getEnableDate = Dealer::where('dealer_id',$dealerId)->first();
+        
+        $getSetData = Set::find(1);
+
+        if( $getEnableDate->enable_date != NULL ){
+            
+            $startdate=strtotime('now');
+            $enddate=strtotime($getEnableDate->enable_date);    
+            $diffDays=abs(round(($enddate-$startdate)/3600/24));
+            
+            if( $diffDays > 90 ){
+
+                $free_price = $getSetData->free_price;
+
+            }else{
+                
+                $free_price = $getSetData->new_free_price;
+            }
+
+        }else{
+
+            $free_price = $getSetData->free_price;
+        }
+
+        
+
         $tmpDatas = [ 'dealerId'  => $dealerId,
+                      'company'   => $getEnableDate->company,
+                      'ein'       => $getEnableDate->ein,
+                      'free_price'=> $free_price,
+                      'shipfee'   => $getSetData->ship_fee,
                       'goodsId'   => $goodsId,
                       'goodsName' => $goodsName,
                       'goodsSn'   => $goodsSn,
@@ -736,7 +767,34 @@ class PurchaseController extends Controller
 
             $tmpGoods['addNum'] = $tmpAdds[1];
 
-            if( count($tmpGoods) == 0 ){
+            /* 計算總銷售 */
+                    
+            // 算出會員該商品的全部銷售量(不限時間)
+            $allSalesDatas  =  Order::select('order_goods.gid',DB::raw('SUM(order_goods.num) as allSales'))
+                ->leftJoin('order_goods', function($join) {
+                    $join->on('order.id', '=', 'order_goods.oid');
+                })
+                ->leftJoin('goods', function($join) {                        
+                    $join->on('order_goods.gid', '=', 'goods.id');
+                })
+                ->where('order.dealer_id',$request->dealerId)
+                ->where('order_goods.gid',$tmpGoods['id'])
+                ->where('order.status','3')
+                ->groupBy('order_goods.gid')
+                ->first(); 
+        
+           
+            if( $allSalesDatas != NULL ){
+
+                $tmpGoods['allSalesNum'] = $allSalesDatas->allSales;
+
+            }else{
+                        
+                $tmpGoods['allSalesNum'] = 0;
+            }                    
+            /* 計算總銷售結束*/
+
+            if( $tmpGoods == NULL ){
                 
                 $msgTxt .= $tmpAdds[0].'不存在<br>';
             }
@@ -747,6 +805,132 @@ class PurchaseController extends Controller
         echo json_encode( [ 'res'=>true , 'msg' => '添加商品完成<br>'.$msgTxt , 'datas' => $tmpDatas] );
         exit;
     }
+    
+
+
+
+    /*----------------------------------------------------------------
+     | ajax 添加庫存0
+     |----------------------------------------------------------------
+     |
+     */
+    public function ajaxAddPurchaseZero( Request $request ){
+
+        // 驗證必須參數
+        $validator = Validator::make($request->all(), [
+
+            'dealerId' => 'required|exists:users,id',
+
+        ],[
+            'dealerId.required'=> '缺少經銷商編號',
+            'dealerId.exists'  => '經銷商不存在',
+            
+        ]);
+
+        $errText = '';
+
+        if ($validator->fails()) {
+
+            $errors = $validator->errors();
+                
+            foreach( $errors->all() as $message ){
+                    
+                $errText .= "$message<br>";
+            
+            }
+        }
+        
+        if( !empty( $errText ) ){
+
+            return json_encode(['res'=>false,'msg'=>$errText]);
+            exit;
+        }     
+        
+        // 權限驗證
+        if( Auth::user()->hasRole('Admin') ){
+
+            if( !Auth::user()->can('purchaseEdit') ){
+
+                echo json_encode( ['res'=>false ,'msg'=>'帳號無此操作權限 , 如有需要請切換帳號或聯絡管理員增加權限'] );
+
+                exit;
+            }
+
+        }else{
+            
+            if( ! $this->chkDealer( $request->dealerId ) ){
+
+                echo json_encode( ['res'=>false ,'msg'=>'要操作的帳號與目前使用者不同 , 請勿嘗試非法操作'] );
+
+                exit;                
+            }
+
+        } 
+        
+        // 先取出經銷商有庫存的商品
+        $haveStocks = GoodsStock::where('dealer_id',$request->dealerId)->where('goods_num','>',0)->get();
+        $haveStocksArr = [];
+        
+        if( count($haveStocks) > 0){
+            
+            foreach ($haveStocks as $haveStockk => $haveStock) {
+
+                array_push($haveStocksArr, $haveStock->goods_id);
+            }
+        }
+
+        // 取出所有商品 
+        $getAllGoods = Goods::where('status',1)->get();
+
+        $tmpDatas = [];
+
+        if( count($getAllGoods) > 0){
+            
+            $getAllGoods = json_decode($getAllGoods,true);
+            $msgTxt = '';
+
+            foreach ($getAllGoods as $getAllGoodk => $getAllGood) {
+                
+                if( !in_array($getAllGood['id'], $haveStocksArr) ){
+                    
+                    $tmpGoods = $getAllGood;
+
+                    $tmpGoods['addNum'] = 1;
+
+                    /* 計算總銷售 */
+                    
+                    // 算出會員該商品的全部銷售量(不限時間)
+                    $allSalesDatas  =  Order::select('order_goods.gid',DB::raw('SUM(order_goods.num) as allSales'))
+                        ->leftJoin('order_goods', function($join) {
+                            $join->on('order.id', '=', 'order_goods.oid');
+                        })
+                        ->leftJoin('goods', function($join) {                        
+                            $join->on('order_goods.gid', '=', 'goods.id');
+                        })
+                        ->where('order.dealer_id',$request->dealerId)
+                        ->where('order_goods.gid',$getAllGood['id'])
+                        ->where('order.status','3')
+                        ->groupBy('order_goods.gid')
+                        ->first(); 
+                
+           
+                    if( $allSalesDatas != NULL ){
+
+                        $tmpGoods['allSalesNum'] = $allSalesDatas->allSales;
+
+                    }else{
+
+                        $tmpGoods['allSalesNum'] = 0;
+                    }                    
+                    /* 計算總銷售結束*/
+                    array_push($tmpDatas, ['goodsData'=>$tmpGoods]);
+                }
+            }
+
+            echo json_encode( [ 'res'=>true , 'msg' => '添加商品完成<br>'.$msgTxt , 'datas' => $tmpDatas] );
+        }
+    }
+
 
 
 
@@ -843,7 +1027,7 @@ class PurchaseController extends Controller
         
         $setdata = DB::table('set')->find(1);
         //var_dump($setdata);
-
+       
         try {
                 
             $loopTime = count( $request->goodsId );
@@ -865,15 +1049,50 @@ class PurchaseController extends Controller
                     
             }
             
-            if( $purchaseAmount >= $setdata->free_price){
+            // 找出適用免運門檻
+            $getEnableDate = Dealer::where('dealer_id',$request->dealerId)->first();
+        
+            $getSetData = Set::find(1);
+
+            if( $getEnableDate->enable_date != NULL ){
+            
+                $startdate=strtotime('now');
+                $enddate=strtotime($getEnableDate->enable_date);    
+                $diffDays=abs(round(($enddate-$startdate)/3600/24));
+            
+                if( $diffDays > 90 ){
+
+                    $free_price = $getSetData->free_price;
+
+                }else{
+                
+                    $free_price = $getSetData->new_free_price;
+                }
+
+            }else{
+
+                $free_price = $getSetData->free_price;
+            }            
+
+
+            if( $purchaseAmount >= $free_price ){
 
                 $shipfee = 0;
 
             }else{
 
-                $shipfee = $setdata->free_price;
+                $shipfee = $getSetData->ship_fee;
 
             }
+
+            if( isset($request->ein) && !empty($request->ein) ){
+
+                $tax = round( ($purchaseAmount + $shipfee) * 0.05 );
+
+            }else{
+                $tax = 0;
+            }
+
             $dealerData = User::find( $request->dealerId );
 
             $radmonNUm = rand(0,999999);
@@ -885,7 +1104,8 @@ class PurchaseController extends Controller
             $Purchase->dealer_name  = $dealerData->name;
             $Purchase->amount       = $purchaseAmount;
             $Purchase->ship_fee     = $shipfee;
-            $Purchase->final_amount = $purchaseAmount + $shipfee;
+            $Purchase->tax          = $tax;
+            $Purchase->final_amount = $purchaseAmount + $shipfee + $tax;
             $Purchase->status       = 1; // 1.待處理 2.已確認 3.已出貨 4.取消
             $Purchase->consignee    = $request->name;
             $Purchase->phone        = $request->phone;
@@ -938,7 +1158,7 @@ class PurchaseController extends Controller
 
             DB::commit();
                 
-            echo json_encode( ['res'=>true , 'msg'=>'進貨單新增成功' ]);
+            return json_encode( ['res'=>true , 'msg'=>'進貨單新增成功' ]);
 
         } catch (Exception $e) {
 
@@ -949,7 +1169,7 @@ class PurchaseController extends Controller
             
             logger("{$e->getMessage()} \n\n-----------------------------------------------\n\n"); 
             
-            echo json_encode( ['res'=>false , 'msg'=>'進貨單新增失敗 , 請稍後再嘗試' ]);       
+            return json_encode( ['res'=>false , 'msg'=>'進貨單新增失敗 , 請稍後再嘗試' ]);       
         }          
 
 

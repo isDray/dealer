@@ -8213,6 +8213,7 @@ html.ie11 .bs-searchbox .form-control {
   width: 90%; }
 .myborder{
     border:1px solid #c4c4c4 !important;
+    padding-left: 1px!important;
 }
 .mysearchbox{
     border:1px solid #d4d4d4 !important;

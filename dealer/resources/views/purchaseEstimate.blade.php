@@ -42,7 +42,7 @@
                             經銷商:
                             </span>
                             
-                            <select class="form-control show-tick" name='dealerId'>
+                            <select class="form-control show-tick myborder" name='dealerId' >
                             <option value="0">請選擇經銷商</option>
                             @foreach( $allDealers as $allDealer )
                             <option value="{{$allDealer['id']}}">{{$allDealer['name']}}</option>
@@ -59,7 +59,7 @@
                             最近:
                             </span>
                             
-                            <div class="form-line">
+                            <div class="form-line myborder">
                                 <input type="number" class="form-control align-center" min="0" placeholder="" name='dayNum' value="@if( isset($reference) ){{$reference}}@endif">
                             </div>
 
@@ -67,7 +67,7 @@
                             天的每日平均量×&nbsp;&nbsp;
                             </span>
 
-                            <div class="form-line">
+                            <div class="form-line myborder">
                                 <input type="number" class="form-control align-center" min="0" placeholder="" name='average' value="@if( isset($safeDays) ){{$safeDays}}@endif">
                             </div>
                             
@@ -79,7 +79,7 @@
 
                         </form>
                     </div>
-
+                    @role('Admin')
                     <div class="col-md-12 col-xs-12 col-sm-12">
 
                         <button class="btn btn-primary waves-effect" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false"
@@ -103,7 +103,12 @@
                         </div>                            
 
                     </div> 
+                    @endrole
+                    <div class="col-md-12 col-xs-12 col-sm-12">
 
+                        <button id='addZero'class="btn btn-primary waves-effect" type="button">增加庫存0商品</button>                             
+
+                    </div>
                 </div>
             </div>
         </div>
@@ -115,47 +120,60 @@
             </div>
             
             <div class='body'>
-                <h4 style='color:red;'>免運門檻:{{$setData->free_price}}</h4>
+
+                <input type='hidden' id="free_price" value="0" >
+                <input type='hidden' id="ship_fee" value="0" >
+
                 <form action="{{url('/purchaseAjaxOrder')}}" method='POST' id='purchaseAjaxNew'>
                     {{ csrf_field() }}
-
                     <input type='hidden' name='dealerId' value="" id='purchaseDealerId'> 
                     <table class="table table-bordered" id='goodsAndNum' style='display:none;'>
                         <thead>
                             <tr class='bg-grey'>
                                 <th>貨號</th>
                                 <th>商品名稱</th>
-                                <th>總銷售數量</th>
-                                <th>銷售數量</th>
-                                <th>庫存</th>
-                                <th width='20%'>需補貨數量</th>
-                                <th>小計</th>
+                                <th class='align-center'>總銷售數量</th>
+                                <th class='align-center'>銷售數量</th>
+                                <th class='align-center'>庫存</th>
+                                <th class='align-center' width='20%'>需補貨數量</th>
+                                <th class='align-right'>小計</th>
                             </tr>
                         </thead>
                         <tbody id='purchaseFormTable'>
                             
+                        </tbody>
+
+                        <tbody id='purchaseDetail'>
+
                         </tbody>
                     </table>
 
                     <table class="table table-bordered" id='purchaseData' style='display:none;'>
                         <thead>
                             <tr>
-                                <th class='bg-grey'>收件人姓名</th>
+                                <th class='bg-grey align-right' style="vertical-align: middle;">收件人姓名</th>
                                 <th><input type='text' name='name' class="form-control" value="" id="shipName"></th>
                                 
-                                <th class='bg-grey'>收件人手機</th>
+                                <th class='bg-grey align-right' style="vertical-align: middle;">收件人手機</th>
                                 <th><input type='text' name='phone' class="form-control" value="" id="shipPhone"></th>
 
-                                <th class='bg-grey'>收件人電話</th>
+                                <th class='bg-grey align-right' style="vertical-align: middle;">收件人電話</th>
                                 <th><input type='text' name='tel' class="form-control" value="" id="shipTel"></th>
 
-                            </tr>   
+                            </tr>  
                             <tr>
-                                <th class='bg-grey'>收件地址</th>
+                                <th class='bg-grey align-right' style="vertical-align: middle;">公司抬頭</th>
+                                <th colspan="3"><input type='text' name='company' class="form-control" value="" id="company"></th>
+                                
+                                <th  class='bg-grey align-right' style="vertical-align: middle;">統編</th>
+                                <th><input type='text' name='ein' class="form-control" value="" id="ein"></th>
+                            </tr>                             
+                            <tr>
+                                <th class='bg-grey align-right' style="vertical-align: middle;">收件地址</th>
                                 <th colspan='5'><input type='text' name='address' class="form-control" value="" id="shipAddress"></th>
                             </tr>
                             <tr>
-                                <th class='bg-grey'>備註</th>
+                                <th class='bg-grey align-right' style="vertical-align: middle;">備註</th>
                                 <th colspan='5'><textarea  class="form-control" name='dealer_note' rows='6'></textarea></th>
                             </tr>                                                    
                         </thead>                        
@@ -232,42 +250,170 @@ $(function(){
         
         // 表單html設為空字串
         formHtml = '';
-
+        
+        var allTotal = 0;
         // 如果商品id有一個以上才需要產生表單
         if( totalNeedNum > 0 ){
             
             for (var i = 0 ; i < totalNeedNum ; i++) {
-
+                 
                 formHtml += "<tr>";
                 formHtml += "<input type='hidden' value='"+_datas['goodsId'][i]+"' name='goodsId[]' class='goodsId' />";
                 formHtml += "<td>"+_datas['goodsSn'][i]+"</td>";
                 formHtml += "<td>"+_datas['goodsName'][i]+"</td>";
-                formHtml += "<td>"+_datas['allSalesNum'][i]+"</td>";
-                formHtml += "<td>"+_datas['salesNum'][i]+"</td>";
-                formHtml += "<td>"+_datas['stock'][i]+"</td>";
-                formHtml += "<td><input type='number' name='needNum[]' value='"+_datas['needNum'][i]+"' class='form-control changeNum' min='0' w_price='"+_datas['w_price'][i]+"' changet='total"+i+"'/></td>";
-                formHtml += "<td id='total"+i+"'>"+ _datas['needNum'][i] * _datas['w_price'][i] +"</td>";
+                formHtml += "<td class='align-center'>"+_datas['allSalesNum'][i]+"</td>";
+                formHtml += "<td class='align-center'>"+_datas['salesNum'][i]+"</td>";
+                formHtml += "<td class='align-center'>"+_datas['stock'][i]+"</td>";
+                formHtml += "<td class='align-center'><input type='number' name='needNum[]' value='"+_datas['needNum'][i]+"' class='form-control changeNum' min='0' w_price='"+_datas['w_price'][i]+"' changet='total"+i+"'/></td>";
+                formHtml += "<td class='align-right subtotal' id='total"+i+"' >"+ _datas['needNum'][i] * _datas['w_price'][i] +"</td>";
                 formHtml += "</tr>";
-
+                
+                allTotal +=  _datas['needNum'][i] * _datas['w_price'][i] ;
             };
-            
+
+            // 添加稅
             // 清空所有form
             $('#purchaseFormTable').empty();
             
             // 將取回資料產生form
             $('#purchaseFormTable').append( formHtml );
 
+            formHtml = '';
+            // 添加價格總計
+            formHtml += "<tr>";
+            formHtml += "<td colspan='5'></td>";
+            formHtml += "<td class='align-right'>總計</td>";
+            formHtml += "<td id='allTotal' class='align-right' >"+allTotal+"</td>";
+            formHtml += "</tr>";
+
+            // 添加運費
+
+            if( allTotal >= _datas['free_price'] ){
+                
+                shipFee = 0;
+
+            }else{
+                shipFee  = _datas['shipfee'];
+            }
+
+            diffFree = _datas['free_price'] - allTotal;
+            
+            if( diffFree < 0){
+
+                diffFree = 0;
+            }
+
+            formHtml += "<tr>";
+            formHtml += "<td colspan='5' class='align-right' id='taxTip'>免運門檻:"+_datas['free_price']+"元,再"+diffFree+"元即可免運</td>";
+            formHtml += "<td class='align-right'>運費</td>";
+            formHtml += "<td id='shipFee' class='align-right' freeFee='"+_datas['free_price']+"' shipFee='"+shipFee+"'>"+shipFee+"</td>";
+            formHtml += "</tr>";               
+
+            // 計算稅金
+            if( _datas['ein'] =='' ||  _datas['ein'] == null ){
+
+                tax = 0;
+
+            }else{
+                
+                tax = Math.round( (allTotal+shipFee) * 0.05 );
+            }
+            formHtml += "<tr>";
+            formHtml += "<td colspan='5'></td>";
+            formHtml += "<td class='align-right'>稅金</td>";
+            formHtml += "<td id='tax' class='align-right' >"+tax+"</td>";
+            formHtml += "</tr>";            
+            
+            
+            // 應付金額
+
+            needPay = allTotal+shipFee+tax;
+
+            formHtml += "<tr>";
+            formHtml += "<td colspan='5'></td>";
+            formHtml += "<td class='align-right'>應付金額</td>";
+            formHtml += "<td id='needPay' class='align-right' >"+needPay+"</td>";
+            formHtml += "</tr>"; 
+
+            $('#purchaseDetail').empty();
+            
+            // 將取回資料產生form
+            $('#purchaseDetail').append( formHtml );
+
+
         }else{
             
             // 如果沒有商品則呈現無商品訊息
-            formHtml += "<tr>";
-            formHtml += "<td colspan='6'> 無銷售紀錄,或不需要補貨 </td>";
+            formHtml += "<tr id='noRecord'>";
+            formHtml += "<td colspan='7'> 無銷售紀錄,或不需要補貨 </td>";
             formHtml += "</tr>";
             // 清空所有form
             $('#purchaseFormTable').empty();
             
             // 將取回資料產生form
             $('#purchaseFormTable').append( formHtml );            
+
+            formHtml = '';
+            // 添加價格總計
+            formHtml += "<tr>";
+            formHtml += "<td colspan='5'></td>";
+            formHtml += "<td class='align-right'>總計</td>";
+            formHtml += "<td id='allTotal' class='align-right' >"+allTotal+"</td>";
+            formHtml += "</tr>";
+
+            // 添加運費
+
+            if( allTotal >= _datas['free_price'] ){
+                
+                shipFee = 0;
+
+            }else{
+                shipFee  = _datas['shipfee'];
+            }
+
+            diffFree = _datas['free_price'] - allTotal;
+            
+            if( diffFree < 0){
+
+                diffFree = 0;
+            }
+
+            formHtml += "<tr>";
+            formHtml += "<td colspan='5' class='align-right' id='taxTip'>免運門檻:"+_datas['free_price']+"元,再"+diffFree+"元即可免運</td>";
+            formHtml += "<td class='align-right'>運費</td>";
+            formHtml += "<td id='shipFee' class='align-right' freeFee='"+_datas['free_price']+"' shipFee='"+shipFee+"'>"+shipFee+"</td>";
+            formHtml += "</tr>";               
+
+            // 計算稅金
+            if( _datas['ein'] =='' ||  _datas['ein'] == null ){
+
+                tax = 0;
+
+            }else{
+                
+                tax = Math.round( (allTotal+shipFee) * 0.05 );
+            }
+            formHtml += "<tr>";
+            formHtml += "<td colspan='5'></td>";
+            formHtml += "<td class='align-right'>稅金</td>";
+            formHtml += "<td id='tax' class='align-right' >"+tax+"</td>";
+            formHtml += "</tr>";            
+            
+            
+            // 應付金額
+
+            needPay = allTotal+shipFee+tax;
+
+            formHtml += "<tr>";
+            formHtml += "<td colspan='5'></td>";
+            formHtml += "<td class='align-right'>應付金額</td>";
+            formHtml += "<td id='needPay' class='align-right' >"+needPay+"</td>";
+            formHtml += "</tr>"; 
+
+            $('#purchaseDetail').empty();
+            
+            // 將取回資料產生form
+            $('#purchaseDetail').append( formHtml );            
         } 
 
         // 填寫預設配送資訊
@@ -276,7 +422,9 @@ $(function(){
         $("#shipPhone").val( $.trim(_datas['ship']['ship_phone']) );
         $("#shipAddress").val( $.trim(_datas['ship']['ship_address']) );
         $("#purchaseDealerId").val( $.trim(_datas['dealerId']) );
- 
+        
+        $("#company").val( $.trim(_datas['company']) );
+        $("#ein").val( $.trim(_datas['ein']) );
 
         $("#purchaseData").show();
         $("#goodsAndNum").show();
@@ -411,7 +559,9 @@ $(function(){
                             
                             }
                         });
-                        
+
+                        calculateOrder();
+
                     }else if( returnData['res'] == false ){
                    
                         estimateErr( returnData['msg'] );
@@ -428,8 +578,73 @@ $(function(){
                 }            
         });        
     });
+    
+    /*----------------------------------------------------------------
+     | 添加庫存0商品
+     |----------------------------------------------------------------
+     |
+     */
+    $("#addZero").click(function(){
+        
+        //  確認已經產生需補貨數
+        if( !$("#purchaseDealerId").val() ){
 
+            estimateErr('請先產生需補貨數');
+            return;
+        }
 
+        $.ajax({
+                type: "POST",
+                url: "{{url('/purchaseAjaxAddZero')}}",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    'dealerId':$("#purchaseDealerId").val(),
+                },
+                dataType:'json',
+                success: function( returnData )
+                {   
+                    
+                    if( returnData['res'] == true ){
+
+                        estimateSuccess( returnData['msg'] );
+
+                        var existGoods = new Array();
+                        
+                        // 將表單內所有的商品id 整理成array用於後續判斷
+                        $.each( $(".goodsId") , function() {
+
+                            existGoods.push( parseInt($(this).val()) );
+
+                        });
+
+                        $.each( returnData['datas'] , function(index,detail){
+
+                            if( $.inArray(detail['goodsData']['id'],existGoods) < 0 ){
+
+                                addRow( detail['goodsData'] );
+                            
+                            }
+                        });
+
+                        calculateOrder();
+
+                    }else if( returnData['res'] == false ){
+                   
+                        estimateErr( returnData['msg'] );
+                    }
+                    
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) { 
+
+                    /*
+                    console.log("Status: " + textStatus); 
+
+                    console.log("Error: " + errorThrown);
+                    */
+                }            
+        });  
+
+    });
 
 
     /*----------------------------------------------------------------
@@ -439,15 +654,21 @@ $(function(){
      */
     function addRow( _datas ){
         
+        $("#noRecord").remove();
+
+        rowCount = $('#purchaseFormTable tr').length;
+
         var formHtml  = '';
+
         formHtml += "<tr>";
         formHtml += "<input type='hidden' value='"+_datas['id']+"' name='goodsId[]' class='goodsId' />";
         formHtml += "<td>"+_datas['goods_sn']+"</td>";
         formHtml += "<td>"+_datas['name']+"</td>";
-        formHtml += "<td>"+0+"</td>";
-        formHtml += "<td>0</td>";
-        formHtml += "<td><input type='number' name='needNum[]' value='"+_datas['addNum']+"' class='form-control' /></td>";
-        formHtml += "<td>"+ _datas['addNum'] * _datas['w_price']+"</td>";
+        formHtml += "<td class='align-center'>"+_datas['allSalesNum']+"</td>";
+        formHtml += "<td class='align-center'>"+0+"</td>";
+        formHtml += "<td class='align-center'>0</td>";
+        formHtml += "<td><input type='number' name='needNum[]' value='"+_datas['addNum']+"' class='form-control changeNum' w_price='"+_datas['w_price']+"' changet='total"+rowCount+"' /></td>";
+        formHtml += "<td class='align-right subtotal' id='total"+rowCount+"'>"+ _datas['addNum'] * _datas['w_price']+"</td>";
         formHtml += "</tr>";
 
         $('#purchaseFormTable').append( formHtml );
@@ -456,17 +677,90 @@ $(function(){
 
 
 
-    /*----------
-     |
-     |
+    /*----------------------------------------------------------------
+     | 動態改變數值
+     |----------------------------------------------------------------
      |
      */
     $('body').on('click keyup', '.changeNum', function() {
         //console.log($(this).attr('w_price'));
         //console.log($(this).attr('changet'));
         $("#"+$(this).attr('changet')).html( $(this).val() * $(this).attr('w_price') );
+
+        calculateOrder();
     });
-}) 
+
+    /*----------------------------------------------------------------
+     | 調整統編時影響進貨單總和
+     |----------------------------------------------------------------
+     |
+     */
+    $('body').on('click keyup', '#ein', function() {
+        calculateOrder();
+    });
+     
+    $(".focused").removeClass('focused');
+})
+
+/*----------------------------------------------------------------
+ | 重新統計
+ |----------------------------------------------------------------
+ |
+ */
+function calculateOrder(){
+    var calAllTotal = 0;
+
+    $(".subtotal").each(function() {
+
+        calAllTotal += parseInt($(this).html()) ;
+
+    });    
+    
+    // 變更總價
+    $("#allTotal").html('');
+    $("#allTotal").html(calAllTotal);
+
+    // 運費
+    var calFreeFee = $("#shipFee").attr('freefee');
+    var calShipFee = $("#shipFee").attr('shipFee');
+
+    if( calAllTotal >= calFreeFee){
+
+        calShipFee = 0;
+
+    }
+    
+    var calDiffFee = calFreeFee - calAllTotal;
+
+    if( calDiffFee < 0){
+
+        calDiffFee = 0;
+    }
+    // 變更運費
+    $("#shipFee").html('');
+    $("#shipFee").html(calShipFee);
+
+    $("#taxTip").html('');
+    $("#taxTip").html( "免運門檻:"+calFreeFee+"元,再"+calDiffFee+"元即可免運");
+
+    // 變更稅金
+    if( $("#ein").val() == '' ){
+
+        calTax = 0;
+
+    }else{
+
+        calTax = Math.round( ( parseInt(calAllTotal)+parseInt(calShipFee) ) * 0.05 );
+    }
+
+    $("#tax").html('');
+    $("#tax").html(calTax);
+
+    // 變更總金額
+    $("#needPay").html('');
+    $("#needPay").html( parseInt(calAllTotal)+parseInt(calShipFee)+parseInt(calTax) );
+}
+
 </script>
 <!-- /專屬js -->
 
