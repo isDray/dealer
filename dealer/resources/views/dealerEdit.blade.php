@@ -10,6 +10,8 @@
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="{{asset('adminbsb-materialdesign/plugins/ckeditor/ckeditor.js')}}"></script>
 <script src="{{asset('adminbsb-materialdesign/plugins/multi-select/js/jquery.multi-select.js')}}"></script>
+
+<link href="{{asset('adminbsb-materialdesign/plugins/bootstrap-select/css/bootstrap-select.css')}}" rel="stylesheet" />
 <script>
   var options = {
     filebrowserImageBrowseUrl: '/laravel-filemanager?type=Images',
@@ -40,6 +42,7 @@
                     <p>帳號資料(ID:{{$dealer['uid']}})</p>
                     
                     <div class="row clearfix">
+
                         <div class="col-md-3 col-sm-12 col-xs-12">
                             <b>帳號<span style='color:red;'>(必填)</span>:</b>
                             <div class="form-group">
@@ -109,6 +112,31 @@
                             </div>
                             </div>
                         </div>
+
+                        <div class="col-md-3 col-sm-12 col-xs-12">
+                            <b>合作日期:</b>
+                            <div class="form-group">
+                            <div class="form-line" id='enableDateBox'>
+                                <input type="text" class="form-control myborder align-center" placeholder="合作日期" id='enable_date' name="enable_date" value="{{$dealer['enable_date']}}">
+                            </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-3 col-sm-12 col-xs-12">
+                            <b>&nbsp;</b>
+                            <div class="form-group">
+                            <div>
+                                <input type="checkbox" class="filled-in" id="status" name='status'>
+                                <label for="status">啟用</label>
+                            </div>
+                            </div>
+                        </div>
+
+
+
+
+                         
                     </div>
                     @endrole
                     <!-- 辨別代碼選擇 -->
@@ -134,6 +162,25 @@
                     <!-- 收貨資訊 -->
                     <div class="row clearfix">
                         <div class="col-md-3 col-sm-12 col-xs-12">
+                            <b>公司抬頭:</b>
+                            <div class="form-group">
+                            <div class="form-line">
+                                <input type="text" class="form-control myborder" name="company" placeholder="" value="{{ $dealer['company'] }}" />
+                            </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-12 col-xs-12">
+                            <b>統一編號:</b>
+                            <div class="form-group">
+                            <div class="form-line">
+                                <input type="text" class="form-control myborder" name="ein" placeholder="" value="{{ $dealer['ein'] }}" />
+                            </div>
+                            </div>
+                        </div>                        
+                    </div>
+
+                    <div class="row clearfix">
+                        <div class="col-md-3 col-sm-12 col-xs-12">
                             <b>旅館名稱:</b>
                             <div class="form-group">
                             <div class="form-line">
@@ -141,14 +188,7 @@
                             </div>
                             </div>
                         </div>
-                        <div class="col-md-3 col-sm-12 col-xs-12">
-                            <b>旅館網址:</b>
-                            <div class="form-group">
-                            <div class="form-line">
-                                <input type="text" class="form-control myborder" name="hotel_url" placeholder="" value="{{ $dealer['web_url'] }}"/>
-                            </div>
-                            </div>
-                        </div>   
+   
                         <div class="col-md-3 col-sm-12 col-xs-12">
                             <b>旅館電話:</b>
                             <div class="form-group">
@@ -181,6 +221,14 @@
                             </div>
                             </div>
                         </div>
+                        <div class="col-md-3 col-sm-12 col-xs-12">
+                            <b>旅館網址:</b>
+                            <div class="form-group">
+                            <div class="form-line">
+                                <input type="text" class="form-control myborder" name="hotel_url" placeholder="" value="{{ $dealer['web_url'] }}"/>
+                            </div>
+                            </div>
+                        </div>                        
                         <div class="col-sm-3">
                             <b>網頁版LOGO <span style="color:red">建議尺寸(400*300)</span></b>
                             <div class="form-group">
@@ -219,6 +267,14 @@
                             </div>
                             </div>
                         </div>
+                        <div class="col-md-3 col-sm-12 col-xs-12">
+                            <b>職稱:</b>
+                            <div class="form-group">
+                            <div class="form-line">
+                                <input type="text" class="form-control myborder" name="user_position" placeholder="" value="{{ $dealer['user_position'] }}" />
+                            </div>
+                            </div>
+                        </div>                         
                         <div class="col-md-3 col-sm-12 col-xs-12">
                             <b>信箱:</b>
                             <div class="form-group">
@@ -330,7 +386,7 @@
 
                 </div>
 
-                <button class="btn btn-primary waves-effect" type="submit">編輯</button>
+                <button class="btn btn-primary waves-effect" type="submit">確定</button>
 
             </form>
 
@@ -339,6 +395,10 @@
         </div>
     </div>
 </div>
+
+
+<script src="{{asset('adminbsb-materialdesign/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js')}}"></script>
+<script src="{{asset('adminbsb-materialdesign/plugins/bootstrap-datepicker/js/datepicker-zh-TW.js')}}"></script>
 
 <!-- 上傳圖片用script -->
 <script type="text/javascript">
@@ -498,6 +558,12 @@ $(function(){
         }
     });
 
+    $('#enable_date').datepicker({
+        format: "yyyy-mm-dd",
+        autoclose: true,
+        container : "#enableDateBox",
+        language: 'zh-TW',
+    });   
 });
 </script>
 <!-- /上傳圖片用script -->

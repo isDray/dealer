@@ -54,7 +54,7 @@ a{
                                 @role('Admin')
                                 <div class="col-sm-2">
                                     <p>經銷商</p>
-                                    <select class="form-control show-tick" id='dealer'>
+                                    <select class="form-control show-tick myborder" id='dealer'>
                                     <option value='0' >-選擇-</option>
                                     @foreach( $dealers as $dealer)
                                     <option value="{{$dealer['id']}}">{{$dealer['name']}}</option>

@@ -419,6 +419,9 @@ class DealerController extends Controller
             $dealer['logo_color2'] = '#fff';
         }        
 
+        if( !empty($dealer['enable_date']) ){
+            $dealer['enable_date'] = explode(' ', $dealer['enable_date'])[0];
+        }
         // 計算目前是使用哪種連結方式
         $dealerUser = User::where('id',$request->id)->first();
         if(  $dealerUser != NULL ){
@@ -447,7 +450,7 @@ class DealerController extends Controller
      |
      */
     public function dealerEditDo( Request $request ){
-
+         
         // 列表功能一定要系統方才能查看
         if( Auth::user()->hasRole('Admin') ){
 
@@ -474,7 +477,7 @@ class DealerController extends Controller
         $validator = Validator::make($request->all(), [
             'account'    => 'required|max:64',
             'password1'  => 'nullable|same:password2',
-            // 'accessWay'  => 'required',
+            'accessWay'  => 'required',
             'multiple'   => 'nullable|exists:multiple,multiple',
             'user_name'  => 'required|max:64',
             'user_email' => 'nullable|email',
@@ -497,7 +500,7 @@ class DealerController extends Controller
             'account.max'      => '帳號最多為64個字元',
             'password1.required' => '密碼為必填',
             'password1.same'     => '密碼驗證不一致',
-            // 'accessWay.required' => '網站代碼為必填',
+            'accessWay.required' => '網站代碼為必填',
             // 'multiple.required' => '價格預設倍數為必填',
             'multiple.exists' => '價格預設倍數不存在',
             'user_name.required' => '聯絡人為必填',
@@ -610,7 +613,18 @@ class DealerController extends Controller
     
                     $dealer = new Dealer();
                 }
+                
+                if( isset($request->enable_date) ){
+                    
+                    $tmpData = strtotime($request->enable_date);
+                    $enableDate = date("Y-m-d",$tmpData);
+                    
+                }
+
                 $dealer->dealer_id     = $user->id;
+                $dealer->company       = isset( $request->company )? trim( $request->company ):'';
+                $dealer->ein           = isset( $request->ein )? trim( $request->ein ):'';
+
                 $dealer->hotel_name    = isset( $request->hotel_name )? trim( $request->hotel_name ):'';
                 $dealer->web_url       = isset( $request->hotel_url)? trim( $request->hotel_url):''; 
                 $dealer->hotel_phone   = isset( $request->hotel_phone )? trim( $request->hotel_phone ):'';
@@ -618,12 +632,15 @@ class DealerController extends Controller
                 $dealer->hotel_email   = isset( $request->hotel_email )? trim( $request->hotel_email):'';
                 $dealer->hotel_address = isset( $request->hotel_address )? trim( $request->hotel_address ):'';
                 $dealer->user_name     = isset( $request->user_name )? trim( $request->user_name ):'';
+                $dealer->user_position = isset( $request->user_position )? trim( $request->user_position ):'';
                 $dealer->user_phone    = isset( $request->user_phone)? trim( $request->user_phone ):'';
                 $dealer->user_tel      = isset( $request->user_tel)?trim($request->user_tel):'';
                 $dealer->ship_name     = isset( $request->ship_name)?trim($request->ship_name):'';
                 $dealer->ship_phone    = isset( $request->ship_phone)?trim($request->ship_phone):'';
                 $dealer->ship_tel      = isset( $request->ship_tel)?trim($request->ship_tel):'';
                 $dealer->ship_address  = isset( $request->ship_address)?trim($request->ship_address):'';
+                $dealer->status        = isset( $request->status)?1:0;
+                $dealer->enable_date   = isset( $request->enable_date)?trim($enableDate):'';
                 $dealer->logo_color1   = isset( $request->logocolor1)?trim($request->logocolor1):'#fff';
                 $dealer->logo_color2   = isset( $request->logocolor2)?trim($request->logocolor2):'#fff';
     
@@ -681,7 +698,7 @@ class DealerController extends Controller
                     $dealer = new Dealer();
                 }      
 
-                $dealer->multiple      = isset( $request->multiple)?trim($request->multiple):'2.2';
+                $dealer->multiple      = isset( $request->multiple)?trim($request->multiple):'2.0';
                 
                 $dealer->save();
                                         

@@ -25,7 +25,9 @@ class CreateSetTable extends Migration
             $table->tinyInteger('show_type')->comment('呈現方式(1=表格 2列表)');
             $table->tinyInteger('sort_type')->comment('排序規則(1=上架時間 2=價格)');
             $table->tinyInteger('sort_way')->comment('排序規則(1=小到大 2=大到小)');
+            $table->unsignedInteger('new_free_price')->comment('新會員免運門檻');
             $table->unsignedInteger('free_price')->comment('免運門檻');
+            $table->unsignedInteger('ship_fee')->comment('運費');
             $table->timestamps();
         });
 
