@@ -325,7 +325,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f93434', end
 
 }
 .fastItem{
-	width: 20%;
+	width: 25%;
 	height:auto;
 	float: left;
 	margin-bottom: 20px;
@@ -355,7 +355,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f93434', end
 	font-size: 60px;
 	line-height: 100px;
 }
-.fastItem>div:last-child{
+.fastItem>div:nth-child(2),.fastItem>div:last-child{
 	text-align: center;
     width: 100%;
     color: #ececec;

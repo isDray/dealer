@@ -87,7 +87,12 @@
                 <div>
                 <img src="{{url('')}}/{{$category['category_pic']}}" width="100%" height="100%">
                 </div>
-                <div>
+
+                <div class='_w'>
+                {{$category['name']}}
+                </div>
+
+                <div class='_p'>
                 {{$category['sortname']}}
                 </div>
             </div>
