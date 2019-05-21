@@ -45,13 +45,14 @@ a{
                                         <tr>
                                             <th style='display:none;'>id</th>
                                             <th>類別名稱</th>
-                                            <th>商品描述</th>
+                                            <th>排序</th>
+                                            <th style='display:none;'>商品描述</th>
                                             <th>是否啟用</th>
                                             <th>編修時間</th>
                                             <th>操作</th>
                                         </tr>
                                     </thead>
-                                    <tfoot>
+<!--                                     <tfoot>
                                         <tr>
                                             <th  style='display:none;'>id</th>
                                             <th>類別名稱</th>
@@ -60,18 +61,19 @@ a{
                                             <th>編修時間</th>
                                             <th>操作</th>
                                         </tr>
-                                    </tfoot>
+                                    </tfoot> -->
                                     <tbody>
                                         
                                         @foreach( $categorys as $ckey=>$category ) 
                                         <tr><td  style='display:none;'>{{$ckey}}</td>
                                             <td>{!!$category['level']!!}{!!$category['levelIcon']!!}{{$category['name']}}</td>
-                                            <td>{{$category['desc']}}</td>
+                                            <th>{{$category['sort']}}</th>
+                                            <td style='display:none;'>{{$category['desc']}}</td>
                                             <td> 
                                                 @if($category['status'] == 1)
-                                                <i class="material-icons col-light-green">fiber_manual_record</i>
+                                                <i class="material-icons col-light-green">done</i>
                                                 @else
-                                                <i class="material-icons col-red">fiber_manual_record</i>
+                                                <i class="material-icons col-red">clear</i>
                                                 @endif
                                             </td>
                                             <td>{{$category['updated_at']}}</td>
@@ -121,6 +123,7 @@ a{
 $(function(){
 
     $('.roleTable').DataTable({
+        order:[[2,'asc']],
         responsive: true,
         stateSave: true, 
         dom: '<"top"<"col-md-6"<"inlinebox"li>><"col-md-6"f>>rt<"bottom"p><"clear">',             
@@ -144,7 +147,8 @@ $(function(){
                 "sortAscending":  ": 升冪排列",
                 "sortDescending": ": 降冪排列"
             }
-        }
+        },
+       
     });
 
     

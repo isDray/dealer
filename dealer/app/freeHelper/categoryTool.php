@@ -46,6 +46,7 @@ Class categoryTool{
                      'updated_at' => $allParent['updated_at'],
                      'level' => '',
                      'levelIcon' => '',
+                     'sort'=>$allParent['sort'],
                    ];
 
             array_push(self::$categorySelect, $tmp );

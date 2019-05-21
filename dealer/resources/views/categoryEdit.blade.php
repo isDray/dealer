@@ -114,16 +114,25 @@
                                 checked
                                 @endif
                                 />
-                                <label for="status">勾選啟用</label>
+                                <label for="status">是否啟用</label>
                             </div>              
                         </div>                  
                     </div>
 
                     <div class="col-md-3">
                         <p><b>排序(越小越前面)</b></p>
-                        <div id="nouislider_basic_example"></div>
+                        <div class="form-group">
+                            <div class="form-line myborder">
+                                <input type="text" class="form-control" name="sort" name='sort' value="{{$editCategory['sort']}}"/>
+                            </div>
+                        </div>                        
+                        
+<!--                         <div id="nouislider_basic_example"></div>
                         <div class="m-t-20 font-12"><b>排序: </b><span class="js-nouislider-value"></span></div>
                         <input type='hidden' id='sort' name='sort' value="{{$editCategory['sort']}}">
+                            <div class="form-line myborder">
+                                
+                            </div>  -->                       
                     </div>   
 
                 </div>                                                   
@@ -143,7 +152,7 @@
                 </div>
 
                 <input type='hidden' name='id' value="{{$editCategory['id']}}">
-                <button class="btn btn-primary waves-effect" type="submit">編輯</button>
+                <button class="btn btn-primary waves-effect" type="submit">確定</button>
             </form>
 
         </div>
@@ -161,30 +170,30 @@
 
 <script type="text/javascript">
     
-    // 選擇排序js
-    var sliderBasic = document.getElementById('nouislider_basic_example');
-    noUiSlider.create(sliderBasic, {
-        start: ["{{$editCategory['sort']}}"],
-        connect: 'lower',
-        step: 1,
-        range: {
-            'min': [0],
-            'max': [100]
-        }
-    });
-    getNoUISliderValue(sliderBasic, true);
+    // // 選擇排序js
+    // var sliderBasic = document.getElementById('nouislider_basic_example');
+    // noUiSlider.create(sliderBasic, {
+    //     start: ["{{$editCategory['sort']}}"],
+    //     connect: 'lower',
+    //     step: 1,
+    //     range: {
+    //         'min': [0],
+    //         'max': [100]
+    //     }
+    // });
+    // getNoUISliderValue(sliderBasic, true);
 
-    function getNoUISliderValue(slider, percentage) {
-    slider.noUiSlider.on('update', function () {
-        var val = slider.noUiSlider.get();
-        if (percentage) {
-            val = parseInt(val);
-            val += '';
-        }
-        $(slider).parent().find('span.js-nouislider-value').text(val);
-        $("#sort").val(val);
-    });
-    }
+    // function getNoUISliderValue(slider, percentage) {
+    // slider.noUiSlider.on('update', function () {
+    //     var val = slider.noUiSlider.get();
+    //     if (percentage) {
+    //         val = parseInt(val);
+    //         val += '';
+    //     }
+    //     $(slider).parent().find('span.js-nouislider-value').text(val);
+    //     $("#sort").val(val);
+    // });
+    // }
 
 $(function(){
     

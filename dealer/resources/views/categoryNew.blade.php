@@ -99,17 +99,20 @@
                         <div class="form-group">
                             <div class="demo-checkbox">
                                 <input type="checkbox" id="status" checked name='status'/>
-                                <label for="status">勾選啟用</label>
+                                <label for="status">是否啟用</label>
                             </div>              
                         </div>                  
                     </div>
 
                     <div class="col-md-3">
                         <p><b>排序(越小越前面)</b></p>
-                        <div id="nouislider_basic_example"></div>
-                        <div class="m-t-20 font-12"><b>排序: </b><span class="js-nouislider-value"></span></div>
-                        <input type='hidden' id='sort' name='sort' value='1'>
-                    </div>   
+                        <div class="form-group">
+                            <div class="form-line myborder">
+                                <input type="text" class="form-control" name="sort" name='sort' value=""/>
+                            </div>
+                        </div>                        
+                                             
+                    </div>  
 
                 </div>      
 
