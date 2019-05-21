@@ -174,7 +174,7 @@ class DealerController extends Controller
         // 檢驗資料
         $validator = Validator::make($request->all(), [
             'account'    => 'required|max:64',
-            // 'accessWay'  => 'required',
+            'accessWay'  => 'required',
             'password1'  => 'required|same:password2',
             'multiple'   => 'nullable|exists:multiple,multiple',
             'user_name'  => 'required|max:64',
@@ -196,7 +196,7 @@ class DealerController extends Controller
         ],[
             'account.required' => '帳號為必填',
             'account.max'      => '帳號最多為64個字元',
-            // 'accessWay.required'=> '網站代碼為必填',
+            'accessWay.required'=> '網站代碼為必填',
             'password1.required' => '密碼為必填',
             'password1.same'     => '密碼驗證不一致',
             // 'multiple.required' => '價格預設倍數為必填',
@@ -252,7 +252,7 @@ class DealerController extends Controller
 
             if( empty($request->user_email) || !isset($request->user_email) ){
 
-                $user->email = '';
+                $user->email = NULL;
             }else{
                 
                 $user->email =  $request->user_email;
@@ -305,11 +305,21 @@ class DealerController extends Controller
             	
                 $thumbnailExtension = $request->file('thumbnail')->extension();
                 $request->file('thumbnail')->storeAs("logo/{$user->id}/","mlogo.$thumbnailExtension",'goodsImage');
+            }    
+
+            if( isset($request->enable_date) ){
+                
+                $tmpData = strtotime($request->enable_date);
+                $enableDate = date("Y-m-d",$tmpData);
+                
             }            
-            
 
             $dealer = new Dealer();
             $dealer->dealer_id     = $user->id;
+
+            $dealer->company       = isset( $request->company )? trim( $request->company ):'';
+            $dealer->ein           = isset( $request->ein )? trim( $request->ein ):'';            
+
             $dealer->hotel_name    = isset( $request->hotel_name )? trim( $request->hotel_name ):'';
             $dealer->web_url       = isset( $request->hotel_url)? trim( $request->hotel_url):''; 
             $dealer->hotel_phone   = isset( $request->hotel_phone )? trim( $request->hotel_phone ):'';
@@ -317,6 +327,7 @@ class DealerController extends Controller
             $dealer->hotel_email   = isset( $request->hotel_email )? trim( $request->hotel_email):'';
             $dealer->hotel_address = isset( $request->hotel_address )? trim( $request->hotel_address ):'';
             $dealer->user_name     = isset( $request->user_name )? trim( $request->user_name ):'';
+            $dealer->user_position = isset( $request->user_position )? trim( $request->user_position ):'';
             $dealer->user_phone    = isset( $request->user_phone)? trim( $request->user_phone ):'';
             $dealer->user_tel      = isset( $request->user_tel)?trim($request->user_tel):'';
             $dealer->ship_name     = isset( $request->ship_name)?trim($request->ship_name):'';
@@ -333,7 +344,9 @@ class DealerController extends Controller
             }else{
                 $dealer->logo2  = '';
             }
-            $dealer->multiple      = isset( $request->multiple)?trim($request->multiple):'2.2';
+            $dealer->multiple      = isset( $request->multiple)?trim($request->multiple):'2.0';
+            $dealer->status        = 1;
+            $dealer->enable_date   = isset( $request->enable_date)?trim($enableDate):'';            
             $dealer->logo_color1   = isset( $request->logocolor1)?trim($request->logocolor1):'#fff';
             $dealer->logo_color2   = isset( $request->logocolor2)?trim($request->logocolor2):'#fff';
 
@@ -699,10 +712,18 @@ class DealerController extends Controller
                 }      
 
                 $dealer->multiple      = isset( $request->multiple)?trim($request->multiple):'2.0';
-                
+
+                $dealer->ship_name     = isset( $request->ship_name)?trim($request->ship_name):'';
+                $dealer->ship_phone    = isset( $request->ship_phone)?trim($request->ship_phone):'';
+                $dealer->ship_tel      = isset( $request->ship_tel)?trim($request->ship_tel):'';
+                $dealer->ship_address  = isset( $request->ship_address)?trim($request->ship_address):'';                
+
                 $dealer->save();
-                                        
-                $dealer->dealer_id     = $user->id;  
+
+                DB::commit();
+                
+                return redirect('dealerEdit/'.$user->id)->with('successMsg', '經銷商編輯成功');          
+
 
             } catch (Exception $e) {
 

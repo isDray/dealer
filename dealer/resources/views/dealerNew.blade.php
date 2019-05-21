@@ -83,13 +83,34 @@
                             </div>
                         </div> -->
                         <div class="col-md-3 col-sm-12 col-xs-12">
-                            <b>網站代碼:</b>
+                            <b>網站代碼<span style='color:red;'>(必填)</span>:</b>
                             <div class="form-group">
                             <div class="form-line">
                                 <input type="text" class="form-control myborder" name="accessWay" id="accessWay" placeholder="" value="" />
                             </div>
                             </div>
-                        </div>                        
+                        </div> 
+
+                        <div class="col-md-3 col-sm-12 col-xs-12">
+                            <b>合作日期:</b>
+                            <div class="form-group">
+                            <div class="form-line" id='enableDateBox'>
+                                <input type="text" class="form-control myborder align-center" placeholder="合作日期" id='enable_date' name="enable_date" value="">
+                            </div>
+                            </div>
+                        </div>
+
+
+<!--                         <div class="col-md-3 col-sm-12 col-xs-12">
+                            <b>&nbsp;</b>
+                            <div class="form-group">
+                            <div>
+                                <input type="checkbox" class="filled-in" id="status" name='status'>
+                                <label for="status">啟用</label>
+                            </div>
+                            </div>
+                        </div> -->
+
                     </div>                    
                     <!-- 辨別代碼選擇 -->                    
                     <p> 價格資料 </p>
@@ -111,6 +132,26 @@
                     </div>          
 
                     <p>旅館資料</p>
+
+                    <div class="row clearfix">
+                        <div class="col-md-3 col-sm-12 col-xs-12">
+                            <b>公司抬頭:</b>
+                            <div class="form-group">
+                            <div class="form-line">
+                                <input type="text" class="form-control myborder" name="company" placeholder="" value="" />
+                            </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-12 col-xs-12">
+                            <b>統一編號:</b>
+                            <div class="form-group">
+                            <div class="form-line">
+                                <input type="text" class="form-control myborder" name="ein" placeholder="" value="" />
+                            </div>
+                            </div>
+                        </div>                        
+                    </div>
+
                     <!-- 收貨資訊 -->
                     <div class="row clearfix">
                         <div class="col-md-3 col-sm-12 col-xs-12">
@@ -120,15 +161,7 @@
                                 <input type="text" class="form-control myborder" name="hotel_name" placeholder="" value="{{ old('hotel_name') }}" />
                             </div>
                             </div>
-                        </div>
-                        <div class="col-md-3 col-sm-12 col-xs-12">
-                            <b>旅館網址:</b>
-                            <div class="form-group">
-                            <div class="form-line">
-                                <input type="text" class="form-control myborder" name="hotel_url" placeholder="" value="{{ old('hotel_url') }}"/>
-                            </div>
-                            </div>
-                        </div>   
+                        </div>  
                         <div class="col-md-3 col-sm-12 col-xs-12">
                             <b>旅館電話:</b>
                             <div class="form-group">
@@ -161,6 +194,14 @@
                             </div>
                             </div>
                         </div>
+                        <div class="col-md-3 col-sm-12 col-xs-12">
+                            <b>旅館網址:</b>
+                            <div class="form-group">
+                            <div class="form-line">
+                                <input type="text" class="form-control myborder" name="hotel_url" placeholder="" value="{{ old('hotel_url') }}"/>
+                            </div>
+                            </div>
+                        </div>                         
                         <div class="col-sm-3">
                             <b>網頁版LOGO <span style="color:red">建議尺寸(400*300)</span></b>
                             <div class="form-group">
@@ -197,6 +238,14 @@
                             </div>
                             </div>
                         </div>
+                        <div class="col-md-3 col-sm-12 col-xs-12">
+                            <b>職稱:</b>
+                            <div class="form-group">
+                            <div class="form-line">
+                                <input type="text" class="form-control myborder" name="user_position" placeholder="" value="" />
+                            </div>
+                            </div>
+                        </div>                          
                         <div class="col-md-3 col-sm-12 col-xs-12">
                             <b>信箱:</b>
                             <div class="form-group">
@@ -317,6 +366,9 @@
         </div>
     </div>
 </div>
+
+<script src="{{asset('adminbsb-materialdesign/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js')}}"></script>
+<script src="{{asset('adminbsb-materialdesign/plugins/bootstrap-datepicker/js/datepicker-zh-TW.js')}}"></script>
 
 <!-- 上傳圖片用script -->
 <script type="text/javascript">
@@ -474,6 +526,13 @@ $(function(){
             $('#ship_address').val( '' );
         }
     });
+
+    $('#enable_date').datepicker({
+        format: "yyyy-mm-dd",
+        autoclose: true,
+        container : "#enableDateBox",
+        language: 'zh-TW',
+    });    
 
 });
 </script>

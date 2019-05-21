@@ -127,7 +127,7 @@
                             <b>&nbsp;</b>
                             <div class="form-group">
                             <div>
-                                <input type="checkbox" class="filled-in" id="status" name='status'>
+                                <input type="checkbox" class="filled-in" id="status" name='status' @if($dealer['status']==1 ) checked @endif>
                                 <label for="status">啟用</label>
                             </div>
                             </div>
@@ -324,18 +324,23 @@
                     </div>
                     <!-- /顏色設定 -->
                     @endrole
+
+                    @role('Dealer')
+                    <input type='hidden' name="user_name" value="{{ $dealer['user_name'] }}">
+                    <input type='hidden' name="accessWay" value="{{ $accessWay }}">
+                    @endrole
                     <p>收貨資料</p>
                     <!-- 收貨資訊 -->
                     <div class="row clearfix">
                         <div class="col-md-3 col-sm-12 col-xs-12">
                             <b>預設收貨人:</b>
                             <div class="input-group">
-                            
+                                @role('Admin')
                                 <span class="input-group-addon">
                                     <input type="checkbox" class="filled-in" id="sameName">
                                     <label for="sameName">同聯絡人</label>
                                 </span>
-                                
+                                @endrole
                                 <div class="form-line">
                                     <input type="text" class="form-control myborder" name="ship_name" id='ship_name' placeholder="" value="{{  $dealer['ship_name'] }}"/>
                                 </div>
@@ -346,10 +351,12 @@
                         <div class="col-md-3 col-sm-12 col-xs-12">
                             <b>預設收貨手機:</b>
                             <div class="input-group">
+                            @role('Admin')
                             <span class="input-group-addon">
                                 <input type="checkbox" class="filled-in" id="samePhone">
                                 <label for="samePhone">同聯絡人</label>
-                            </span>                            
+                            </span>       
+                            @endrole                     
                             <div class="form-line">
                                 <input type="text" class="form-control myborder" name="ship_phone" id="ship_phone" placeholder="" value="{{ $dealer['ship_phone'] }}" />
                             </div>
@@ -358,10 +365,12 @@
                         <div class="col-md-3 col-sm-12 col-xs-12">
                             <b>預設收貨電話:</b>
                             <div class="input-group">
+                            @role('Admin')
                             <span class="input-group-addon">
                                 <input type="checkbox" class="filled-in" id="sameTel">
                                 <label for="sameTel">同聯絡人</label>
-                            </span>                                 
+                            </span>       
+                            @endrole                          
                             <div class="form-line">
                                 <input type="text" class="form-control myborder" name="ship_tel" id='ship_tel' placeholder="" value="{{ $dealer['ship_tel'] }}" />
                             </div>
@@ -370,10 +379,12 @@
                         <div class="col-md-12 col-sm-12 col-xs-12">
                             <b>預設收貨地址:</b>
                             <div class="input-group">
+                            @role('Admin')
                             <span class="input-group-addon">
                                 <input type="checkbox" class="filled-in" id="sameAddress">
                                 <label for="sameAddress">同旅館地址</label>
-                            </span>                                 
+                            </span>       
+                            @endrole                          
                             <div class="form-line">
                                 <input type="text" class="form-control myborder" name="ship_address" id="ship_address" placeholder="" value="{{ $dealer['ship_address']}}" />
                             </div>
@@ -493,7 +504,7 @@ $(function(){
 
     /*CKEDITOR.replace('ckeditor',options);
     CKEDITOR.config.height = 300;*/
-    
+    @role('Admin')
     /*----------------------------------------------------------------
      | 收貨人同步聯絡人
      |
@@ -563,9 +574,12 @@ $(function(){
         autoclose: true,
         container : "#enableDateBox",
         language: 'zh-TW',
-    });   
+    }); 
+
+    @endrole  
 });
 </script>
+
 <!-- /上傳圖片用script -->
 
 <style type="text/css">
