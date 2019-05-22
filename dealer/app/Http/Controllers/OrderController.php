@@ -18,7 +18,7 @@ use App\Role;
 use App\OrderLog;
 use App\GoodsPrice;
 use App\Dealer;
-
+use App\GoodsStock;
 use \Exception;
 
 /*----------------------------------------------------------------------------------------------------
@@ -688,6 +688,12 @@ class OrderController extends Controller
                     
                     $Order = Order::find($request->orderId);
                     
+                    // 紀錄訂單原始狀態
+                    $oldStatus = $Order->status;
+                    
+                    $dealerId = $Order->dealer_id;
+
+
                     $useableStatus = $this->getUseable( $Order->status );
                      
                     // 如果不能夠切換狀態則終止
@@ -707,10 +713,61 @@ class OrderController extends Controller
 
                         $Order->ship_at = '';
                     }
+                    
 
                     if( $Order->save() ){
                         
+                        // 訂單取消需要將商品庫存補回
+                        if( $wantStatus == 5 ){
+
+                            $orderGoods = OrderGoods::where('oid',$request->orderId)->get();
+                            
+                            if( count( $orderGoods ) > 0 ){
+
+                                $orderGoods = json_decode($orderGoods,true);
+
+                                foreach ($orderGoods as $orderGood) {
+                                    
+                                    $goodsStock = GoodsStock::where('dealer_id',$dealerId)->where('goods_id',$orderGood['gid'])->first();
+                                    $backNum = $goodsStock->goods_num + $orderGood['num'];
+
+                                    GoodsStock::where('dealer_id', $dealerId)
+                                                ->where('goods_id', $orderGood['gid'])
+                                                ->update(['goods_num' => $backNum]);
+
+                                }
+                            }
+                        }
+                        
+                        // 取消的訂單轉回後再將數值扣除
+                        if( $oldStatus == 5 && $wantStatus == 2 ){
+
+                            $orderGoods = OrderGoods::where('oid',$request->orderId)->get();
+                            
+                            if( count( $orderGoods ) > 0 ){
+
+                                $orderGoods = json_decode($orderGoods,true);
+
+                                foreach ($orderGoods as $orderGood) {
+                                    
+                                    $goodsStock = GoodsStock::where('dealer_id',$dealerId)->where('goods_id',$orderGood['gid'])->first();
+                                    $backNum = $goodsStock->goods_num - $orderGood['num'];
+                                     
+                                    if( $backNum < 0){
+
+                                        $backNum = 0;
+                                    }
+                                    
+                                    GoodsStock::where('dealer_id', $dealerId)
+                                                ->where('goods_id', $orderGood['gid'])
+                                                ->update(['goods_num' => $backNum]);
+
+                                }
+                            }                            
+                        }
                         $this->orderLog( $request->orderId , $wantStatus , 3 );
+                        
+
 
                         return redirect("/orderInfo/{$request->orderId}")->with('successMsg', '修改狀態成功');
 
@@ -767,6 +824,9 @@ class OrderController extends Controller
                     
                     $Order = Order::find($request->orderId);
 
+                    // 紀錄訂單原始狀態
+                    $oldStatus = $Order->status;
+
                     $useableStatus = $this->getUseable( $Order->status );
                     
 
@@ -790,6 +850,55 @@ class OrderController extends Controller
                     }
                     
                     if( $Order->save() ){
+
+                        // 訂單取消需要將商品庫存補回
+                        if( $wantStatus == 5 ){
+
+                            $orderGoods = OrderGoods::where('oid',$request->orderId)->get();
+                            
+                            if( count( $orderGoods ) > 0 ){
+
+                                $orderGoods = json_decode($orderGoods,true);
+
+                                foreach ($orderGoods as $orderGood) {
+                                    
+                                    $goodsStock = GoodsStock::where('dealer_id',$dealerId)->where('goods_id',$orderGood['gid'])->first();
+                                    $backNum = $goodsStock->goods_num + $orderGood['num'];
+
+                                    GoodsStock::where('dealer_id', $dealerId)
+                                                ->where('goods_id', $orderGood['gid'])
+                                                ->update(['goods_num' => $backNum]);
+
+                                }
+                            }
+                        } 
+                        
+                        // 取消的訂單轉回後再將數值扣除
+                        if( $oldStatus == 5 && $wantStatus == 2 ){
+
+                            $orderGoods = OrderGoods::where('oid',$request->orderId)->get();
+                            
+                            if( count( $orderGoods ) > 0 ){
+
+                                $orderGoods = json_decode($orderGoods,true);
+
+                                foreach ($orderGoods as $orderGood) {
+                                    
+                                    $goodsStock = GoodsStock::where('dealer_id',$dealerId)->where('goods_id',$orderGood['gid'])->first();
+                                    $backNum = $goodsStock->goods_num - $orderGood['num'];
+                                     
+                                    if( $backNum < 0){
+
+                                        $backNum = 0;
+                                    }
+
+                                    GoodsStock::where('dealer_id', $dealerId)
+                                                ->where('goods_id', $orderGood['gid'])
+                                                ->update(['goods_num' => $backNum]);
+
+                                }
+                            }                            
+                        }
 
                         $this->orderLog( $request->orderId , $wantStatus , 3 );
 
@@ -2148,19 +2257,19 @@ class OrderController extends Controller
         // 依照目前狀態給予能夠執行的狀態
         switch ( $_stayus ) {
             case '1':
-              $useableStatus = [2];
+              $useableStatus = [2,5];
               break;
             case '2':
-              $useableStatus = [3];
+              $useableStatus = [3,5];
               break;
             case '3':
-              $useableStatus = [2,4];
+              $useableStatus = [2,4,5];
               break;
             case '4':
               $useableStatus = [3,5];
               break;
             case '5':
-              $useableStatus = [4];
+              $useableStatus = [2];
               break;                                              
             default:
               $useableStatus = [];
