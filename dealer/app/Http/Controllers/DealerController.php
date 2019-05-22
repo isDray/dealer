@@ -349,7 +349,32 @@ class DealerController extends Controller
             $dealer->enable_date   = isset( $request->enable_date)?trim($enableDate):'';            
             $dealer->logo_color1   = isset( $request->logocolor1)?trim($request->logocolor1):'#fff';
             $dealer->logo_color2   = isset( $request->logocolor2)?trim($request->logocolor2):'#fff';
+            
+            // banner儲存
+            $bannerArr = ["0","1","2","3"];
+                
+            // 如果代碼不存在 , 則給預設1  
+            if( !in_array($request->web_type, $bannerArr) || !isset($request->web_type) ){
+                    
+                $webBanner = 1;
 
+            }else{
+                $webBanner = $request->web_type;
+            }
+
+            // 如果代碼不存在 , 則給預設1  
+            if( !in_array($request->mobile_type, $bannerArr) || !isset($request->mobile_type) ){
+                    
+                $mobileBanner = 1;
+
+            }else{
+                $mobileBanner = $request->mobile_type;
+            }                
+                
+            $dealer->banner_type_w = $webBanner;
+
+            $dealer->banner_type_m = $mobileBanner;
+            
             $dealer->save();
 
             DB::commit();
@@ -463,7 +488,8 @@ class DealerController extends Controller
      |
      */
     public function dealerEditDo( Request $request ){
-         
+        
+        
         // 列表功能一定要系統方才能查看
         if( Auth::user()->hasRole('Admin') ){
 
@@ -659,16 +685,42 @@ class DealerController extends Controller
     
                 if( $request->file('mainpic') != null){
                     $dealer->logo1         = 'wlogo.'.$mainpicExtension;
-                }else{
+                }/*else{
                     $dealer->logo1  = '';
-                }
+                }*/
                 if( $request->file('thumbnail') != null){
                     $dealer->logo2         = 'mlogo.'.$thumbnailExtension;
-                }else{
+                }/*else{
                     $dealer->logo2 = '';
-                }
+                }*/
                 $dealer->multiple      = isset( $request->multiple)?trim($request->multiple):'2.2';
                 
+
+                // banner儲存
+                $bannerArr = ["0","1","2","3"];
+                
+                // 如果代碼不存在 , 則給預設1  
+                if( !in_array($request->web_type, $bannerArr) || !isset($request->web_type) ){
+                    
+                    $webBanner = 1;
+
+                }else{
+                    $webBanner = $request->web_type;
+                }
+
+                // 如果代碼不存在 , 則給預設1  
+                if( !in_array($request->mobile_type, $bannerArr) || !isset($request->mobile_type) ){
+                    
+                    $mobileBanner = 1;
+
+                }else{
+                    $mobileBanner = $request->mobile_type;
+                }                
+                
+                $dealer->banner_type_w = $webBanner;
+
+                $dealer->banner_type_m = $mobileBanner;
+
                 $dealer->save();
     
     

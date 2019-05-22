@@ -41,6 +41,10 @@ a:active {
 #fixBox{
 	width: 100%;
 	height: auto;
+	position: fixed;
+	top:0px;
+	left:0px;
+	z-index: 999;
 }
 #logoBox{
 	top:0px;
@@ -56,28 +60,27 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f93434', end
 */
 }
 #webLogo{
-	height:80px;
+	/*height:80px;*/
 }
 #webLogo  img {
-    object-fit:contain;
+/*    object-fit:contain;
     height: 100%;
     max-width: 100%;
     display:block;
-    margin:auto;    
+    margin:auto;    */
 }
 #cartNav{
 	height: 50px;
-	position: fixed;
+	/*position: fixed;
 	top:100px;
 	left:0px;
 	width: 100%;
-	z-index: 99;
-
+	z-index: 99;*/
 	border:0px;
 	border-radius: 0px;
 	background-color: #3a3a3a;
 	margin-bottom: 0px;
-	/*box-shadow: 0px 2px 13px -3px #eb74f3;*/
+
 }
 #bs-example-navbar-collapse-1{
 	background-color: #3a3a3a;

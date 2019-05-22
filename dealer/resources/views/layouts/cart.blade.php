@@ -54,32 +54,49 @@
 
     <script src="{{asset('sweetalert2/dist/sweetalert2.js')}}"></script>
 </head>
+
 <style type="text/css">
-#logoBox{
-    /*position: fixed;*/
+/*#logoBox{
+    position: fixed;
     top:0px;
     left:0px;
     width: 100%;
-    /*z-index: 99;*/
-    /*height: 100px;*/
+    z-index: 99;
+    height: 100px;
 
-background: {{$dealerDatas['logo_color1']}}; /* Old browsers */
-background: -moz-linear-gradient(45deg, {{$dealerDatas['logo_color1']}} 0%, {{$dealerDatas['logo_color2']}} 100%); /* FF3.6-15 */
-background: -webkit-linear-gradient(45deg, {{$dealerDatas['logo_color1']}} 0%,{{$dealerDatas['logo_color2']}} 100%); /* Chrome10-25,Safari5.1-6 */
-background: linear-gradient(45deg, {{$dealerDatas['logo_color1']}} 0%,{{$dealerDatas['logo_color2']}} 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='{{$dealerDatas['logo_color1']}}', endColorstr='{{$dealerDatas['logo_color2']}}',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
-}</style>
+background: {{$dealerDatas['logo_color1']}}; 
+background: -moz-linear-gradient(45deg, {{$dealerDatas['logo_color1']}} 0%, {{$dealerDatas['logo_color2']}} 100%); /
+background: -webkit-linear-gradient(45deg, {{$dealerDatas['logo_color1']}} 0%,{{$dealerDatas['logo_color2']}} 100%); 
+background: linear-gradient(45deg, {{$dealerDatas['logo_color1']}} 0%,{{$dealerDatas['logo_color2']}} 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='{{$dealerDatas['logo_color1']}}', endColorstr='{{$dealerDatas['logo_color2']}}',GradientType=1 );
+}*/
+</style>
 
 <body class="theme-red">
     
     <div id="fixBox">
     <div id='logoBox' class="container-fluid _np">
-        <div id="webLogo" class='col-md-4 col-md-offset-4 _w'>
-            <img src="{{url('logo')}}/{{$cartUser}}/{{$dealerDatas['logo1']}}">
+        <div id="webLogo" class='col-md-12 _w _np'>
+            @if( !empty($dealerDatas['logo1']) && $dealerDatas['banner_type_w'] == 0 )
+                <img src="{{url('logo')}}/{{$cartUser}}/{{$dealerDatas['logo1']}}" width='100%'> 
+            @elseif( empty($dealerDatas['logo1']) && $dealerDatas['banner_type_w'] == 0 )
+                <img src="{{url('banner')}}/web/default1.jpg" width='100%'>
+            @else
+                <img src="{{url('banner')}}/web/default{{$dealerDatas['banner_type_w']}}.jpg" width='100%'>
+            @endif
+            <!-- <img src="{{url('logo')}}/{{$cartUser}}/{{$dealerDatas['logo1']}}"> -->
+            
         </div>
-        <div id="webLogo" class='col-md-4 col-md-offset-4 _p _np'>
+        <div id="webLogo" class='col-md-12 _p _np'>
             <!-- <img src="{{url('logo')}}/{{$cartUser}}/{{$dealerDatas['logo2']}}"> -->
-            <img src="{{url('')}}/banner.jpg" width='100%'>
+            @if( !empty($dealerDatas['logo2']) && $dealerDatas['banner_type_m'] == 0 )
+                <img src="{{url('logo')}}/{{$cartUser}}/{{$dealerDatas['logo2']}}" width='100%'> 
+            @elseif( empty($dealerDatas['logo2']) && $dealerDatas['banner_type_m'] == 0 )
+                <img src="{{url('banner')}}/mobile/default1.jpg" width='100%'>
+            @else
+                <img src="{{url('banner')}}/mobile/default{{$dealerDatas['banner_type_m']}}.jpg" width='100%'>
+            @endif            
+
         </div>        
     </div>
 

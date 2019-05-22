@@ -56,8 +56,13 @@ class CreateDealerTable extends Migration
             $table->char('logo_color2', 100)->nullable()->comment('logo區塊顏色2');
 
             $table->float('multiple', 8, 1)->comment('預設倍數');
+
             $table->boolean('status')->comment('帳號狀態');
+            
             $table->nullableTimestamps('enable_date')->comment('合作日期');
+
+            $table->unsignedTinyInteger('banner_type')->comment('banner設定');
+
             $table->timestamps();
         });
     }

@@ -202,35 +202,138 @@
                             </div>
                             </div>
                         </div>                         
-                        <div class="col-sm-3">
-                            <b>網頁版LOGO <span style="color:red">建議尺寸(400*300)</span></b>
-                            <div class="form-group">
-                                <div class="">
-                                    <input type="file" class="form-control imageupload" name="mainpic" id="mainpic" placeholder="" />
-                                </div>
-                                <div id="mainDisplay">
-                                    <img src="">
+                        <div class="col-sm-12">
+
+                            <div class="col-sm-3">
+                                <b> 
+                                    <input name="web_type" type="radio" id="web_type0"  value="0" class="with-gap radio-col-teal" checked/>
+                                    <label for="web_type0">選用</label>
+
+                                    網頁版LOGO
+
+                                </b>
+                                <div class="form-group">
+                                    <div class="">
+                                        <input type="file" class="form-control imageupload" name="mainpic" id="mainpic" placeholder="" />
+                                    </div>
+                                    <div id="mainDisplay">
+                                        <img src="">
+
+                                    </div>
                                 </div>
                             </div>
+                            <div class="col-sm-3">
+                                <b>
+                                    <input name="web_type" type="radio" id="web_type1" value="1" class="with-gap radio-col-teal" />
+                                    <label for="web_type1">選用</label>                                    
+                                    預設1
+                                </b>
+                                <div class="form-group">
+                                    <div class="">
+                                        
+                                    </div>
+                                    <div class="defaultDisplay">
+                                        <img src="{{url('banner')}}/web/default1.jpg">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <b>
+                                    <input name="web_type" type="radio" id="web_type2" value="2" class="with-gap radio-col-teal" />
+                                    <label for="web_type2">選用</label>
+                                    預設2</b>
+                                <div class="form-group">
+                                    <div class="">
+                                    </div>
+                                    <div class="defaultDisplay">
+                                        <img src="{{url('banner')}}/web/default2.jpg">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <b>
+                                    <input name="web_type" type="radio" id="web_type3" value="3" class="with-gap radio-col-teal" />
+                                    <label for="web_type3">選用</label>
+                                    預設3</b>
+                                <div class="form-group">
+                                    <div class="">
+                                        
+                                    </div>
+                                    <div class="defaultDisplay">
+                                        <img src="{{url('banner')}}/web/default3.jpg">
+                                    </div>
+                                </div>
+                            </div>                                                                                    
                         </div>
 
-                        <div class="col-sm-3">
-                            <b>手機板LOGO <span style="color:red">建議尺寸(300*200)</span></b>
-                            <div class="form-group">
-                                <div class="">
-                                    <input type="file" class="form-control imageupload" name="thumbnail" id="thumbnail" placeholder="" />
-                                </div>
-                                <div id="thumbDisplay">
-                                    <img src="">
+                        <div class="col-sm-12">
+
+                            <div class="col-sm-3">
+                                <b>  
+                                    <input name="mobile_type" type="radio" id="wobile_type0" value="0" class="with-gap radio-col-teal"  checked/>
+                                    <label for="wobile_type0">選用</label>
+                                    手機板LOGO </span>
+                                </b>
+                                <div class="form-group">
+                                    <div class="">
+                                        <input type="file" class="form-control imageupload" name="thumbnail" id="thumbnail" placeholder="" />
+                                    </div>
+                                    <div id="thumbDisplay">
+
+                                        <img src="">
+
+                                    </div>
                                 </div>
                             </div>
+                            <div class="col-sm-3">
+                                <b>
+                                    <input name="mobile_type" type="radio" id="wobile_type1" value="1" class="with-gap radio-col-teal" />
+                                    <label for="wobile_type1">選用</label>
+                                    預設1</b>
+                                <div class="form-group">
+                                    <div class="">
+                                        
+                                    </div>
+                                    <div class="defaultDisplay">
+                                        <img src="{{url('banner')}}/mobile/default1.jpg">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <b>
+                                    <input name="mobile_type" type="radio" id="wobile_type2" value="2" class="with-gap radio-col-teal" />
+                                    <label for="wobile_type2">選用</label>
+                                    預設2</b>
+                                <div class="form-group">
+                                    <div class="">
+                                    </div>
+                                    <div class="defaultDisplay">
+                                        <img src="{{url('banner')}}/mobile/default2.jpg">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <b>
+                                    <input name="mobile_type" type="radio" id="wobile_type3" value="3" class="with-gap radio-col-teal" />
+                                    <label for="wobile_type3">選用</label>
+                                    預設3</b>
+                                <div class="form-group">
+                                    <div class="">
+                                        
+                                    </div>
+                                    <div class="defaultDisplay">
+                                        <img src="{{url('banner')}}/mobile/default3.jpg">
+                                    </div>
+                                </div>
+                            </div>                             
                         </div>                                                                                                                
+                    </div>                                                                                                                
                     </div>
 
                     <p>聯絡人資料</p>
 
                     <div class="row clearfix">
-                        <div class="col-md-3 col-sm-12 col-xs-12">
+                        <div class="col-md-2 col-sm-12 col-xs-12">
                             <b>聯絡人<span style='color:red;'>(必填)</span>:</b>
                             <div class="form-group">
                             <div class="form-line">
@@ -238,7 +341,7 @@
                             </div>
                             </div>
                         </div>
-                        <div class="col-md-3 col-sm-12 col-xs-12">
+                        <div class="col-md-2 col-sm-12 col-xs-12">
                             <b>職稱:</b>
                             <div class="form-group">
                             <div class="form-line">
@@ -246,15 +349,8 @@
                             </div>
                             </div>
                         </div>                          
-                        <div class="col-md-3 col-sm-12 col-xs-12">
-                            <b>信箱:</b>
-                            <div class="form-group">
-                            <div class="form-line">
-                                <input type="email" class="form-control myborder" name="user_email" placeholder="" value="{{ old('user_email') }}" />
-                            </div>
-                            </div>
-                        </div>                          
-                        <div class="col-md-3 col-sm-12 col-xs-12">
+                          
+                        <div class="col-md-2 col-sm-12 col-xs-12">
                             <b>聯絡人手機:</b>
                             <div class="form-group">
                             <div class="form-line">
@@ -262,21 +358,30 @@
                             </div>
                             </div>
                         </div>   
-                        <div class="col-md-3 col-sm-12 col-xs-12">
+                        <div class="col-md-2 col-sm-12 col-xs-12">
                             <b>聯絡人電話:</b>
                             <div class="form-group">
                             <div class="form-line">
                                 <input type="text" class="form-control myborder" name="user_tel" id="user_tel" placeholder="" value="{{ old('user_tel') }}"/>
                             </div>
                             </div>
-                        </div>                                             
+                        </div> 
+                        <div class="col-md-2 col-sm-12 col-xs-12">
+                            <b>信箱:</b>
+                            <div class="form-group">
+                            <div class="form-line">
+                                <input type="email" class="form-control myborder" name="user_email" placeholder="" value="{{ old('user_email') }}" />
+                            </div>
+                            </div>
+                        </div>
+
                     </div>                    
                     
 
                     <!-- 顏色設定 -->
-                    <p>色彩設定</p>
+                    <!-- <p>色彩設定</p> -->
                     <!-- 收貨資訊 -->
-                    <div class="row clearfix">
+<!--                     <div class="row clearfix">
                         <div class="col-md-3 col-sm-12 col-xs-12">
                             <b>logo背景色1</b>
                             <div class="form-group">
@@ -293,7 +398,7 @@
                             </div>
                             </div>
                         </div>                                               
-                    </div>
+                    </div> -->
                     <!-- /顏色設定 -->
                     <p>收貨資料</p>
                     <!-- 收貨資訊 -->
@@ -553,6 +658,13 @@ $(function(){
     margin-top: 2px;
     border:1px solid #ddd;
     background-color: #f6f6f6;
+}
+.defaultDisplay{
+    overflow: hidden;
+}
+.defaultDisplay > img{
+    object-fit:cover!important;
+    
 }
 </style>
 

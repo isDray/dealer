@@ -229,34 +229,135 @@
                             </div>
                             </div>
                         </div>                        
-                        <div class="col-sm-3">
-                            <b>網頁版LOGO <span style="color:red">建議尺寸(400*300)</span></b>
-                            <div class="form-group">
-                                <div class="">
-                                    <input type="file" class="form-control imageupload" name="mainpic" id="mainpic" placeholder="" />
-                                </div>
-                                <div id="mainDisplay">
-                                    @if( !empty($dealer['logo1']) )
-                                    <img src="{{url('')}}/logo/{{$dealer['uid']}}/{{$dealer['logo1']}}">
-                                    @endif
+                        <div class="col-sm-12">
+
+                            <div class="col-sm-3">
+                                <b> 
+                                    <input name="web_type" type="radio" id="web_type0"  value="0" class="with-gap radio-col-teal"  @if( $dealer['banner_type_w'] == 0) checked @endif/>
+                                    <label for="web_type0">選用</label>
+
+                                    網頁版LOGO
+
+                                </b>
+                                <div class="form-group">
+                                    <div class="">
+                                        <input type="file" class="form-control imageupload" name="mainpic" id="mainpic" placeholder="" />
+                                    </div>
+                                    <div id="mainDisplay">
+                                        @if( !empty($dealer['logo1']) )
+                                        <img src="{{url('')}}/logo/{{$dealer['uid']}}/{{$dealer['logo1']}}">
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
+                            <div class="col-sm-3">
+                                <b>
+                                    <input name="web_type" type="radio" id="web_type1" value="1" class="with-gap radio-col-teal" @if( $dealer['banner_type_w'] == 1) checked @endif />
+                                    <label for="web_type1">選用</label>                                    
+                                    預設1
+                                </b>
+                                <div class="form-group">
+                                    <div class="">
+                                        
+                                    </div>
+                                    <div class="defaultDisplay">
+                                        <img src="{{url('banner')}}/web/default1.jpg">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <b>
+                                    <input name="web_type" type="radio" id="web_type2" value="2" class="with-gap radio-col-teal" @if( $dealer['banner_type_w'] == 2) checked @endif />
+                                    <label for="web_type2">選用</label>
+                                    預設2</b>
+                                <div class="form-group">
+                                    <div class="">
+                                    </div>
+                                    <div class="defaultDisplay">
+                                        <img src="{{url('banner')}}/web/default2.jpg">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <b>
+                                    <input name="web_type" type="radio" id="web_type3" value="3" class="with-gap radio-col-teal" @if( $dealer['banner_type_w'] == 3) checked @endif />
+                                    <label for="web_type3">選用</label>
+                                    預設3</b>
+                                <div class="form-group">
+                                    <div class="">
+                                        
+                                    </div>
+                                    <div class="defaultDisplay">
+                                        <img src="{{url('banner')}}/web/default3.jpg">
+                                    </div>
+                                </div>
+                            </div>                                                                                    
                         </div>
 
-                        <div class="col-sm-3">
-                            <b>手機板LOGO <span style="color:red">建議尺寸(300*200)</span></b>
-                            <div class="form-group">
-                                <div class="">
-                                    <input type="file" class="form-control imageupload" name="thumbnail" id="thumbnail" placeholder="" />
-                                </div>
-                                <div id="thumbDisplay">
-                                    @if( !empty($dealer['logo2']) )
-                                    <img src="{{url('')}}/logo/{{$dealer['uid']}}/{{$dealer['logo2']}}">
-                                    @endif
+                        <div class="col-sm-12">
+
+                            <div class="col-sm-3">
+                                <b>  
+                                    <input name="mobile_type" type="radio" id="wobile_type0" value="0" class="with-gap radio-col-teal"  @if( $dealer['banner_type_m'] == 0) checked @endif />
+                                    <label for="wobile_type0">選用</label>
+                                    手機板LOGO </span>
+                                </b>
+                                <div class="form-group">
+                                    <div class="">
+                                        <input type="file" class="form-control imageupload" name="thumbnail" id="thumbnail" placeholder="" />
+                                    </div>
+                                    <div id="thumbDisplay">
+                                        @if( !empty($dealer['logo2']) )
+                                        <img src="{{url('')}}/logo/{{$dealer['uid']}}/{{$dealer['logo2']}}">
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
+                            <div class="col-sm-3">
+                                <b>
+                                    <input name="mobile_type" type="radio" id="wobile_type1" value="1" class="with-gap radio-col-teal" @if( $dealer['banner_type_m'] == 1) checked @endif/>
+                                    <label for="wobile_type1">選用</label>
+                                    預設1</b>
+                                <div class="form-group">
+                                    <div class="">
+                                        
+                                    </div>
+                                    <div class="defaultDisplay">
+                                        <img src="{{url('banner')}}/mobile/default1.jpg">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <b>
+                                    <input name="mobile_type" type="radio" id="wobile_type2" value="2" class="with-gap radio-col-teal" @if( $dealer['banner_type_m'] == 2) checked @endif/>
+                                    <label for="wobile_type2">選用</label>
+                                    預設2</b>
+                                <div class="form-group">
+                                    <div class="">
+                                    </div>
+                                    <div class="defaultDisplay">
+                                        <img src="{{url('banner')}}/mobile/default2.jpg">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <b>
+                                    <input name="mobile_type" type="radio" id="wobile_type3" value="3" class="with-gap radio-col-teal" @if( $dealer['banner_type_m'] == 3) checked @endif />
+                                    <label for="wobile_type3">選用</label>
+                                    預設3</b>
+                                <div class="form-group">
+                                    <div class="">
+                                        
+                                    </div>
+                                    <div class="defaultDisplay">
+                                        <img src="{{url('banner')}}/mobile/default3.jpg">
+                                    </div>
+                                </div>
+                            </div>                             
                         </div>                                                                                                                
-                    </div>                                     
+                    </div>   
+
+                                                      
                     <p>聯絡人資料</p>
                     <div class="row clearfix">
                         <div class="col-md-3 col-sm-12 col-xs-12">
@@ -302,9 +403,9 @@
                     </div>                    
                     
                     <!-- 顏色設定 -->
-                    <p>色彩設定</p>
+                    <!-- <p>色彩設定</p> -->
                     <!-- 收貨資訊 -->
-                    <div class="row clearfix">
+<!--                     <div class="row clearfix">
                         <div class="col-md-3 col-sm-12 col-xs-12">
                             <b>logo背景色1</b>
                             <div class="form-group">
@@ -321,7 +422,7 @@
                             </div>
                             </div>
                         </div>                                               
-                    </div>
+                    </div> -->
                     <!-- /顏色設定 -->
                     @endrole
 
@@ -583,10 +684,17 @@ $(function(){
 <!-- /上傳圖片用script -->
 
 <style type="text/css">
-#mainDisplay > img , #thumbDisplay > img{
-
+#mainDisplay > img , #thumbDisplay > img {
     object-fit:contain;
     max-width: 100%;
+}
+
+.defaultDisplay{
+    overflow: hidden;
+}
+.defaultDisplay > img{
+    object-fit:cover!important;
+    
 }
 .demo-checkbox > img{
     object-fit:contain;
