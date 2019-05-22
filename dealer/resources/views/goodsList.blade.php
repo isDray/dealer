@@ -84,19 +84,25 @@ a{
                                         <option value="2" @if($dfStatus == 2) selected @endif>下架</option>
                                     </select>
                                 </div>                                 
-                                <div class="col-sm-3">
-                                    <p>關鍵字:</p>
+                                <div class="col-sm-2">
+                                    <p>商品名稱:</p>
                                     <div class="input-group">
                                         <input type="text" class="form-control myborder" placeholder="" id='myKeyword' value=''>
                                     </div>
                                 </div>
+                                <div class="col-sm-2">
+                                    <p>貨號:</p>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control myborder" placeholder="" id='snKeyword' value=''>
+                                    </div>
+                                </div>                                
                             </div>
 
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped table-hover js-basic-example dataTable roleTable">
                                     <thead>
                                         <tr>
-                                            
+                                            <th>ID</th>
                                             <th>縮圖</th>
                                             <th>商品名稱</th>
                                             <th>商品貨號</th>
@@ -190,25 +196,32 @@ $(function(){
                 d.max_price = $("#max_price").val();
                 d.category  = $("#category").val();
                 d.status    = $("#status").val();
-                d.myKeyword  = $("#myKeyword").val();                
+                d.myKeyword  = $("#myKeyword").val(); 
+                d.snKeyword  = $("#snKeyword").val();  
             }
         },
 
         "columnDefs" : [
             {   "targets" : 0 ,
+                "data": 8,
+                "orderable": false,
+            },        
+            {   "targets" : 1 ,
                 "data": "img",
                 "orderable": false,
                 "render" : function ( url, type, full) {
                     return '<img height="80px" width="80px" src="'+"{{url('/images')}}/"+full[0]+'"/>';
                 }
-            },
-            {   "targets" : 1 ,
-                "orderable": false,
-            },     
+            },   
             {   "targets" : 2 ,
                 "orderable": false,
-            },                     
+                "data": 1,
+            },      
             {   "targets" : 3 ,
+                "orderable": false,
+                "data": 2,
+            },                           
+            {   "targets" : 4 ,
               
                 "render" : function ( url, type, full) {
                     if( full[3] == 1 ){
@@ -223,27 +236,36 @@ $(function(){
         
             },
             {
-                "targets":4,
-                "visible": false,
+                "targets":5,
+                "data": 4,
             },
             {
                 "targets":6,
-                "render" : function ( url, type, full) {
-                    var tmptable = "";
-
-                    $.each( full[9], function( tablek, tablev ) {
-
-                        tmptable +="<tr>";
-                        tmptable +="<td>"+tablev['name']+"</td>";
-                        tmptable +="<td>"+tablev['num']+"</td>";
-                        tmptable +="</tr>";
-
-                    });
-
-                    return  "<div class='stockbox' gid='"+full[8]+"'>"+full[6]+"<div><table><tr><td>經銷商</td><td>庫存</td></tr>"+tmptable+"</table></div></div>";
-                }
+                "data": 5,
             },            
-            {   "targets" : 8 ,
+            {
+                "targets":7,
+                "data": 6,
+                // "render" : function ( url, type, full) {
+                //     var tmptable = "";
+
+                //     $.each( full[9], function( tablek, tablev ) {
+
+                //         tmptable +="<tr>";
+                //         tmptable +="<td>"+tablev['name']+"</td>";
+                //         tmptable +="<td>"+tablev['num']+"</td>";
+                //         tmptable +="</tr>";
+
+                //     });
+
+                //     return  "<div class='stockbox' gid='"+full[8]+"'>"+full[6]+"<div><table><tr><td>經銷商</td><td>庫存</td></tr>"+tmptable+"</table></div></div>";
+                // }
+            },   
+            {
+                "targets":8,
+                "data": 7,
+            },                     
+            {   "targets" : 9 ,
                 "data": "edit",
                 "orderable": false,
                 "render" : function ( url, type, full) {
@@ -291,7 +313,10 @@ $(function(){
         
         mytable.ajax.reload();
     });    
-
+    $("#snKeyword").bind("keyup change", function(e) {
+        
+        mytable.ajax.reload();
+    });
     /*----------------------------------------------------------------
      | 觸發刪除
      |----------------------------------------------------------------

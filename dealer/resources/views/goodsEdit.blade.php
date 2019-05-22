@@ -82,7 +82,7 @@
                                     <div class="col-sm-3">
                                         <b>商品名稱</b>
                                         <div class="form-group">
-                                            <div class="form-line">
+                                            <div class="form-line myborder ">
                                                 <input type="text" class="form-control" name="name" placeholder="" value="{{$goodsData['name']}}"/>
                                             </div>
                                         </div>
@@ -91,7 +91,7 @@
                                     <div class="col-sm-3">
                                         <b>貨號</b>
                                         <div class="form-group">
-                                            <div class="form-line">
+                                            <div class="form-line myborder ">
                                                 <input type="text" class="form-control" name="goods_sn" placeholder="" value="{{$goodsData['goods_sn']}}"/>
                                             </div>
                                         </div>
@@ -102,7 +102,7 @@
                 
                                     <div class="col-sm-6">
                                         <p><b>商品類別</b></p>
-                                        <select class="form-control show-tick" name='category'>
+                                        <select class="form-control show-tick myborder " name='category'>
                                             @foreach( $categorys as $category)
                                             <option value="{{$category['id']}}"
                                                 @if( $goodsData['cid'] == $category['id'] )
@@ -120,7 +120,7 @@
                                     <div class="col-md-6">
                                         <p><b>擴展類別</b></p>
                                         
-                                        <select class="form-control show-tick" multiple name='multiplCategory[]'>
+                                        <select class="form-control show-tick myborder " multiple name='multiplCategory[]'>
                                             @foreach( $categorys as $category)
                                             <option value="{{$category['id']}}" 
                                                 @if( in_array( $category['id'] , $goodsCats ) )
@@ -140,7 +140,7 @@
                                     <div class="col-sm-3">
                                         <b>售價</b>
                                         <div class="form-group">
-                                            <div class="form-line">
+                                            <div class="form-line myborder">
                                                 <input type="text" class="form-control" name="price" placeholder="" value="{{$goodsData['price']}}"/>
                                             </div>
                                         </div>
@@ -149,7 +149,7 @@
                                     <div class="col-sm-3">
                                         <b>批發價</b>
                                         <div class="form-group">
-                                            <div class="form-line">
+                                            <div class="form-line myborder">
                                                 <input type="text" class="form-control" name="wprice" placeholder="" value="{{$goodsData['w_price']}}"/>
                                             </div>
                                         </div>
@@ -202,7 +202,7 @@
                                                     checked
                                                 @endif
                                                 />
-                                                <label for="status">勾選上架</label>
+                                                <label for="status">是否上架</label>
                                             </div>              
                                         </div>                  
                                     </div> 
@@ -221,11 +221,11 @@
                                     </div> 
                                 </div>
                                 
-                            
+                        <input type='hidden' name='id' value="{{$goodsData['id']}}">
+                        <button class="btn btn-primary waves-effect" type="submit">確定</button>                            
 
                         </div>
-                        <input type='hidden' name='id' value="{{$goodsData['id']}}">
-                        <button class="btn btn-primary waves-effect" type="submit">新增</button>
+
                         </form>
                     </div>
 

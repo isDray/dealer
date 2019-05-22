@@ -80,7 +80,7 @@
                                     <div class="col-sm-3">
                                         <b>商品名稱</b>
                                         <div class="form-group">
-                                            <div class="form-line">
+                                            <div class="form-line myborder ">
                                                 <input type="text" class="form-control" name="name" placeholder="" />
                                             </div>
                                         </div>
@@ -89,7 +89,7 @@
                                     <div class="col-sm-3">
                                         <b>貨號</b>
                                         <div class="form-group">
-                                            <div class="form-line">
+                                            <div class="form-line myborder ">
                                                 <input type="text" class="form-control" name="goods_sn" placeholder="" />
                                             </div>
                                         </div>
@@ -99,7 +99,7 @@
                 
                                     <div class="col-sm-6">
                                         <p><b>商品類別</b></p>
-                                        <select class="form-control show-tick" name='category'>
+                                        <select class="form-control show-tick myborder " name='category'>
                                             @foreach( $categorys as $category)
                                             <option value="{{$category['id']}}"> {{$category['level']}}{{$category['name']}} </option>
                                             @endforeach
@@ -114,7 +114,7 @@
                                     <div class="col-md-6">
                                         <p><b>擴展類別</b></p>
                                         
-                                        <select class="form-control show-tick" multiple name='multiplCategory[]'>
+                                        <select class="form-control show-tick myborder " multiple name='multiplCategory[]'>
                                             @foreach( $categorys as $category)
                                             <option value="{{$category['id']}}" >{{$category['name']}} </option>
                                             @endforeach
@@ -129,7 +129,7 @@
                                     <div class="col-sm-3">
                                         <b>售價</b>
                                         <div class="form-group">
-                                            <div class="form-line">
+                                            <div class="form-line myborder">
                                                 <input type="text" class="form-control" name="price" placeholder="" />
                                             </div>
                                         </div>
@@ -138,7 +138,7 @@
                                     <div class="col-sm-3">
                                         <b>批發價</b>
                                         <div class="form-group">
-                                            <div class="form-line">
+                                            <div class="form-line myborder">
                                                 <input type="text" class="form-control" name="wprice" placeholder="" />
                                             </div>
                                         </div>
@@ -187,7 +187,7 @@
                                         <div class="form-group">
                                             <div class="demo-checkbox">
                                                 <input type="checkbox" id="status" checked name='status'/>
-                                                <label for="status">勾選上架</label>
+                                                <label for="status">是否上架</label>
                                             </div>              
                                         </div>                  
                                     </div> 

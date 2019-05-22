@@ -822,13 +822,19 @@ class GoodsController extends Controller
                 
                 $query_add->where( 'g.name', 'like', "%{$filterSearch}%");
 
-                $query_add->orWhere( 'g.goods_sn', 'like', "%{$filterSearch}%");
+                /*$query_add->orWhere( 'g.goods_sn', 'like', "%{$filterSearch}%");
             
-                $query_add->orWhere( 'g.updated_at', 'like', "%{$filterSearch}%");                
+                $query_add->orWhere( 'g.updated_at', 'like', "%{$filterSearch}%");                */
 
 
             });            
 
+        }
+
+        // 貨號查詢
+        if( !empty( $request->snKeyword ) ){
+            
+            $query->where('g.goods_sn','like',"%{$request->snKeyword}%");
         }
         
         // 類別
@@ -857,8 +863,11 @@ class GoodsController extends Controller
                 $query->where( 'g.status', '0' );
             }
         }
-        $query->groupBy( 'id' );
-        $suitNum = $query->count();
+
+        $query->groupBy( 'g.id' );
+        
+
+        $suitNum = count($query->get());
         
         $query->offset( $request->start );
         
@@ -924,7 +933,7 @@ class GoodsController extends Controller
             $tmpStock,
             $value->updated_at,
             $value->id,
-            $returnStock
+            $returnStock,
                                 ]);
             
 
