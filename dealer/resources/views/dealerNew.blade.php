@@ -458,11 +458,11 @@
                     </div>  
                     <!-- /收貨資訊 -->                  
 
-                      
+                    <button class="btn btn-primary waves-effect" type="submit">新增</button>
 
                 </div>
 
-                <button class="btn btn-primary waves-effect" type="submit">新增</button>
+                
 
             </form>
 

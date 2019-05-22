@@ -576,10 +576,15 @@ class OrderController extends Controller
                 $orderLogs[$orderLogk]['order_status'] = $this->statusToStr($orderLog['order_status'] );
                 
             }
+            
+            // 取得可以使用的狀態
+            $useableStatus = $this->getUseable( $order['status'] );
+
             return view('orderInfo')->with([ 'title'      => $pageTitle,
                                              'order'      => $order,
                                              'orderGoods' => $orderGoods,
-                                             'orderLogs'  => $orderLogs
+                                             'orderLogs'  => $orderLogs,
+                                             'useableStatus' => $useableStatus
                                           ]);
 
 
@@ -624,11 +629,15 @@ class OrderController extends Controller
                 $orderLogs[$orderLogk]['order_status'] = $this->statusToStr($orderLog['order_status'] );
                 
             }
+            
+            // 取得可以使用的狀態
+            $useableStatus = $this->getUseable( $order['status'] );
 
             return view('orderInfo')->with([ 'title'      => $pageTitle,
                                              'order'      => $order,
                                              'orderGoods' => $orderGoods,
-                                             'orderLogs'  => $orderLogs
+                                             'orderLogs'  => $orderLogs,
+                                             'useableStatus' => $useableStatus
                                           ]);            
         }
     }
@@ -659,27 +668,44 @@ class OrderController extends Controller
 
                 $wantStatus = 2;
             }
-            if( isset( $request->shipped) ){
+            if( isset( $request->checked) ){
                 
                 $wantStatus = 3;
-            }
-            if( isset( $request->cancel) ){
+            }            
+            if( isset( $request->shipped) ){
                 
                 $wantStatus = 4;
             }
+            if( isset( $request->cancel) ){
+                
+                $wantStatus = 5;
+            }
+
             
             if( !empty($wantStatus) ){
                 
                 if( !empty($request->orderId) ){
                     
                     $Order = Order::find($request->orderId);
+                    
+                    $useableStatus = $this->getUseable( $Order->status );
+                     
+                    // 如果不能夠切換狀態則終止
+                    if( !in_array($wantStatus, $useableStatus)){
+
+                        return back()->with('errorMsg', '訂單目前無法切換至該狀態');
+                    }
 
                     $Order->status = $wantStatus;
-
-                    if( $wantStatus == 3 ){
+                    
+                    // 如果是出貨則需要紀錄出貨時間
+                    if( $wantStatus == 4 ){
                         
                         $Order->ship_at = date("Y-m-d H:i:s");
 
+                    }else{
+
+                        $Order->ship_at = '';
                     }
 
                     if( $Order->save() ){
@@ -722,13 +748,17 @@ class OrderController extends Controller
 
                 $wantStatus = 2;
             }
-            if( isset( $request->shipped) ){
+            if( isset( $request->checked) ){
                 
                 $wantStatus = 3;
+            }            
+            if( isset( $request->shipped) ){
+                
+                $wantStatus = 4;
             }
             if( isset( $request->cancel) ){
                 
-                $wantStatus = 4;
+                $wantStatus = 5;
             }
             
             if( !empty($wantStatus) ){
@@ -737,12 +767,26 @@ class OrderController extends Controller
                     
                     $Order = Order::find($request->orderId);
 
+                    $useableStatus = $this->getUseable( $Order->status );
+                    
+
+                    // 如果不能夠切換狀態則終止
+                    if( !in_array($wantStatus, $useableStatus)){
+
+                        return back()->with('errorMsg', '訂單目前無法切換至該狀態');
+                    } 
+
                     $Order->status = $wantStatus;
                     
-                    if( $wantStatus == 3 ){
+                   
+
+                    if( $wantStatus == 4 ){
                         
                         $Order->ship_at = date("Y-m-d H:i:s");
 
+                    }else{
+
+                        $Order->ship_at = '';
                     }
                     
                     if( $Order->save() ){
@@ -2067,11 +2111,14 @@ class OrderController extends Controller
                 return '待處理';
             break;
             case 3:
-                return '已出貨';
+                return '已確認';
             break;
             case 4:
+                return '已出貨';
+            break;  
+            case 5:
                 return '取消';
-            break;                                    
+            break;                                                
           
         }
     }
@@ -2087,6 +2134,41 @@ class OrderController extends Controller
 
         return Order::where('id',$_orderId)->exists();
     }
+    
 
+
+
+    /*----------------------------------------------------------------
+     | 取出可以改變的狀態
+     |----------------------------------------------------------------
+     |
+     */
+    public function getUseable( $_stayus ){
+        
+        // 依照目前狀態給予能夠執行的狀態
+        switch ( $_stayus ) {
+            case '1':
+              $useableStatus = [2];
+              break;
+            case '2':
+              $useableStatus = [3];
+              break;
+            case '3':
+              $useableStatus = [2,4];
+              break;
+            case '4':
+              $useableStatus = [3,5];
+              break;
+            case '5':
+              $useableStatus = [4];
+              break;                                              
+            default:
+              $useableStatus = [];
+              break;            
+        }
+
+        return $useableStatus;
+ 
+    }
 
 }

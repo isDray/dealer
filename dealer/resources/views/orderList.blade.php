@@ -70,8 +70,9 @@ a{
                                         <option value='0' >-選擇-</option>
                                         <option value='1' @if($dfStatus == '1') selected @endif>未新增完成</option>
                                         <option value='2' @if($dfStatus == '2') selected @endif >待處理</option>
-                                        <option value='3' @if($dfStatus == '3') selected @endif >已出貨</option>
-                                        <option value='4' @if($dfStatus == '4') selected @endif >取消</option>
+                                        <option value='3' @if($dfStatus == '3') selected @endif >已確認</option>
+                                        <option value='4' @if($dfStatus == '4') selected @endif >已出貨</option>
+                                        <option value='5' @if($dfStatus == '5') selected @endif >取消</option>
                                     </select>
                                 </div> 
                                 
@@ -238,12 +239,17 @@ $(function(){
                     
                     }else if( full[4] == 3 ){
                         
-                        return '<span class="label bg-teal">已出貨</span>';
+                        return '<span class="label bg-teal">已確認</span>';
 
                     }else if( full[4] == 4 ){
 
+                        return '<span class="label bg-teal">已出貨</span>';
+
+                    }else if( full[4] == 5 ){
+
                         return '<span class="label bg-teal">取消</span>';
                     }
+
                 }
         
             },
