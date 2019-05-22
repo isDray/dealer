@@ -94,7 +94,6 @@ Route::group(['middleware' => ['auth','role:Admin'] ], function () {
     Route::post('/announcementDelete','SetController@announcementDelete');
     
     
-    
 
 
 });
@@ -164,6 +163,7 @@ Route::group(['middleware' => ['auth','role:Admin|Dealer'] ], function () {
     Route::get('/dealerEdit/{id}','DealerController@dealerEdit');// 編輯經銷商頁面
     Route::post('/dealerEditDo','DealerController@dealerEditDo'); // 編輯經銷商實作
     Route::post('/dealerDeleteDo','DealerController@dealerDeleteDo'); // 刪除經銷商
+    Route::get('/dealerQr/{id}','DealerController@qrDownload');
 
     // 經銷商設定商品價格
     Route::get('/price' , 'PriceController@index');// 商品價格列表

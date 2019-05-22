@@ -226,6 +226,9 @@ $(function(){
             },        
             {   "targets" : 1 ,
                 "orderable": false,
+                "render" : function ( url, type, full) {
+                    return  '<a href="'+"{{url('')}}/"+full[6]+'" target="_blank">'+full[1]+'</a>';
+                }
             },
             {   "targets" : 2 ,
                 "orderable": false,
@@ -300,7 +303,15 @@ $(function(){
                             '<button type="button" class="btn btn-danger waves-effect deleteDealer" dealerId="'+full[0]+'" orderName="'+full[1]+'">'+
                             '<i class="material-icons">cancel</i>'+
                             '<span>刪除</span>'+
-                            '</button>'
+                            '</button>&nbsp;'+
+
+                            '<a href="{{url('')}}/dealerQr/'+full[0]+'">'+
+                            '<button type="button" class="btn bg-grey waves-effect">'+
+                            '<i class="material-icons">file_download</i>'+
+                            '<span>QR-code</span>'+
+                            '</button>'+
+                            '</a>'
+
                 }
         
             },                     

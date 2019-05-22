@@ -24,7 +24,9 @@ use App\PurchaseGoods;
 use App\GoodsStock;
 use App\PurchaseLog;
 */
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use \Exception;
+use Storage;
 class DealerController extends Controller
 {
     
@@ -104,6 +106,7 @@ class DealerController extends Controller
                 $value->email,
                 $value->user_phone,
                 $value->created_at,
+                $value->detect,
                 
 
             ]);
@@ -878,8 +881,32 @@ class DealerController extends Controller
             return false;
         }
     }
+    
 
 
+
+    /*----------------------------------------------------------------
+     | 下載QR code 
+     |----------------------------------------------------------------
+     |
+     */
+    public function qrDownload( Request $request ){
+
+        $tmpDatas = User::find( $request->id );
+
+        $url = $_SERVER['SERVER_NAME'].'/'.$tmpDatas->detect;
+
+
+        $image = QrCode::format('png')
+                        ->size(110)->errorCorrection('H')
+                        ->generate($url);
+        
+        $output_file = 'qr/1/qrcode'.'.png';
+        Storage::disk('goodsImage')->put($output_file, $image);        
+
+        return response()->download( public_path(). "/qr/1/qrcode.png")->deleteFileAfterSend(true);
+
+    }
 
 
 }
