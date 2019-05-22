@@ -28,6 +28,20 @@
                     <a href="{{url('order')}}/?status=3">
                     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                     <div class="info-box bg-red hover-zoom-effect">
+                        <div class="icon ">
+                            <i class="material-icons">playlist_add_check</i>
+                        </div>
+                        <div class="content">
+                            <div class="text">已確認未出貨</div>
+                            <div class="number count-to" data-from="0" data-to="{{$checkedNum}}" data-speed="1000" data-fresh-interval="1">{{$checkedNum}}</div>
+                        </div>
+                    </div>
+                    </div>
+                    </a>
+
+                    <a href="{{url('order')}}/?status=4">
+                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <div class="info-box bg-red hover-zoom-effect">
                         <div class="icon">
                             <i class="material-icons">assignment_turned_in</i>
                         </div>

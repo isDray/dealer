@@ -111,7 +111,7 @@ class PriceController extends Controller
 
             if( $request->stock == 2 ){
                 
-                $stockGoods = GoodsStock::where('dealer_id',Auth::id())->where('goods_num','=',1)->get();
+                $stockGoods = GoodsStock::where('dealer_id',Auth::id())->where('goods_num','<=',1)->get();
             }
             
             if( $request->stock == 3 ){

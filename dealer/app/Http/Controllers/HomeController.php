@@ -56,7 +56,9 @@ class HomeController extends Controller
             // 取出待處理裡訂單
             $pendingNum = Order::where('status',2)->count();
             // 取出已完成訂單數量
-            $doneNum = Order::where('status',3)->count();    
+            $doneNum = Order::where('status',4)->count();    
+            // 已確認數量
+            $checkedNum = Order::where('status',3)->count(); 
 
             // 可用商品數
             $useGoodsNum =  Goods::where('status',1)->count();
@@ -81,7 +83,8 @@ class HomeController extends Controller
                                        'doneNum'   => $doneNum,
                                        'useGoodsNum'=> $useGoodsNum,
                                        'stopGoodsNum'=>$stopGoodsNum,
-                                       'lowStaockNum'=>$lowStaockNum
+                                       'lowStaockNum'=>$lowStaockNum,
+                                       'checkedNum'=>$checkedNum
                                       ]);
 
         }elseif( Auth::user()->hasRole('Dealer') ){
@@ -90,8 +93,8 @@ class HomeController extends Controller
             $pendingNum = Order::where('dealer_id',Auth::id())->where('status',2)->count();
 
             // 取出已完成訂單數量
-            $doneNum = Order::where('dealer_id',Auth::id())->where('status',3)->count();
-            
+            $doneNum = Order::where('dealer_id',Auth::id())->where('status',4)->count();
+            $checkedNum = Order::where('status',3)->count();
             // 可用商品數
             $useGoodsNum =  Goods::leftJoin('goods_stock', function($join) {
                                 $join->on('goods.id', '=', 'goods_stock.goods_id');
@@ -120,7 +123,8 @@ class HomeController extends Controller
                                        'doneNum'   => $doneNum,
                                        'useGoodsNum'=> $useGoodsNum,
                                        'noStockGoodsNum'=>$noStockGoodsNum,
-                                       'lowStaockNum'=>$lowStaockNum
+                                       'lowStaockNum'=>$lowStaockNum,
+                                       'checkedNum'=>$checkedNum
 
                                       ]);
         }
