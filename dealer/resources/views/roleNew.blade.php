@@ -41,7 +41,7 @@
                     <div class="col-sm-6">
                         <b>身分代碼</b>
                         <div class="form-group">
-                            <div class="form-line">
+                            <div class="form-line myborder">
                                 <input type="text" class="form-control" name="code" placeholder="請輸入身分代碼 ex: goodsManager" />
                             </div>
                         </div>
@@ -52,7 +52,7 @@
                     <div class="col-sm-6">
                         <b>身分名稱</b>
                         <div class="form-group">
-                            <div class="form-line">
+                            <div class="form-line myborder">
                                 <input type="text" class="form-control" name='name' placeholder="請輸入身分名稱 ex: 商品管理者" />
                             </div>
                         </div>
@@ -63,7 +63,7 @@
                     <div class="col-sm-6">
                         <b>身分描述</b>
                         <div class="form-group">
-                            <div class="form-line">
+                            <div class="form-line myborder">
                                 <input type="text" class="form-control" name='note' placeholder="請輸入身分描述 ex: 該主要控商品相關模組操作" />
                             </div>
                         </div>

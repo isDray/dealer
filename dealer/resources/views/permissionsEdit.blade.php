@@ -38,7 +38,7 @@
                     <div class="col-sm-6">
                         <b>權限代碼</b>
                         <div class="form-group">
-                            <div class="form-line">
+                            <div class="form-line myborder">
                                 <input type="text" class="form-control" name="code" placeholder="請輸入權限代碼 ex: user_create"  value="{{$permissions->name}}"/>
                             </div>
                         </div>
@@ -49,7 +49,7 @@
                     <div class="col-sm-6">
                         <b>權限名稱</b>
                         <div class="form-group">
-                            <div class="form-line">
+                            <div class="form-line myborder">
                                 <input type="text" class="form-control" name='name' placeholder="請輸入權限名稱 ex: 新增使用者" value="{{$permissions->display_name}}"/>
                             </div>
                         </div>
@@ -60,7 +60,7 @@
                     <div class="col-sm-6">
                         <b>權限描述</b>
                         <div class="form-group">
-                            <div class="form-line">
+                            <div class="form-line myborder">
                                 <input type="text" class="form-control" name='note' placeholder="請輸入權限描述 ex: 有該權限的使用者能夠進行新增使用者的操作"  value="{{$permissions->description}}"/>
                             </div>
                         </div>
@@ -68,7 +68,7 @@
                 </div>             
 
                 <input type='hidden' name='id' value="{{$permissions->id}}">
-                <button class="btn btn-primary waves-effect" type="submit">編輯</button>
+                <button class="btn btn-primary waves-effect" type="submit">確定</button>
             </form>
 
         </div>

@@ -34,6 +34,7 @@ use App\freeHelper\categoryTool;
 // 使用商品輔助工具
 use App\freeHelper\goodsTool;
 
+
 class PriceController extends Controller
 {
     /*----------------------------------------------------------------
@@ -65,8 +66,11 @@ class PriceController extends Controller
             return back()->with('errorMsg', ' 無此權限 , 請勿嘗試非法操作' ); 
         
         }
+        // 取出所有分類
+        $categorys = categoryTool::getAllCategoryForSelect();
         return view('priceList')->with([ 'title'   => $pageTitle,
                                          'dfStock' => $dfStock,
+                                         'categorys' => $categorys
                                          //'goods'   => $dealers
                                        ]); 
     }
@@ -92,9 +96,39 @@ class PriceController extends Controller
             return back()->with('errorMsg', ' 無此權限 , 請勿嘗試非法操作' ); 
         
         }
+        
+        // 先取出自身倍數
+        $tmpMutiple = Dealer::where('dealer_id',Auth::id())->first();
+        $tmpMutiple = $tmpMutiple->multiple;
+        
+        $orderItems  = [
+                        '0'=>'id',
+                        '3'=>'w_price',
+                        '4'=>'selfPrice',
+                        '5'=>'allStock',
+                        '6'=>'updated_at',
+                      ];
+        
+        // 整理排序關鍵字
+        if( array_key_exists($request->order['0']['column'], $orderItems )){
 
-        $query = DB::table('goods');
-  
+            $orderBy = $orderItems[ $request->order['0']['column'] ];
+        
+        }else{
+
+            $orderBy = '';
+        }
+
+        $orderWay = $request->order['0']['dir'];
+
+        $query = DB::table('goods as g');
+        
+        $query->leftJoin('goods_cat as gc', 'g.id', '=', 'gc.gid');
+
+        $query->leftJoin(  DB::raw("(SELECT goods_id , goods_num as  allStock FROM goods_stock  WHERE dealer_id = ".Auth::id()." )AS gs"),'gs.goods_id','=','g.id' );
+
+        $query->leftJoin(  DB::raw("(SELECT goods_id , price as selfPrice FROM goods_price  WHERE dealer_id = ".Auth::id()." )AS gp"),'gp.goods_id','=','g.id' );
+
         $recordsTotal = $query->count();
 
         // 針對庫存做過濾
@@ -139,16 +173,41 @@ class PriceController extends Controller
 
             $query->where(function ($cond) use ($filterSearch) {
             	
-                $cond->where('goods_sn', 'like', "%$filterSearch%")
-                     ->orWhere('name', 'like' ,"%$filterSearch%");
+                $cond->where('goods_sn', 'like', "%$filterSearch%");
+                     //->orWhere('name', 'like' ,"%$filterSearch%");
             });
         }
         
+        if( isset($request->nameKeyword) && !empty($request->nameKeyword) ){
+               
+            $query->where('g.name','LIKE',"%{$request->nameKeyword}%");
+        }
+
         if( isset($stockGoodsArr) ){
             
             $query->whereIn('id',$stockGoodsArr);
 
         }
+        if( !empty( $request->category ) ){
+            
+            $filterCategory = $request->category;
+
+            $query->where(function ( $query_add  ) use ($filterCategory) {
+                
+                $query_add->where( 'g.cid', $filterCategory );
+                $query_add->orWhere( 'gc.cid',  $filterCategory );
+
+            });
+
+        }        
+
+        // 如果有排序就執行
+        if( !empty( $orderBy ) ){
+            
+            $query->orderBy($orderBy , $orderWay );
+
+        }
+
         if( !empty( $request->start ) ){
 
             $query->offset($request->start);
@@ -160,9 +219,10 @@ class PriceController extends Controller
         }
         //$goods = Goods::get();
 
+
         $allFilter = $query->count();
 
-        $goods = $query->select('*')->get();
+        $goods = $query->selectRaw("g.* , IFNULL( gs.allStock, 0) as allStock , ROUND(IFNULL( gp.selfPrice , g.w_price*".$tmpMutiple.")) as selfPrice")->get();
         
 
         $goods = $goods->toArray();
@@ -185,7 +245,7 @@ class PriceController extends Controller
         }
         
         // 取出經銷商資料
-        $dealer = Dealer::where('dealer_id',Auth::id())->first();
+        /*$dealer = Dealer::where('dealer_id',Auth::id())->first();
         $dealer = $dealer->toArray();
 
         $defaultMultiple = $dealer['multiple'];
@@ -201,7 +261,7 @@ class PriceController extends Controller
                 
                 $goods[$key]->price =  round( $good->w_price * $defaultMultiple );
         	}
-        }
+        }*/
         
 
         $returnData = [];
@@ -209,7 +269,7 @@ class PriceController extends Controller
         foreach ($goods as $key => $value) {
             
             // 取出庫存
-            $tmpRes = GoodsStock::where('dealer_id',Auth::id())->where('goods_id',$value->id)->first();
+            /*$tmpRes = GoodsStock::where('dealer_id',Auth::id())->where('goods_id',$value->id)->first();
             
             if( $tmpRes != NULL){
 
@@ -218,14 +278,14 @@ class PriceController extends Controller
             }else{
                 $tmpStock = 0;
             }
-            
+            */
             array_push($returnData, [
             
                 $value->goods_sn,
                 $value->name,
                 $value->w_price,
-                $value->price,
-                $tmpStock,
+                $value->selfPrice,
+                $value->allStock,
                 $value->updated_at,
                 $value->id,
 

@@ -41,7 +41,7 @@
                     <div class="col-sm-6">
                         <b>身分代碼</b>
                         <div class="form-group">
-                            <div class="form-line">
+                            <div class="form-line myborder">
                                 <input type="text" class="form-control" name="code" placeholder="請輸入身分代碼 ex: goodsManager" value="{{$role->name}}"/>
                             </div>
                         </div>
@@ -52,7 +52,7 @@
                     <div class="col-sm-6">
                         <b>身分名稱</b>
                         <div class="form-group">
-                            <div class="form-line">
+                            <div class="form-line myborder">
                                 <input type="text" class="form-control" name='name' placeholder="請輸入身分名稱 ex: 商品管理者" value="{{$role->display_name}}"/>
                             </div>
                         </div>
@@ -62,7 +62,7 @@
                 <div class="row clearfix">
                     <div class="col-sm-6">
                         <b>身分描述</b>
-                        <div class="form-group">
+                        <div class="form-group myborder">
                             <div class="form-line">
                                 <input type="text" class="form-control" name='note' placeholder="請輸入身分描述 ex: 該主要控商品相關模組操作" value="{{$role->description}}"/>
                             </div>
@@ -93,7 +93,7 @@
              
                  
                 <input type='hidden' name='id' value="{{$role->id}}">
-                <button class="btn btn-primary waves-effect" type="submit">編輯</button>
+                <button class="btn btn-primary waves-effect" type="submit">確定</button>
             </form>
 
         </div>

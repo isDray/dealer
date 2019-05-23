@@ -63,16 +63,31 @@ a{
                                     </select>
                                 </div>
                                 @endrole
-
-                                <div class="col-sm-3">
-                                    <p>關鍵字:</p>
+                                <div class="col-sm-2">
+                                    <p>商品類別</p>
+                                    <select class="form-control show-tick myborder" id='category'>
+                                        <option value='0' >-選擇-</option>
+                                        @foreach( $categorys as $category)
+                                        <option value="{{$category['id']}}"> {{$category['level']}}{{$category['name']}} </option>
+                                        @endforeach
+                                    </select>
+                                </div> 
+                                <div class="col-sm-1">
+                                    <p>商品貨號:</p>
                                     <div class="input-group">
                                         <input type="text" class="form-control myborder" placeholder="" id='myKeyword' value=''>
                                     </div>
                                 </div>                                 
                                 
+                                <div class="col-sm-1">
+                                    <p>商品名稱:</p>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control myborder" placeholder="" id='nameKeyword' value=''>
+                                    </div>
+                                </div>  
 
-                                <div class="col-sm-2">
+
+                                <div class="col-sm-1">
                                     <p>商品數量</p>
                                     <select class="form-control show-tick myborder" id='stock'>
                                         <option value='0' >-選擇-</option>
@@ -139,6 +154,7 @@ a{
                                 <table class="table table-bordered table-striped table-hover js-basic-example dataTable orderTable">
                                     <thead>
                                         <tr>
+                                            <th>ID</th>
                                             <th>商品貨號</th>
                                             <th>商品名稱</th>
                                             <th>批發價</th>
@@ -148,7 +164,7 @@ a{
                                             <th>操作</th>
                                         </tr>
                                     </thead>
-                                    <tfoot>
+<!--                                     <tfoot>
                                         <tr>
                                             <th>商品貨號</th>
                                             <th>商品名稱</th>
@@ -158,7 +174,7 @@ a{
                                             <th>編修時間</th>
                                             <th>操作</th>
                                         </tr>
-                                    </tfoot>
+                                    </tfoot> -->
                                     <tbody></tbody>
                                 </table>
                             </div>
@@ -188,9 +204,10 @@ a{
 $(function(){
 
     orderTable = $('.orderTable').DataTable({
-        order:[[2,'desc']],
+        order:[[0,'desc']],
         responsive: true,
         searching: false,
+        dom: '<"top"<"col-md-6"<"inlinebox"li>><"col-md-6"f>>rt<"bottom"p><"clear">',         
         language:{
             "processing":   "處理中...",
             "loadingRecords": "載入中...",
@@ -227,26 +244,37 @@ $(function(){
                 d.status     = $("#status").val();
                 d.dealer     = $("#dealer").val();*/
                 d.myKeyword  = $("#myKeyword").val();
+                d.nameKeyword = $("#nameKeyword").val();
                 d.stock      = $("#stock").val();
+                d.category  = $("#category").val();
             }
         },
         "columnDefs" : [
             {   "targets" : 0 ,
-                "orderable": false,
+                "data":6
             },        
             {   "targets" : 1 ,
                 "orderable": false,
+                "data":0
             },
             {   "targets" : 2 ,
                 "orderable": false,               
+                "data":1
             },     
             {   "targets" : 3 ,
-                "orderable": false,
+                "data":2
 
             }, 
             {   "targets" : 4,
-                "orderable": false,
+                "data":3
             },
+            {   "targets" : 5,
+
+                "data":4
+            },            
+            {   "targets" : 6,
+                "data":5
+            },            
             /*                            
             {   "targets" : 7 ,
                 "orderable": false,
@@ -281,7 +309,7 @@ $(function(){
             {   "targets" : 9 ,
                 "orderable": true,
             },*/                          
-            {   "targets" : 6 ,
+            {   "targets" : 7 ,
                 "data": "edit",
                 "orderable": false,
                 "render" : function ( url, type, full) {
@@ -331,11 +359,20 @@ $(function(){
         
         orderTable.ajax.reload();
     });
+    $("#nameKeyword").bind("keyup change", function(e) {
+        
+        orderTable.ajax.reload();
+
+    });
     $("#stock").bind("change", function(e) {
         
         orderTable.ajax.reload();
     });
-    
+    $("#category").bind("change" , function(e){
+
+        orderTable.ajax.reload();
+
+    });    
     /*
     $("#max_price").bind("keyup change", function(e) {
         

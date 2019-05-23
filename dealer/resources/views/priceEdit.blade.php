@@ -152,7 +152,7 @@
                                                 >
                                                 <label for="ig_radio">自訂售價</label>
                                             </span>
-                                            <div class="form-line">
+                                            <div class="form-line myborder">
                                                 <input type="number" min='0' class="form-control" name='custome'
                                                 @if( count($goodsPrice) > 0 && $goodsPrice['multiple_id'] == 999 )
                                                     value="{{$goodsPrice['price']}}"
@@ -189,7 +189,7 @@
                                     <div class="col-sm-3">
                                         <b>庫存</b>
                                         <div class="form-group">
-                                            <div class="form-line">
+                                            <div class="form-line myborder">
                                                 <input type="text" class="form-control" name="stock" placeholder="" value="{{$stock}}" />
                                             </div>
                                         </div>
@@ -243,7 +243,7 @@
 
                         </div>
                         <input type='hidden' name='id' value="{{$goodsData['id']}}">
-                        <button class="btn btn-primary waves-effect" type="submit">編輯</button>
+                        <button class="btn btn-primary waves-effect" type="submit">確定</button>
                         </form>
                     </div>
 

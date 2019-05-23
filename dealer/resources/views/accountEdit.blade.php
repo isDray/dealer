@@ -41,7 +41,7 @@
                     <div class="col-sm-6">
                         <b>姓名</b>
                         <div class="form-group">
-                            <div class="form-line">
+                            <div class="form-line myborder">
                                 <input type="text" class="form-control" name="name" placeholder="" value="{{$user->name}}" />
                             </div>
                         </div>
@@ -52,7 +52,7 @@
                     <div class="col-sm-6">
                         <b>信箱</b>
                         <div class="form-group">
-                            <div class="form-line">
+                            <div class="form-line myborder">
                                 <input type="text" class="form-control" name='email' placeholder="" value="{{$user->email}}"/>
                             </div>
                         </div>
@@ -63,7 +63,7 @@
                     <div class="col-sm-6">
                         <b>密碼</b>
                         <div class="form-group">
-                            <div class="form-line">
+                            <div class="form-line myborder">
                                 <input type="password" class="form-control" name='password' placeholder=""/>
                             </div>
                         </div>
@@ -74,7 +74,7 @@
                     <div class="col-sm-6">
                         <b>密碼確認</b>
                         <div class="form-group">
-                            <div class="form-line">
+                            <div class="form-line myborder">
                                 <input type="password" class="form-control" name='password2' placeholder=""/>
                             </div>
                         </div>
@@ -157,7 +157,7 @@
 
                  
                 <input type="hidden" value="{{$user->id}}" name='id'>
-                <button class="btn btn-primary waves-effect" type="submit">編輯</button>
+                <button class="btn btn-primary waves-effect" type="submit">確定</button>
             </form>
 
         </div>
