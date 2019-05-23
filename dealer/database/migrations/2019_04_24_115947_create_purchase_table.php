@@ -30,6 +30,7 @@ class CreatePurchaseTable extends Migration
             $table->unsignedInteger('tax')->comment('稅金');
             $table->unsignedInteger('final_amount')->comment('應付金額');
             $table->tinyInteger('status')->comment('狀態');
+            $table->boolean('pay_status')->comment('付款狀態');
             $table->char('company',191)->nullable()->comment('公司抬頭');
             $table->char('ein',191)->nullable()->comment('統一編號');               
             $table->char('consignee',100)->comment('收件人名稱');

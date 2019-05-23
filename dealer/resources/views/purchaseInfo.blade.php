@@ -169,10 +169,10 @@
                         <input type="hidden" name="purchaseId" value="{{$purchaseData['id']}}">
                         @role('Admin')
                        
-                        <input type="submit" name="pending" class="btn btn-primary waves-effect" value="待處理">
-                        <input type="submit" name="checked" class="btn btn-primary waves-effect" value="已確認">
-                        <input type="submit" name="shipped" class="btn btn-primary waves-effect" value="已出貨">
-                        <input type="submit" name="cancel" class="btn btn-primary waves-effect" value="取消">
+                        <input type="submit" name="pending" class="btn @if( !in_array(1,$useableStatus) ) bg-grey @else btn-primary @endif waves-effect" value="待處理" @if( !in_array(1,$useableStatus) )disabled="disabled" @endif>
+                        <input type="submit" name="checked" class="btn @if( !in_array(2,$useableStatus) ) bg-grey @else btn-primary @endif waves-effect" value="已確認" @if( !in_array(2,$useableStatus) )disabled="disabled" @endif>
+                        <input type="submit" name="shipped" class="btn @if( !in_array(3,$useableStatus) ) bg-grey @else btn-primary @endif waves-effect" value="已出貨" @if( !in_array(3,$useableStatus) )disabled="disabled" @endif>
+                        <input type="submit" name="cancel" class="btn  @if( !in_array(4,$useableStatus) ) bg-grey @else btn-primary @endif waves-effect" value="取消"   @if( !in_array(4,$useableStatus) )disabled="disabled" @endif>
                         @endrole
 
                         @role('Dealer')

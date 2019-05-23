@@ -48,14 +48,14 @@ a{
 
 
                             <!-- 進階搜尋框 -->
-                            <div class="row clearfix">
-                                <div class='col-xs-12 col-sm-12 col-md-12'>
+                            <div class="row clearfix mysearchbox">
+                                <div class='col-xs-12 col-sm-12 col-md-12 bg-grey'>
                                     <p><b>進階搜尋</b></p>
                                 </div>
                                 @role('Admin')
-                                <div class="col-sm-2">
+                                <div class="col-sm-1">
                                     <p>經銷商</p>
-                                    <select class="form-control show-tick" id='dealer'>
+                                    <select class="form-control show-tick myborder" id='dealer'>
                                     <option value='0' >-選擇-</option>
                                     @foreach( $dealers as $dealer)
                                     <option value="{{$dealer['id']}}">{{$dealer['name']}}</option>
@@ -64,9 +64,9 @@ a{
                                 </div>
                                 @endrole
                                 
-                                <div class="col-sm-2">
+                                <div class="col-sm-1">
                                     <p>進貨單狀態</p>
-                                    <select class="form-control show-tick" id='status'>
+                                    <select class="form-control show-tick myborder" id='status'>
                                         <option value='0' >-選擇-</option>
                                         <option value='1' >待處理</option>
                                         <option value='2' >已確認</option>
@@ -75,40 +75,54 @@ a{
                                     </select>
                                 </div> 
 
+                                <div class="col-sm-1">
+                                    <p>進貨單編號:</p>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control myborder" placeholder="" id='purchaseKeyword' value=''>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-1">
+                                    <p>手機號碼:</p>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control myborder" placeholder="" id='pohneKeyword' value=''>
+                                    </div>
+                                </div>
+
                                 <div class="col-sm-2">
                                     <p>價格</p>
                                     <div class="input-group">
-                                        <div class="form-line">
+                                        <div class="form-line myborder">
                                             <input type="text" class="form-control" placeholder="" id='min_price'>
                                         </div>
-                                        <span class="input-group-addon">~</span>
-                                        <div class="form-line">
+                                        <span class="input-group-addon" style="padding-right:10px;">~</span>
+                                        <div class="form-line myborder">
                                             <input type="text" class="form-control" placeholder="" id='max_price'>
                                         </div>                                        
                                     </div>
                                 </div>
 
                                 <!-- 訂單時間選擇 -->
-                                <div class="col-xs-3">
+                                <div class="col-xs-2">
                                     
                                     <p>進貨單時間</p>
                                     
                                     <div class="input-group">
 
                                         
-                                        <div class="form-line" id='orderSatrtBox'>
+                                        <div class="form-line myborder" id='orderSatrtBox'>
                                         
-                                            <input type="text" class="form-control" placeholder="開始日期" id='orderSatrt'>
+                                            <input type="text" class="form-control align-center" placeholder="開始日期" id='orderSatrt'>
                                         
                                         </div>
                                         
 
-                                        <span class="input-group-addon">~</span>
+                                        <span class="input-group-addon" style="padding-right:10px;">~</span>
                                         
                                         
-                                        <div class="form-line" id='orderEndBox'>
+                                        <div class="form-line myborder" id='orderEndBox'>
                                             
-                                            <input type="text" class="form-control" placeholder="結束日期" id='orderEnd'>
+                                            <input type="text" class="form-control align-center" placeholder="結束日期" id='orderEnd'>
                                         
                                         </div>
                                         
@@ -142,7 +156,7 @@ a{
                                             <th>操作</th>
                                         </tr>
                                     </thead>
-                                    <tfoot>
+<!--                                     <tfoot>
                                         <tr>
                                             <th>進貨單id</th>
                                             <th>進貨單編號</th>
@@ -156,7 +170,7 @@ a{
                                             <th>編修日期</th>
                                             <th>操作</th>
                                         </tr>
-                                    </tfoot>
+                                    </tfoot> -->
                                     <tbody></tbody>
                                 </table>
                             </div>
@@ -186,9 +200,12 @@ a{
 $(function(){
 
     orderTable = $('.orderTable').DataTable({
-        order:[[9,'desc']],
+        order:[[0,'desc']],
         responsive: true,
         stateSave: true, 
+        searching:false,        
+        lengthMenu: [ 20, 50, 100 ],
+        pageLength:20,        
         dom: '<"top"<"col-md-6"<"inlinebox"li>><"col-md-6"f>>rt<"bottom"p><"clear">',                   
         language:{
             "processing":   "處理中...",
@@ -225,12 +242,12 @@ $(function(){
                 d.orderEnd   = $("#orderEnd").val();
                 d.status     = $("#status").val();
                 d.dealer     = $("#dealer").val();
+                d.purchaseKeyword = $("#purchaseKeyword").val();
+                d.pohneKeyword = $("#pohneKeyword").val();
             }
         },
         "columnDefs" : [
             {   "targets" : 0 ,
-                "orderable": false,
-                "visible": false 
             },        
             {   "targets" : 1 ,
                 "orderable": false,
@@ -241,11 +258,13 @@ $(function(){
             },     
             {   "targets" : 3 ,
                 "orderable": false,
-
             }, 
             {   "targets" : 4,
                 "orderable": false,
-            },                                
+            },    
+            {   "targets" : 5,
+                "orderable": false,
+            },                                        
             {   "targets" : 7 ,
                 "orderable": false,
                 "render" : function ( url, type, full) {
@@ -275,10 +294,7 @@ $(function(){
      
             {   "targets" : 8 ,
                 "orderable": true,
-            },  
-            {   "targets" : 9 ,
-                "orderable": true,
-            },                               
+            },                                
             {   "targets" : 10 ,
                 "data": "edit",
                 "orderable": false,
@@ -353,6 +369,14 @@ $(function(){
         orderTable.ajax.reload();
 
     });
+    $("#purchaseKeyword").bind("keyup change", function(e) {
+        
+        orderTable.ajax.reload();
+    });    
+    $("#pohneKeyword").bind("keyup change", function(e) {
+        
+        orderTable.ajax.reload();
+    });    
 
 
     $('body').on('click', '.deleteOrder', function() {

@@ -84,8 +84,29 @@ class PurchaseController extends Controller
         
         }
 
+        $orderItems  = [
+                        '0'=>'id',
+                        '6'=>'final_amount',
+                        '7'=>'shipdate',                        
+                        '8'=>'updated_at',
+                      ];
+        
+        // 整理排序關鍵字
+        if( array_key_exists($request->order['0']['column'], $orderItems )){
+
+            $orderBy = $orderItems[ $request->order['0']['column'] ];
+        
+        }else{
+
+            $orderBy = '';
+        }
+        
+        
+        $orderWay = $request->order['0']['dir'];
+
+
         $query    = DB::table('purchase');
-        $querynum = DB::table('purchase');
+        // $querynum = DB::table('purchase');
         
         // 過濾經銷商
         if( Auth::user()->hasRole('Admin') ){
@@ -93,13 +114,13 @@ class PurchaseController extends Controller
             if( !empty($request->dealer ) ){
     
                 $query->where( 'dealer_id', $request->dealer );
-                $querynum->where( 'dealer_id', $request->dealer );
+                // $querynum->where( 'dealer_id', $request->dealer );
             
             }
 
         }elseif( Auth::user()->hasRole('Dealer') ){
                 $query->where( 'dealer_id', Auth::id() );
-                $querynum->where( 'dealer_id', Auth::id() );        
+                // $querynum->where( 'dealer_id', Auth::id() );        
         }        
  
         
@@ -107,21 +128,21 @@ class PurchaseController extends Controller
         if( !empty($request->status ) ){
     
             $query->where( 'status', $request->status );
-            $querynum->where( 'status', $request->status );
+            // $querynum->where( 'status', $request->status );
         } 
         
         // 進貨單金額
         if( !empty($request->min_price ) ){
     
-            $query->where( 'amount','>=',$request->min_price );
-            $querynum->where( 'amount','>=',$request->min_price );
+            $query->where( 'final_amount','>=',$request->min_price );
+            // $querynum->where( 'amount','>=',$request->min_price );
     
         }        
 
         if( !empty($request->max_price ) ){
     
-            $query->where( 'amount','<=',$request->max_price );
-            $querynum->where( 'amount','<=',$request->max_price );
+            $query->where( 'final_amount','<=',$request->max_price );
+            // $querynum->where( 'amount','<=',$request->max_price );
         }
 
         // 進貨單時間
@@ -130,7 +151,7 @@ class PurchaseController extends Controller
             $request->orderSatrt = $request->orderSatrt." 00:00:00";
 
             $query->where( 'updated_at' , '>=' , $request->orderSatrt );
-            $querynum->where( 'updated_at' , '>=' , $request->orderSatrt );
+            // $querynum->where( 'updated_at' , '>=' , $request->orderSatrt );
         }
 
         if( !empty($request->orderEnd) ){
@@ -138,32 +159,42 @@ class PurchaseController extends Controller
             $request->orderEnd = $request->orderEnd." 23:59:59";
 
             $query->where( 'updated_at' , '<=' , $request->orderEnd );
-            $querynum->where( 'updated_at' , '<=' , $request->orderEnd );
+            // $querynum->where( 'updated_at' , '<=' , $request->orderEnd );
 
         }        
+        
+        if( !empty( $request->purchaseKeyword ) ){
 
+            $query->where( 'purchase_sn' , 'LIKE' , "%{$request->purchaseKeyword}%");
+        }
+
+        if( !empty( $request->pohneKeyword ) ){
+
+            $query->where( 'phone' , 'LIKE' , "%{$request->pohneKeyword}%");
+        }        
+
+        
         // 如果有收到排序項目
         //var_dump($request->all());
-        if( !empty($request->order[0]['column']) ){
+        // if( !empty($request->order[0]['column']) ){
             
-            $orderType = $request->order[0]['dir'];
+        //     $orderType = $request->order[0]['dir'];
 
-            if( $request->order[0]['column'] == 8){
+        //     if( $request->order[0]['column'] == 8){
                 
-                $query->orderBy('shipdate', "$orderType");
-            }
-            if( $request->order[0]['column'] == 9){
+        //         $query->orderBy('shipdate', "$orderType");
+        //     }
+        //     if( $request->order[0]['column'] == 9){
                 
-                $query->orderBy('updated_at', "$orderType");
-            }
-        }
+        //         $query->orderBy('updated_at', "$orderType");
+        //     }
+        // }
         
-        if( !empty($request->search['value']) ){
+        // if( !empty($request->search['value']) ){
 
-            $query->where('dealer_name','like', "%{$request->search['value']}%");
-            $querynum->where('dealer_name','like', "%{$request->search['value']}%");
+        //     $query->where('dealer_name','like', "%{$request->search['value']}%");
 
-        }
+        // }
 
         if( !empty( $request->start ) ){
 
@@ -174,7 +205,18 @@ class PurchaseController extends Controller
             $query->limit($request->length);
         }
 
-        $allFilter = $querynum->count();
+        $allFilter = $query->count();
+
+        // 如果有排序就執行
+        if( !empty( $orderBy ) ){
+            
+            $query->orderBy($orderBy , $orderWay );
+
+        }
+
+        // $query->offset( $request->start );
+
+        // $query->limit( $request->length );  
 
         $purchase = $query->select('purchase.*')->get();
 
@@ -275,11 +317,13 @@ class PurchaseController extends Controller
             $purchaseLogs = PurchaseLog::where('purchase_id' , $request->id)->where('user_id' , Auth::id() )->orderBy('created_at', 'desc')->get();
             $purchaseLogs = $purchaseLogs->toArray();
         }
-
+        
+        $useableStatus = $this->getUseableAdmin( $purchaseData['status'] );
         return view('purchaseInfo')->with(['title'           => $pageTitle,
                                            'purchaseData'    => $purchaseData,
                                            'purchaseDetails' => $purchaseDetail,
-                                           'purchaseLogs'    => $purchaseLogs
+                                           'purchaseLogs'    => $purchaseLogs,
+                                           'useableStatus'   => $useableStatus
                                          ]);
     }
 
@@ -1524,6 +1568,15 @@ class PurchaseController extends Controller
             return back()->with(['errorMsg'=> '進貨單無此狀態 , 請勿嘗試非法操作']);
         }
         
+        $useableStatus = $this->getUseableAdmin( $purchase['status'] );
+                     
+        // 如果不能夠切換狀態則終止
+        if( !in_array($tmpStatus, $useableStatus)){
+
+            return back()->with('errorMsg', '進貨單目前無法切換至該狀態');
+        
+        }        
+        
         if( $purchase['status'] == $tmpStatus ){
 
             return back()->with(['successMsg'=> '狀態一致 , 不需進行操作']);
@@ -1928,5 +1981,42 @@ class PurchaseController extends Controller
 
         return( Goods::where('id', $_goodsId)->exists() );
 
+    }
+    
+
+
+
+    /*----------------------------------------------------------------
+     | 進貨單可用狀態
+     |----------------------------------------------------------------
+     |
+     */
+    public function getUseableAdmin( $_stayus ){
+        
+        // 依照目前狀態給予能夠執行的狀態
+        switch ( $_stayus ) {
+            // 待處理
+            case '1':
+              $useableStatus = [2,5];
+              break;
+            // 已確認
+            case '2':
+              $useableStatus = [1,3,5];
+              break;
+            // 已出貨
+            case '3':
+              $useableStatus = [2,4,5];
+              break;
+            // 取消
+            case '4':
+              $useableStatus = [1];
+              break;                                             
+            default:
+              $useableStatus = [];
+              break;            
+        }
+
+        return $useableStatus;
+ 
     }
 }

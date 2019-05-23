@@ -1150,7 +1150,11 @@ class OrderController extends Controller
                 $query->orderBy($orderBy , $orderWay );
 
             }
-
+            
+            $query->offset( $request->start );
+    
+            $query->limit( $request->length );  
+                        
             $orders = $query->select('order.*', 'users.name')->get();
 
             $orders = $orders->toArray();
