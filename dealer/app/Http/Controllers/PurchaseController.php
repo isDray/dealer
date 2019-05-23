@@ -87,8 +87,8 @@ class PurchaseController extends Controller
         $orderItems  = [
                         '0'=>'id',
                         '6'=>'final_amount',
-                        '7'=>'shipdate',                        
-                        '8'=>'updated_at',
+                        '8'=>'shipdate',                        
+                        '9'=>'updated_at',
                       ];
         
         // 整理排序關鍵字
@@ -131,6 +131,16 @@ class PurchaseController extends Controller
             // $querynum->where( 'status', $request->status );
         } 
         
+        // 付費狀態
+        if( !empty($request->paystatus ) ){
+            
+            if( $request->paystatus == 1){
+                $query->where( 'pay_status', 1 );
+            }else{
+                $query->where( 'pay_status', 0 );
+            }
+            // $querynum->where( 'status', $request->status );
+        }         
         // 進貨單金額
         if( !empty($request->min_price ) ){
     
@@ -239,6 +249,7 @@ class PurchaseController extends Controller
             $value->shipdate,
             $value->created_at,
             $value->updated_at,
+            $value->pay_status,
             ]);
                 
         }
@@ -1703,6 +1714,101 @@ class PurchaseController extends Controller
             return back()->with('errorMsg', '進貨單操作失敗 , 請稍後再嘗試');          
         }            
     
+    }
+
+
+
+
+    /*----------------------------------------------------------------
+     | 更新付款狀態
+     |----------------------------------------------------------------
+     |
+     */
+    public function updatePayStatus( Request $request ){
+        
+
+
+        $validator = Validator::make($request->all(), [
+            'purchaseId'   => 'required|exists:purchase,id',
+        ],[
+            'purchaseId.required'=> '缺少進貨單編號',
+            'purchaseId.exists'  => '進貨單不存在',
+        ] );
+
+        if ($validator->fails()) {
+                
+            $errText = '';
+
+            $errors = $validator->errors();
+                
+            foreach( $errors->all() as $message ){
+                    
+                $errText .= "$message<br>";
+            }
+
+            return back()->with(['errorMsg'=> $errText]);
+        }
+
+        if( !Auth::user()->hasRole('Admin') ){
+
+            return back()->with(['errorMsg'=> '帳號無此操作權限 , 請勿嘗試非法操作']);
+
+        }            
+        
+        if( !Auth::user()->can('purchaseEdit') ){
+                
+            return back()->with(['errorMsg'=> '帳號無此操作權限 , 如有需要請切換帳號或聯絡管理員增加權限']);
+        }
+
+        $wantPayStatus = '';
+
+        if( isset($request->pay) ){
+            
+            $wantPayStatus = 1;
+
+        }elseif( isset($request->unpay) ){
+
+            $wantPayStatus = 0;
+        }
+        
+
+        $oldPay = Purchase::find( $request->purchaseId );
+
+        $oldPay = $oldPay->pay_status;
+
+        if( $oldPay == $wantPayStatus ){
+
+            return back()->with(['errorMsg'=> '進貨單付款狀態與要修改的付款狀態相同']);
+
+        }else{
+            
+            DB::beginTransaction();
+
+            try {
+            
+                $Purchase = Purchase::find( $request->purchaseId );
+    
+                $Purchase->pay_status = $wantPayStatus;
+                
+                $Purchase->save();
+
+                DB::commit();
+                return back()->with('successMsg', '進貨單操作成功');
+
+            }catch (Exception $e) {
+
+                DB::rollback();
+                //$e->getMessage();
+
+                // 寫入錯誤代碼後轉跳
+            
+                logger("{$e->getMessage()} \n\n-----------------------------------------------\n\n"); 
+            
+                return back()->with('errorMsg', '進貨單操作失敗 , 請稍後再嘗試');          
+            }    
+
+        }
+        
     }
 
 

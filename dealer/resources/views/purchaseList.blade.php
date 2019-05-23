@@ -74,6 +74,16 @@ a{
                                         <option value='4' >取消</option>
                                     </select>
                                 </div> 
+                                <div class="col-sm-1">
+
+                                    <p>付款狀態</p>
+
+                                    <select class="form-control show-tick myborder" id='paystatus'>
+                                        <option value='0' >-選擇-</option>
+                                        <option value='1' >已付款</option>
+                                        <option value='2' >未付款</option>
+                                    </select>
+                                </div>                                 
 
                                 <div class="col-sm-1">
                                     <p>進貨單編號:</p>
@@ -151,6 +161,7 @@ a{
                                             <th>地址</th>                                            
                                             <th>總價</th>
                                             <th>狀態</th>
+                                            <th>付款狀態</th>
                                             <th>出貨時間</th>
                                             <th>編修日期</th>
                                             <th>操作</th>
@@ -244,6 +255,7 @@ $(function(){
                 d.dealer     = $("#dealer").val();
                 d.purchaseKeyword = $("#purchaseKeyword").val();
                 d.pohneKeyword = $("#pohneKeyword").val();
+                d.paystatus = $("#paystatus").val();
             }
         },
         "columnDefs" : [
@@ -291,11 +303,29 @@ $(function(){
                 }
         
             },
-     
-            {   "targets" : 8 ,
+            {   "targets" : 8,
+                "orderable": false,
+                "render" : function ( url, type, full) {
+                    if( full[11] == 1 ){
+
+                       return '<i class="material-icons col-light-green">done</i>';
+
+                    }else if( full[11] == 0 ){
+                        
+                        return '<i class="material-icons col-red">clear</i>';
+                    }
+      
+                }                
+            },      
+            {   "targets" : 9,
                 "orderable": true,
-            },                                
-            {   "targets" : 10 ,
+                "data":8
+            },       
+            {   "targets" : 10,
+                "orderable": true,
+                "data":10
+            },                                       
+            {   "targets" :  11,
                 "data": "edit",
                 "orderable": false,
                 "render" : function ( url, type, full) {
@@ -359,6 +389,11 @@ $(function(){
         orderTable.ajax.reload();
 
     });
+    $("#paystatus").bind("change" , function(e){
+
+        orderTable.ajax.reload();
+
+    });
     $("#orderSatrt").bind("change" , function(e){
 
         orderTable.ajax.reload();
@@ -377,6 +412,8 @@ $(function(){
         
         orderTable.ajax.reload();
     });    
+
+
 
 
     $('body').on('click', '.deleteOrder', function() {

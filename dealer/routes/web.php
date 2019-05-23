@@ -144,6 +144,8 @@ Route::group(['middleware' => ['auth','role:Admin|Dealer'] ], function () {
     Route::post('/purchaseAjaxAddGoods','PurchaseController@ajaxAddPurchaseGoods');
     Route::post('/purchaseAjaxAddZero','PurchaseController@ajaxAddPurchaseZero');
     Route::post('/puchaseStatus','PurchaseController@updateStatus');
+    Route::post('/puchasePayStatus','PurchaseController@updatePayStatus');
+    
     Route::post('/purchaseDeleteDo','PurchaseController@purchaseDelete');
     Route::get('/addStockException/{id}','PurchaseController@addStockException'); // 特殊狀況入庫 
     Route::post('ajaxAddStockGoods','PurchaseController@ajaxAddStockGoods'); // ajax撈出要加入庫存之商品

@@ -200,6 +200,38 @@
         <!-- /操作區塊 -->
 
 
+        <!-- 付款操作 -->
+        @role('Admin')
+        <div class='card'>
+
+            
+            <div class="header bg-red">
+                <h2>付款操作</h2>
+            </div>
+
+            <div class='body'>
+                
+                <form action="{{url('/puchasePayStatus')}}" method="POST">
+
+                    {{ csrf_field() }}
+
+                    <div class="align-left">
+                        <input type="hidden" name="purchaseId" value="{{$purchaseData['id']}}">
+                        
+                       
+                        <input type="submit" name="pay" class="btn @if( $purchaseData['pay_status'] == 1 ) bg-grey @else btn-primary @endif waves-effect" value="付款" @if( $purchaseData['pay_status'] == 1 )disabled="disabled" @endif>
+                        <input type="submit" name="unpay" class="btn @if( $purchaseData['pay_status'] == 0 ) bg-grey @else btn-primary @endif waves-effect" value="未付款" @if( $purchaseData['pay_status'] == 0 )disabled="disabled" @endif>
+                        
+                    </div>
+
+                </form>
+            </div>
+
+        </div>        
+        @endrole
+        <!-- /付款操作 -->
+
+
 
         
         <!-- 操作紀錄表 -->
