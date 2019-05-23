@@ -81,12 +81,49 @@ class DealerController extends Controller
             exit;
         }
 
+        $orderItems  = [
+                        '0'=>'users.id',
+                      ];
+        
+        // 整理排序關鍵字
+        if( array_key_exists($request->order['0']['column'], $orderItems )){
+
+            $orderBy = $orderItems[ $request->order['0']['column'] ];
+        
+        }else{
+
+            $orderBy = '';
+        }
+        
+        
+        $orderWay = $request->order['0']['dir'];
+
         $query = DB::table('users')
         ->leftJoin('role_user', 'users.id', '=', 'role_user.user_id')
         ->leftJoin('roles', 'role_user.role_id', '=', 'roles.id')
         ->leftJoin('dealer', 'users.id', '=', 'dealer.dealer_id');
 
         $query->where( 'roles.name','Dealer' );
+        
+        if( !empty( $request->dealer ) ){
+
+            $query->where( 'users.id',$request->dealer );
+        }
+
+        if( !empty( $request->status ) ){
+            if( $request->status == 1){
+                $query->where( 'dealer.status',1 );
+            }else{
+                $query->where( 'dealer.status',0 );
+            }
+        }
+
+        // 如果有排序就執行
+        if( !empty( $orderBy ) ){
+            
+            $query->orderBy($orderBy , $orderWay );
+
+        }
 
         $recordsTotal = $query->count();
         $allFilter    = $query->count();
@@ -107,7 +144,7 @@ class DealerController extends Controller
                 $value->user_phone,
                 $value->created_at,
                 $value->detect,
-                
+                $value->status,
 
             ]);
                 

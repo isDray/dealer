@@ -52,7 +52,7 @@ a{
                                     <p><b>進階搜尋</b></p>
                                 </div>
                                 @role('Admin')
-                                <div class="col-sm-2">
+                                <div class="col-sm-1">
                                     <p>經銷商</p>
                                     <select class="form-control show-tick myborder" id='dealer'>
                                     <option value='0' >-選擇-</option>
@@ -61,6 +61,17 @@ a{
                                     @endforeach
                                     </select>
                                 </div>
+
+                                <div class="col-sm-1">
+                                    <p>狀態</p>
+                                    <select class="form-control show-tick myborder" id='status'>
+                                    <option value='0' >-選擇-</option>
+
+                                        <option value="1">啟用</option>
+                                        <option value="2">停用</option>
+
+                                    </select>
+                                </div>                                
                                 @endrole
                                 <!--
                                 <div class="col-sm-2">
@@ -135,7 +146,8 @@ a{
                                             <th>聯絡人</th>
                                             <th>email</th>
                                             <th>手機</th>
-                                            <th>加入時間</th>
+                                            <th>啟用</th>
+                                            <th>開始合作時間</th>
                                             <th>操作</th>
                                         </tr>
                                     </thead>
@@ -178,7 +190,9 @@ a{
 $(function(){
 
     orderTable = $('.orderTable').DataTable({
-        order:[[2,'desc']],
+        order:[[0,'desc']],
+        lengthMenu: [ 20, 50, 100 ],
+        pageLength:20,        
         responsive: true,
         searching: false,
         stateSave: true, 
@@ -222,7 +236,6 @@ $(function(){
         },
         "columnDefs" : [
             {   "targets" : 0 ,
-                "orderable": false,
             },        
             {   "targets" : 1 ,
                 "orderable": false,
@@ -243,6 +256,22 @@ $(function(){
             },
             {   "targets" : 5,
                 "orderable": false,
+                "render" : function ( url, type, full) {
+                    if( full[7] == 0 ){
+
+                        return '<i class="material-icons col-red">clear</i>';
+
+                    }else if( full[7] == 1 ){
+                        
+                        return '<i class="material-icons col-light-green">done</i>';
+                    
+                    }
+                }
+
+            },             
+            {   "targets" : 6,
+                "orderable": false,
+                "data":5,
             },            
             /*                            
             {   "targets" : 7 ,
@@ -278,7 +307,7 @@ $(function(){
             {   "targets" : 9 ,
                 "orderable": true,
             },*/                          
-            {   "targets" : 6 ,
+            {   "targets" : 7 ,
                 "data": "edit",
                 "orderable": false,
                 "render" : function ( url, type, full) {
