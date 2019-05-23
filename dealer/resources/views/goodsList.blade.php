@@ -91,7 +91,7 @@ a{
                                     </div>
                                 </div>
                                 <div class="col-sm-2">
-                                    <p>貨號:</p>
+                                    <p>商品貨號:</p>
                                     <div class="input-group">
                                         <input type="text" class="form-control myborder" placeholder="" id='snKeyword' value=''>
                                     </div>
@@ -158,7 +158,7 @@ a{
 $(function(){
 
     mytable = $('.roleTable').DataTable({
-        order:[[6,'desc']],
+        order:[[0,'desc']],
         responsive: true,
         stateSave: true,
         searching:false,
@@ -204,10 +204,8 @@ $(function(){
         "columnDefs" : [
             {   "targets" : 0 ,
                 "data": 8,
-                "orderable": false,
             },        
             {   "targets" : 1 ,
-                "data": "img",
                 "orderable": false,
                 "render" : function ( url, type, full) {
                     return '<img height="80px" width="80px" src="'+"{{url('/images')}}/"+full[0]+'"/>';

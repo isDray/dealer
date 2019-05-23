@@ -55,6 +55,23 @@ class GoodsController extends Controller
         $goods = goodsTool::getAllGoods();
 
         $goods = $goods->toArray();
+        
+        /* 搜尋 */
+        /*$query = DB::table('goods as g')->select('g.id','gs.allStock');
+        
+        $query->leftJoin(  DB::raw("(SELECT goods_id , SUM(goods_num) allStock FROM goods_stock GROUP BY goods_id )AS gs"),'gs.goods_id','=','g.id' );
+        
+
+        
+        $datas = $query->get();
+
+        $datas = json_decode($datas,true);
+
+        foreach ($datas as $data) {
+            echo $data['id']."-".$data['allStock'];
+            echo '<br>';
+        }
+        /* 搜尋結束 */
 
         return view('goodsList')->with([ 'title'     => $pageTitle,
                                          'goods'     => $goods,
@@ -779,10 +796,13 @@ class GoodsController extends Controller
      */
     public function query( Request $request ){
         
-        $orderItems  = ['3'=>'status',
-                        '4'=>'price',
-                        '5'=>'w_price',
-                        '6'=>'updated_at',
+        $orderItems  = [
+                        '0'=>'id',
+                        '4'=>'status',
+                        '5'=>'price',
+                        '6'=>'w_price',
+                        '7'=>'allStock',
+                        '8'=>'updated_at',
                       ];
 
         $orderWay = $request->order['0']['dir'];
@@ -797,6 +817,8 @@ class GoodsController extends Controller
         $query = DB::table('goods as g');
         
         $query->leftJoin('goods_cat as gc', 'g.id', '=', 'gc.gid');
+
+        $query->leftJoin(  DB::raw("(SELECT goods_id , SUM(goods_num) allStock FROM goods_stock GROUP BY goods_id )AS gs"),'gs.goods_id','=','g.id' );
 
         // 最低價
         if( !empty( $request->min_price )){
@@ -875,7 +897,11 @@ class GoodsController extends Controller
 
         
 
+
         $query->orderBy($orderBy , $orderWay );
+    
+
+
     
         $goods = $query->get();
         
@@ -886,42 +912,44 @@ class GoodsController extends Controller
         foreach ($goods as $key => $value) {
             
             // 取出庫存總和
-            $tmpRes = GoodsStock::selectRaw("SUM(goods_num) as stock")->where('goods_id',$value->id)->groupBy('goods_id')->first();
-            if( $tmpRes!=NULL){
-                $tmpStock = $tmpRes->stock;
-            }else{
-                $tmpStock = 0;
-            }
+            // $tmpRes = GoodsStock::selectRaw("SUM(goods_num) as stock")->where('goods_id',$value->id)->groupBy('goods_id')->first();
+            // if( $tmpRes!=NULL){
+            //     $tmpStock = $tmpRes->stock;
+            // }else{
+            //     $tmpStock = 0;
+            // }
 
             // 取出庫存來源
-            $tmpDatas = GoodsStock::where('goods_id',$value->id)->get();
+            // $tmpDatas = GoodsStock::where('goods_id',$value->id)->get();
 
-            if( count($tmpDatas) > 0 ){
+            // if( count($tmpDatas) > 0 ){
                 
-                $returnStock = [];
+            //     $returnStock = [];
     
-                foreach ($tmpDatas as $tmpDatak => $tmpData) {
+            //     foreach ($tmpDatas as $tmpDatak => $tmpData) {
                     
-                    $tmpDealer = Dealer::where('dealer_id',$tmpData->dealer_id)->first();
+            //         $tmpDealer = Dealer::where('dealer_id',$tmpData->dealer_id)->first();
     
-                    if( $tmpDealer != NULL ){
+            //         if( $tmpDealer != NULL ){
     
-                        $tmpDealerName = "ID:".$tmpData->dealer_id.",".$tmpDealer->hotel_name;
+            //             $tmpDealerName = "ID:".$tmpData->dealer_id.",".$tmpDealer->hotel_name;
     
-                    }else{
-                        $tmpDealerName = "ID:".$tmpData->dealer_id.",";
-                    }
+            //         }else{
+            //             $tmpDealerName = "ID:".$tmpData->dealer_id.",";
+            //         }
     
-                    $returnStock[] = [ 'name'=> $tmpDealerName,
-                                      'num' => $tmpData->goods_num
-                                    ];
-                }
+            //         $returnStock[] = [ 'name'=> $tmpDealerName,
+            //                           'num' => $tmpData->goods_num
+            //                         ];
+            //     }
     
                 
-            }else{
+            // }else{
 
-                $returnStock = [];
-            }
+            //     $returnStock = [];
+            // }
+            
+            $returnStock = [];
 
             array_push($returnData, [
             $value->thumbnail,
@@ -930,7 +958,7 @@ class GoodsController extends Controller
             $value->status,
             $value->price,
             $value->w_price,
-            $tmpStock,
+            $value->allStock,
             $value->updated_at,
             $value->id,
             $returnStock,

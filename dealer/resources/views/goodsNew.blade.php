@@ -28,7 +28,7 @@
         <div class="header">
             <h2>
             {{$title}}表格
-            <small>填寫以下表格以新增一組類別</small>
+            <small>填寫以下表格以新增商品</small>
             </h2>
 
             <!-- 功能列表(暫時用不到)
