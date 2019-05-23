@@ -950,7 +950,7 @@ class PurchaseController extends Controller
                     
                     $tmpGoods = $getAllGood;
 
-                    $tmpGoods['addNum'] = 1;
+                    $tmpGoods['addNum'] = 0;
 
                     /* 計算總銷售 */
                     

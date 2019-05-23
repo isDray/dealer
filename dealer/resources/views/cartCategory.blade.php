@@ -18,7 +18,7 @@
     <div id='categoryGoodsBox' class='col-md-8 col-md-offset-2 col-sm-12 col-xs-12'> 
         
         @foreach($goods as $good)
-        <div class="col-md-3 col-sm-4 col-xs-6 ">
+        <div class="col-md-3 col-sm-4 col-xs-6 _psp">
             <div class="thumbnail">
                 <a href="{{url('')}}/{{$dealerDetect}}/goods/{{$good['id']}}" target="_blank">
                 <img src="{{url('images')}}/{{$good['thumbnail']}}" alt="...">

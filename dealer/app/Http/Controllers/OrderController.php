@@ -628,7 +628,7 @@ class OrderController extends Controller
             $orderGoods = $orderGoods->toArray();
 
             // 取出訂單log檔案
-            $orderLogs = OrderLog::where('order_id' , $request->id )->orderBy('created_at', 'desc')->get();
+            $orderLogs = OrderLog::where('order_id' , $request->id )->where('user_id',$dealerId)->orderBy('created_at', 'desc')->get();
             
             $orderLogs = $orderLogs->toArray();
             
