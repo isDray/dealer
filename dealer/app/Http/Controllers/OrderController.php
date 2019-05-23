@@ -1198,14 +1198,14 @@ class OrderController extends Controller
             // 如果最小值有填寫
             if( !empty($request->min_price ) ){
     
-                $query->where('amount', '>=', $request->min_price);
+                $query->where('final_amount', '>=', $request->min_price);
     
             }
             
             // 如果最大值有填寫
             if( !empty($request->max_price ) ){
                 
-                $query->where('amount', '<=', $request->max_price);
+                $query->where('final_amount', '<=', $request->max_price);
     
             }
     
@@ -1250,6 +1250,16 @@ class OrderController extends Controller
             }             
 
             $query->where( "dealer_id" , "$authId" );
+
+            // 如果有排序就執行
+            if( !empty( $orderBy ) ){
+            
+                $query->orderBy($orderBy , $orderWay );
+
+            } 
+            $query->offset( $request->start );
+    
+            $query->limit( $request->length );  
 
             $orders = $query->get();
 
