@@ -96,7 +96,7 @@
                                 <input type='hidden' name='isNew' value='1'>
                                 @endif
 
-                                <input type='submit' value='完成' class='btn btn-primary waves-effect' >
+                                <input type='submit' value='確定' class='btn btn-primary waves-effect' >
                                 
                                 @if( ! $isNew )
                                 <a href="{{url('/orderInfo/'.$order['id'])}}">

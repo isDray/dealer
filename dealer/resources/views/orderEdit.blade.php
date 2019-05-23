@@ -193,11 +193,11 @@
                 @if( $isNew == True )
                     <!-- <a href="{{url('/orderEditBasic/new/'.$orderId)}}"> -->
                     <a href="{{url('/orderInfo/'.$orderId)}}">
-                        <span class='btn btn-primary waves-effect'>完成</span>
+                        <span class='btn btn-primary waves-effect'>確定</span>
                     </a>
                 @else
                     <a href="{{url('/orderInfo/'.$orderId)}}">
-                        <span class='btn btn-primary waves-effect'>完成</span>
+                        <span class='btn btn-primary waves-effect'>確定</span>
                     </a>
                 @endif
 

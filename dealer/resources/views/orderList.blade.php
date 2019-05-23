@@ -49,33 +49,65 @@ a{
                                 <div class='col-xs-12 col-sm-12 col-md-12 bg-grey'>
                                     <p><b>進階搜尋</b></p>
                                 </div>
-                               
-                                <div class="col-sm-2">
-                                    <p>價格</p>
-                                    <div class="input-group">
-                                        <div class="form-line">
-                                            <input type="text" class="form-control myborder" placeholder="" id='min_price'>
-                                        </div>
-                                        <span class="input-group-addon">~</span>
-                                        <div class="form-line">
-                                            <input type="text" class="form-control myborder" placeholder="" id='max_price'>
-                                        </div>                                        
-                                    </div>
-                                </div>
-
                                 
+                                @role("Admin")
+                                <div class="col-sm-2">
+                                    <p>經銷商</p>
+                                    <select class="form-control show-tick myborder" id='dealer'>
+                                        <option value='0' >-選擇-</option>
+                                        <!-- <option value='1' @if($dfStatus == '1') selected @endif>未新增完成</option> -->
+                                        
+                                        @foreach( $allDearlers as $allDearler)
+                                            <option value="{{$allDearler['id']}}" >{{$allDearler['name']}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @endrole  
+
                                 <div class="col-sm-2">
                                     <p>訂單狀態</p>
                                     <select class="form-control show-tick myborder" id='status'>
                                         <option value='0' >-選擇-</option>
-                                        <option value='1' @if($dfStatus == '1') selected @endif>未新增完成</option>
+                                        <!-- <option value='1' @if($dfStatus == '1') selected @endif>未新增完成</option> -->
                                         <option value='2' @if($dfStatus == '2') selected @endif >待處理</option>
                                         <option value='3' @if($dfStatus == '3') selected @endif >已確認</option>
                                         <option value='4' @if($dfStatus == '4') selected @endif >已出貨</option>
                                         <option value='5' @if($dfStatus == '5') selected @endif >取消</option>
                                     </select>
                                 </div> 
-                                
+
+                                <!-- 房號 -->
+                                <div class="col-sm-1">
+                                    <p>訂單號碼:</p>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control myborder" placeholder="" id='orderKeyword' value=''>
+                                    </div>
+                                </div>                                
+                                <!-- /房號 -->
+
+                                <!-- 房號 -->
+                                <div class="col-sm-1">
+                                    <p>房號:</p>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control myborder" placeholder="" id='roomKeyword' value=''>
+                                    </div>
+                                </div>                                
+                                <!-- /房號 -->
+
+
+                                <div class="col-sm-2">
+                                    <p>價格</p>
+                                    <div class="input-group">
+                                        <div class="form-line">
+                                            <input type="text" class="form-control myborder" placeholder="" id='min_price'>
+                                        </div>
+                                        <span class="input-group-addon" style='padding:10px;'>~</span>
+                                        <div class="form-line">
+                                            <input type="text" class="form-control myborder" placeholder="" id='max_price'>
+                                        </div>                                        
+                                    </div>
+                                </div>
+
                                 <!-- 訂單時間選擇 -->
                                 <div class="col-xs-3">
                                     
@@ -91,7 +123,7 @@ a{
                                         </div>
                                         
 
-                                        <span class="input-group-addon">~</span>
+                                        <span class="input-group-addon" style='padding:10px;'>~</span>
                                         
                                         
                                         <div class="form-line" id='orderEndBox'>
@@ -117,6 +149,7 @@ a{
                                 <table class="table table-bordered table-striped table-hover js-basic-example dataTable orderTable">
                                     <thead>
                                         <tr>
+                                            <th>ID</th>
                                             <th>訂單編號</th>
                                             <th>經銷商</th>
                                             <th>房號</th>
@@ -128,7 +161,7 @@ a{
                                             <th>操作</th>
                                         </tr>
                                     </thead>
-                                    <tfoot>
+<!--                                     <tfoot>
                                         <tr>
                                             <th>訂單編號</th>
                                             <th>經銷商</th>
@@ -140,7 +173,7 @@ a{
                                             <th>編修日期</th>
                                             <th>操作</th>
                                         </tr>
-                                    </tfoot>
+                                    </tfoot> -->
                                     <tbody></tbody>
                                 </table>
                             </div>
@@ -170,9 +203,12 @@ a{
 $(function(){
 
     orderTable = $('.orderTable').DataTable({
-        order:[[5,'desc']],
+        order:[[0,'desc']],
         responsive: true,
         stateSave: true,  
+        searching:false,  
+        lengthMenu: [ 20, 50, 100 ],
+        pageLength: 20,         
         dom: '<"top"<"col-md-6"<"inlinebox"li>><"col-md-6"f>>rt<"bottom"p><"clear">',                  
         language:{
             "processing":   "處理中...",
@@ -208,25 +244,36 @@ $(function(){
                 d.orderSatrt = $("#orderSatrt").val();
                 d.orderEnd   = $("#orderEnd").val();
                 d.status     = $("#status").val();
+                d.roomKeyword = $("#roomKeyword").val();
+                d.orderKeyword = $("#orderKeyword").val();
+                @role('Admin')
+                d.dealer = $("#dealer").val();
+                @endrole
             }
         },
         "columnDefs" : [
             {   "targets" : 0 ,
-                "orderable": false,
-            },
+                "data":10
+            },        
             {   "targets" : 1 ,
                 "orderable": false,
+                "data":0
+            },
+            {   "targets" : 2 ,
+                "orderable": false,
+                "data":1,
                 @role('Dealer')
                 "visible": false
                 @endrole
             },     
-            {   "targets" : 2 ,
-                "orderable": false,
-            },  
             {   "targets" : 3 ,
                 "orderable": false,
-            },                                
+                "data":2,
+            },  
             {   "targets" : 4 ,
+                "data":3,
+            },                                
+            {   "targets" : 5 ,
                 "orderable": false,
                 "render" : function ( url, type, full) {
                     if( full[4] == 1 ){
@@ -253,16 +300,19 @@ $(function(){
                 }
         
             },
-            {   "targets" : 5 ,
-                "orderable": false,
-            },     
             {   "targets" : 6 ,
+                "orderable": false,
+                "data":5,
+            },     
+            {   "targets" : 7 ,
                 "orderable": true,
+                "data":6,
             },   
-            {   "targets" : 7,
+            {   "targets" : 8,
                 "orderable": true,
+                "data":7,
             },                    
-            {   "targets" : 8 ,
+            {   "targets" : 9 ,
                 "data": "edit",
                 "orderable": false,
                 "render" : function ( url, type, full) {
@@ -333,6 +383,21 @@ $(function(){
 
     });
 
+    $("#dealer").bind("change" , function(e){
+
+        orderTable.ajax.reload();
+
+    });
+
+    $("#roomKeyword").bind("keyup change", function(e) {
+        
+        orderTable.ajax.reload();
+    }); 
+    $("#orderKeyword").bind("keyup change", function(e) {
+        
+        orderTable.ajax.reload();
+    }); 
+        
 
     $('body').on('click', '.deleteOrder', function() {
         

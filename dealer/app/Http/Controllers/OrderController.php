@@ -63,9 +63,14 @@ class OrderController extends Controller
     
             // 將物件轉換為陣列格式
             $orders = $orders->toArray();
-    
+
+            $allDearlers = Role::where('name','Dealer')->first()->users()->get();
+            $allDearlers = json_decode($allDearlers,true);
+
             return view('orderList')->with([ 'title'  => $pageTitle,
                                              'dfStatus'=>$dfStatus,
+                                             'allDearlers'=>$allDearlers,
+
                                             ]);
 
         }elseif( Auth::user()->hasRole('Dealer') ){
@@ -76,10 +81,13 @@ class OrderController extends Controller
             
             // 將物件轉換為陣列格式
             $orders = $orders->toArray();
+            
+            $allDearlers = Role::where('name','Dealer')->first()->users()->get();
+            $allDearlers = json_decode($allDearlers,true);
 
             return view('orderList')->with([ 'title'  => $pageTitle,
                                              'dfStatus'=>$dfStatus,
-    
+                                             'allDearlers'=>$allDearlers,
                                             ]);            
         }
     }
@@ -1050,6 +1058,24 @@ class OrderController extends Controller
          *----------------------------------------------------------------
          *
          */
+        
+        $orderItems  = [
+                        '0'=>'id',
+                        '4'=>'final_amount',
+                        '7'=>'ship_at',
+                        '8'=>'updated_at',
+                      ];
+        
+        // 整理排序關鍵字
+        if( array_key_exists($request->order['0']['column'], $orderItems )){
+
+            $orderBy = $orderItems[ $request->order['0']['column'] ];
+        
+        }else{
+
+            $orderBy = '';
+        }
+        $orderWay = $request->order['0']['dir'];
 
         if( Auth::user()->hasRole('Admin') ){
 
@@ -1057,8 +1083,8 @@ class OrderController extends Controller
     
             $query = DB::table('order');
           
-
             $query->leftJoin('users', 'order.dealer_id', '=', 'users.id');
+
             // 如果最小值有填寫
             if( !empty($request->min_price ) ){
     
@@ -1084,7 +1110,7 @@ class OrderController extends Controller
 
                 $request->orderSatrt = $request->orderSatrt." 00:00:00";
 
-                $query->where( 'updated_at' , '>=' , $request->orderSatrt );
+                $query->where( 'order.updated_at' , '>=' , $request->orderSatrt );
             }
 
             // 如果有收到訂單結束時間
@@ -1092,7 +1118,7 @@ class OrderController extends Controller
 
                 $request->orderEnd = $request->orderEnd." 23:59:59";
 
-                $query->where( 'updated_at' , '<=' , $request->orderEnd );
+                $query->where( 'order.updated_at' , '<=' , $request->orderEnd );
             }
 
             // 表示剛進入查詢需要以訂單時間作為排序依據
@@ -1102,8 +1128,28 @@ class OrderController extends Controller
     
             }
             
+            // 如果有訂單關鍵字
+            if( !empty($request->roomKeyword ) ){
 
-    
+                $query->where( 'order.room' , 'like' , "%{$request->roomKeyword}%" );
+            }
+
+            // 如果有房號
+            if( !empty($request->orderKeyword ) ){
+
+                $query->where( 'order.order_sn' , 'like' , "%{$request->orderKeyword}%" );
+            }
+            // 如果有指定經銷商    
+            if( !empty( $request->dealer) ){
+                
+                $query->where( 'order.dealer_id' , $request->dealer );              
+            }                    
+            // 如果有排序就執行
+            if( !empty( $orderBy ) ){
+            
+                $query->orderBy($orderBy , $orderWay );
+
+            }
 
             $orders = $query->select('order.*', 'users.name')->get();
 
@@ -1131,6 +1177,7 @@ class OrderController extends Controller
             }        
 
             echo json_encode( ['data'=>$returnData , 'recordsTotal'=>$recordsTotal, 'recordsFiltered'=>count($returnData)] );
+
         } elseif( Auth::user()->hasRole('Dealer') ){
 
         /* 經銷商專用的查詢
@@ -1186,7 +1233,17 @@ class OrderController extends Controller
                 $query->orderBy('updated_at', $request->order['0']['dir']);
     
             }
-            
+            // 如果有訂單關鍵字
+            if( !empty($request->roomKeyword ) ){
+
+                $query->where( 'order.room' , 'like' , "%{$request->roomKeyword}%" );
+            }
+
+            // 如果有房號
+            if( !empty($request->orderKeyword ) ){
+
+                $query->where( 'order.order_sn' , 'like' , "%{$request->orderKeyword}%" );
+            }             
 
             $query->where( "dealer_id" , "$authId" );
 

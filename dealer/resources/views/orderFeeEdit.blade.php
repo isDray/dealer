@@ -56,7 +56,7 @@
                  
                     <div class="row clearfix">
                         <div class="col-md-4 col-sm-12 col-xs-12">
-                            <input type='submit' class='btn btn-primary waves-effect' value="編輯">
+                            <input type='submit' class='btn btn-primary waves-effect' value="確定">
                         </div>
                     </div>
                 </form>
