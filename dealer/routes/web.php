@@ -63,6 +63,7 @@ Route::group(['middleware' => ['auth','role:Admin'] ], function () {
     Route::get('/categoryEdit/{id?}','CategoryController@edit');
     Route::post('/categoryEditDo','CategoryController@editDo');       
     Route::post('/categoryDeleteDo','CategoryController@DeleteDo');
+    Route::post('/categoryQuery','CategoryController@query');     
     
     // 總站商品管理
     Route::get('/goods','GoodsController@index');

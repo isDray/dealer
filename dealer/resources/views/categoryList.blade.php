@@ -39,14 +39,27 @@ a{
                 </ul>
                         </div>
                         <div class="body">
+
+                            <div class="row clearfix mysearchbox">
+                                <div class='col-xs-12 col-sm-12 col-md-12 bg-grey'>
+                                    <p><b>進階搜尋</b></p>
+                                </div>
+
+                                <div class="col-sm-2">
+                                    <p>分類名稱:</p>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control myborder" placeholder="" id='myKeyword' value=''>
+                                    </div>
+                                </div>
+
+                            </div>                             
+
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped table-hover js-basic-example dataTable roleTable">
                                     <thead>
                                         <tr>
-                                            <th style='display:none;'>id</th>
                                             <th>類別名稱</th>
                                             <th>排序</th>
-                                            <th style='display:none;'>商品描述</th>
                                             <th>是否啟用</th>
                                             <th>編修時間</th>
                                             <th>操作</th>
@@ -64,7 +77,7 @@ a{
                                     </tfoot> -->
                                     <tbody>
                                         
-                                        @foreach( $categorys as $ckey=>$category ) 
+<!--                                         @foreach( $categorys as $ckey=>$category ) 
                                         <tr><td  style='display:none;'>{{$ckey}}</td>
                                             <td>{!!$category['level']!!}{!!$category['levelIcon']!!}{{$category['name']}}</td>
                                             <th>{{$category['sort']}}</th>
@@ -94,7 +107,7 @@ a{
 
                                         </tr>
 
-                                        @endforeach
+                                        @endforeach -->
                                     </tbody>
                                 </table>
                             </div>
@@ -122,10 +135,11 @@ a{
 <script type="text/javascript">
 $(function(){
 
-    $('.roleTable').DataTable({
-        order:[[2,'asc']],
+    mytable = $('.roleTable').DataTable({
+        order:[[1,'asc']],
         responsive: true,
         stateSave: true, 
+        searching:false,        
         dom: '<"top"<"col-md-6"<"inlinebox"li>><"col-md-6"f>>rt<"bottom"p><"clear">',             
         language:{
             "processing":   "處理中...",
@@ -148,9 +162,76 @@ $(function(){
                 "sortDescending": ": 降冪排列"
             }
         },
-       
+
+        "processing": true,
+        "serverSide": true,
+
+        "ajax": {
+            "url" :"{{url('/categoryQuery')}}",
+            "type": "POST",
+            "data": function ( d ) { 
+                d._token = "{{csrf_token()}}";
+                d.myKeyword  = $("#myKeyword").val();                
+            }
+        },    
+        "columnDefs" : [
+            {   
+                "targets" : 0 ,
+                "data": 1,
+                "orderable": false,
+            }, 
+            {   
+                "targets" : 1 ,
+                "data": 3,
+            }, 
+            {   
+                "targets" : 2 ,
+                "data": 2,
+                "render" : function ( url, type, full) {
+                    if( full[2] == 1 ){
+
+                        return '<i class="material-icons col-light-green">done</i>';
+
+                    }else if( full[2] == 0 ){
+                        
+                        return '<i class="material-icons col-red">clear</i>';
+                    }
+                }                   
+            }, 
+            {   
+                "targets" : 3 ,
+                "data": 4,
+             
+            }, 
+            {   
+                "targets" : 4,
+                "data": 4,
+                "orderable": false,
+                "render" : function ( url, type, full) {
+                    return  '<a href="'+"{{url('/categoryEdit')}}/"+full[0]+'">'+
+                            '<button type="button" class="btn btn-success waves-effect">'+
+                            '<i class="material-icons">settings</i>'+
+                            '<span>編輯  </span>'+
+                            '</button>'+
+                            '</a>&nbsp;'+
+                            '<button type="button" class="btn btn-danger waves-effect categoryDelete" cid="'+full[0]+'" cname="'+full[1]+'">'+
+                            '<i class="material-icons">cancel</i>'+
+                            '<span>刪除</span>'+
+                            '</button>'
+                }                
+            },                                                             
+        ]
     });
 
+    /*----------------------------------------------------------------
+     | 觸發查詢
+     |----------------------------------------------------------------
+     |
+     */
+    $("#myKeyword").bind("keyup change", function(e) {
+        
+        mytable.ajax.reload();
+    }); 
     
     $('body').on('click', '.categoryDelete', function() {
         

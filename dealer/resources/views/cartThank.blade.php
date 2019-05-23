@@ -21,7 +21,7 @@
         <br>
         <h4 style='font-weight:900;'>訂單編號:{{$orderSn}}, 訂單金額:{{$orderAmount}}元</h4>
         <br>
-        <h4 style='color:red;font-weight:900;'>** 請撥打服務電話告知已訂購商品 , 以利旅館服務人員處理訂單 , 謝謝</h4>
+        <h4 style='color:red;font-weight:900;'>訂單送出後，請撥打分機，告知櫃台人員已訂購商品，以利客服人員處理訂單，謝謝!</h4>
         <br><br>
         <a href="{{url('')}}/{{$dealerDetect}}" class='btn btn-primary'>回首頁</a>
     </div>

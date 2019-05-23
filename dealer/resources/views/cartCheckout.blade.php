@@ -13,7 +13,7 @@
 
 <div id='checkoutBox' class="container-fluid _np">
     
-    <h4 style='color:red;font-weight:900;text-align:center;padding-left:15px;padding-right:15px;'>** 訂購完成後 , 請撥打服務電話告知已訂購商品 , 以利旅館服務人員處理訂單 , 謝謝</h4>
+    <h4 style='color:red;font-weight:900;text-align:center;padding-left:15px;padding-right:15px;'>訂單送出後，請撥打分機，告知櫃台人員已訂購商品，以利客服人員處理訂單，謝謝!</h4>
 
     <div class='checkoutLabel _np col-md-8 col-md-offset-2 col-sm-12 col-xs-12' label='購買清單'></div>
 

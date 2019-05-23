@@ -10,6 +10,7 @@ use App\freeHelper\categoryTool;
 
 // 使用類別Model
 use App\Category;
+use DB;
 
 class CategoryController extends Controller
 {
@@ -21,12 +22,81 @@ class CategoryController extends Controller
 
         // 取出所有分類
         $category = categoryTool::getAllCategoryForSelect();
-        
+
         return view('categoryList')->with(['title'     => $pageTitle,
                                            'categorys' => $category
                                          ]);
     }
+    
+    /*----------------------------------------------------------------
+     | 類別查詢
+     |----------------------------------------------------------------
+     |
+     */
+    public function query( Request $request ){
+        
+        $orderItems  = [
+                        '1'=>'sort',
+                        '2'=>'status',
+                        '3'=>'updated_at',
+                      ];
+        
+        // 整理排序關鍵字
+        if( array_key_exists($request->order['0']['column'], $orderItems )){
 
+            $orderBy = $orderItems[ $request->order['0']['column'] ];
+        
+        }else{
+
+            $orderBy = '';
+        }
+        
+        
+        $orderWay = $request->order['0']['dir'];
+
+        $query = DB::table('category');
+        
+        $recordsTotal = $query->count();
+
+
+        // 商品名稱
+        if( !empty( $request->myKeyword ) ){
+            
+            $query->where('name','like',"%{$request->myKeyword}%");
+        }
+        
+        // 如果有排序就執行
+        if( !empty( $orderBy ) ){
+            
+            $query->orderBy($orderBy , $orderWay );
+
+        }
+
+        
+
+        $suitNum      = $query->count();
+
+        $query->offset( $request->start );
+
+        $query->limit( $request->length );            
+
+        $datas = $query->get();
+    
+        $returnData = [];
+
+        foreach($datas as $key => $value) {
+
+            array_push($returnData, [
+                $value->id,
+                $value->name,
+                $value->status,
+                $value->sort,
+                $value->updated_at,
+            ]);
+        }
+
+        return json_encode( ['data'=>$returnData , 'recordsTotal'=>$recordsTotal, 'recordsFiltered'=>$suitNum] );
+    }
 
     // 新增類別介面
     public function new(){

@@ -808,7 +808,11 @@ class GoodsController extends Controller
         $orderWay = $request->order['0']['dir'];
 
         // 排序欄位 ( 依照哪一欄位做排序 )
-        $orderBy = $orderItems[ $request->order['0']['column'] ];
+        if( array_key_exists($request->order['0']['column'], $orderItems) ){
+            $orderBy = $orderItems[ $request->order['0']['column'] ];
+        }else{
+            $orderBy = '';
+        }
         
         // 計算全部商品數量
         $recordsTotal = Goods::count();
@@ -897,8 +901,11 @@ class GoodsController extends Controller
 
         
 
+        if( !empty($orderBy) ){
+            
+            $query->orderBy($orderBy , $orderWay );            
+        }
 
-        $query->orderBy($orderBy , $orderWay );
     
 
 
