@@ -273,21 +273,11 @@ $(function(){
             },            
             {
                 "targets":8,
-                "data": 6,
-                // "render" : function ( url, type, full) {
-                //     var tmptable = "";
-
-                //     $.each( full[9], function( tablek, tablev ) {
-
-                //         tmptable +="<tr>";
-                //         tmptable +="<td>"+tablev['name']+"</td>";
-                //         tmptable +="<td>"+tablev['num']+"</td>";
-                //         tmptable +="</tr>";
-
-                //     });
-
-                //     return  "<div class='stockbox' gid='"+full[8]+"'>"+full[6]+"<div><table><tr><td>經銷商</td><td>庫存</td></tr>"+tmptable+"</table></div></div>";
-                // }
+                //"data": 6,
+                "render" : function ( url, type, full) {
+                    return "<a target='_blank' href='"+"{{url('/goodsStockDetail')}}/"+full[8]+"'>"+full[6]+"</a>";
+                    //return  "<div class='stockbox' gid='"+full[8]+"'>"+full[6]+"<div><table><tr><td>經銷商</td><td>庫存</td></tr>"+tmptable+"</table></div></div>";
+                }
             },   
             {
                 "targets":9,
@@ -318,7 +308,7 @@ $(function(){
      | 觸發查詢
      |----------------------------------------------------------------
      |
-     */
+     
     $("#min_price").bind("keyup change", function(e) {
         
         mytable.ajax.reload();

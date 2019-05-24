@@ -1057,4 +1057,76 @@ class GoodsController extends Controller
             return json_encode([false,[]]);
         }
     }
+
+
+
+
+    /*----------------------------------------------------------------
+     | 商品庫存明細
+     |----------------------------------------------------------------
+     |
+     */
+    public function goodsStockDetail( Request $request ){
+        
+        $pageTitle = "商品庫存明細";
+
+        if( !isset( $request->id ) ){
+
+            return back()->with('errorMsg', '缺少必要參數');
+
+        }
+
+        // 找出商品所有明細
+        $tmpDatas = GoodsStock::where('goods_id',$request->id)->get();
+        
+        // 取出商品名稱
+        $goodsDatas = Goods::find($request->id);
+        
+        if( $goodsDatas != NULL){
+
+            $goodsSn   = $goodsDatas->goods_sn;            
+            $goodsName = $goodsDatas->name;
+
+        }else{
+            
+            $goodsName = '';
+            $goodsSn   = '';
+        }
+
+        if( count($tmpDatas) > 0 ){
+            
+            $returnData = [];
+
+            foreach ($tmpDatas as $tmpDatak => $tmpData) {
+                
+                $tmpDealer = Dealer::where('dealer_id',$tmpData->dealer_id)->first();
+
+                if( $tmpDealer != NULL ){
+
+                    $tmpDealerName = "$tmpDealer->hotel_name";
+
+                }else{
+
+                    $tmpDealerName = "NA";
+                }
+
+                $returnData[] = [ 'name'=> $tmpDealerName,
+                                  'num' => $tmpData->goods_num
+                                ];
+            }
+
+           
+        }else{
+
+            $returnData=[];
+        }
+
+        return view('goodsStockDetail')->with([
+                                        'title'     => $pageTitle,
+                                        'stockDetails' => $returnData,
+                                        'goodsName' => $goodsName,
+                                        'goodsSn'   => $goodsSn
+
+                                        ]);          
+    }
 }

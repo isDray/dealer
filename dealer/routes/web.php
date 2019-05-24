@@ -76,6 +76,7 @@ Route::group(['middleware' => ['auth','role:Admin'] ], function () {
     Route::post('/goodsAjaxPic','GoodsController@ajaxPic');
     Route::post('/goodsAjaxPicDelete','GoodsController@ajaxPicDelete');
     Route::post('/goodsAjaxPicSort','GoodsController@ajaxPicSort');
+    Route::get('/goodsStockDetail/{id}','GoodsController@goodsStockDetail');
     // Route::post('/goodsAjaxStock','GoodsController@ajaxStock');
     // 網站設置
     Route::get('/set','SetController@set');
