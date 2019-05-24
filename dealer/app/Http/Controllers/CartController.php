@@ -202,6 +202,7 @@ class CartController extends Controller
 
             $recommendGoods = [];
         }
+        $set = Set::find(1);
 
         return view('cartIndex')->with([ 'dealerDetect' => $request->name,
         	                             'cartUser' =>$cartUser,
@@ -210,7 +211,8 @@ class CartController extends Controller
                                          'newGoods'=>$newGoods,
                                          'recommendGoods'=>$recommendGoods,
                                          'hots'=>$hots=[],
-                                         'color'=>'yellow'
+                                         'color'=>'yellow',
+                                         'displayWay' => $set->show_type
                                         ]);     	
     }
     
@@ -936,6 +938,7 @@ class CartController extends Controller
                                             'goods'        => $goods,
                                             'plist'        => $plist,
                                             'cateName'     => $cateName,
+                                            'displayWay'   => $set->show_type
                                         ]);
     }
 
@@ -1106,6 +1109,7 @@ class CartController extends Controller
                                             'goods'        => $goods,
                                             'plist'        => $plist,
                                             'cateName'     => $cateName,
+                                            'displayWay'   => $set->show_type
                                         ]);
     }
     

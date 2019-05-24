@@ -123,6 +123,8 @@
     <div class='boxLabel _np col-md-8 col-md-offset-2 col-sm-12 col-xs-12' label='最新商品'></div>
     
     <div id='newGoods' class='col-md-8 col-md-offset-2 col-sm-12 col-xs-12 _np'>
+        @if( $displayWay == 1)
+
         @foreach($newGoods as $newGood)
         <div class="col-md-3 col-sm-4 col-xs-6 _psp">
             <div class="thumbnail">
@@ -147,6 +149,33 @@
             </div>
         </div>
         @endforeach
+
+        @else
+
+        @foreach($newGoods as $good)
+        <div class="media goodlist" style='background-color:#e3e3e3'>
+          <div class="media-left">
+            <a href="{{url('')}}/{{$dealerDetect}}/goods/{{$good['id']}}" target="_blank">
+              <img src="{{url('images')}}/{{$good['thumbnail']}}" alt="...">
+            </a>
+          </div>
+          <div class="media-body">
+                <h5> {{ $good['name'] }}</h5>
+                <h4>價格:{{$good['goodsPrice'] }}</h4>
+                <p class='itemBtn'>
+                  <!-- <a href="#" class="btn btn-view" role="button"><span class="glyphicon glyphicon-search"></span>查看商品</a>  -->
+                   
+                    @if( $good['stock'] > 0)
+                    <button class="btn btn-primary addone" role="button" goodsId="{{$good['id']}}"><span class="glyphicon glyphicon-shopping-cart"></span>加入購物車</button>
+                    @else
+                    <button class="btn btn-danger" role="button" goodsId="{{$good['id']}}" disabled><span class="glyphicon glyphicon-retweet"></span>補貨中</button>
+                    @endif                   
+                </p>                
+          </div>
+        </div>
+        @endforeach
+        
+        @endif        
     </div>
     
     </div>
@@ -188,6 +217,7 @@
     <div class='boxLabel _np col-md-8 col-md-offset-2 col-sm-12 col-xs-12' label='推薦商品'></div>
     
     <div id='recommendGoods' class='col-md-8 col-md-offset-2 col-sm-12 col-xs-12 _np'>
+        @if( $displayWay == 1)
         @foreach($recommendGoods as $newGood)
         <div class="col-md-3 col-sm-4 col-xs-6 _psp">
             <div class="thumbnail">
@@ -207,6 +237,33 @@
             </div>
         </div>
         @endforeach
+
+        @else
+
+        @foreach($newGoods as $good)
+        <div class="media goodlist" style='background-color:#e3e3e3'>
+          <div class="media-left">
+            <a href="{{url('')}}/{{$dealerDetect}}/goods/{{$good['id']}}" target="_blank">
+              <img src="{{url('images')}}/{{$good['thumbnail']}}" alt="...">
+            </a>
+          </div>
+          <div class="media-body">
+                <h5> {{ $good['name'] }}</h5>
+                <h4>價格:{{$good['goodsPrice'] }}</h4>
+                <p class='itemBtn'>
+                  <!-- <a href="#" class="btn btn-view" role="button"><span class="glyphicon glyphicon-search"></span>查看商品</a>  -->
+                   
+                    @if( $good['stock'] > 0)
+                    <button class="btn btn-primary addone" role="button" goodsId="{{$good['id']}}"><span class="glyphicon glyphicon-shopping-cart"></span>加入購物車</button>
+                    @else
+                    <button class="btn btn-danger" role="button" goodsId="{{$good['id']}}" disabled><span class="glyphicon glyphicon-retweet"></span>補貨中</button>
+                    @endif                   
+                </p>                
+          </div>
+        </div>
+        @endforeach
+        
+        @endif         
     </div>
     
     </div>

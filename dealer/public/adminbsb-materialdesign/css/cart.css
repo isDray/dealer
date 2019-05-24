@@ -487,6 +487,12 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f93434', end
 	margin-top: 8px;
 	width: calc(100% - 198px);
 }
+
+.goodlist>.media-left>a>img{
+    width: 150px;
+    height: 150px;
+}
+
 }
 @media (min-width: 768px) and (max-width: 991px) {
 ._w{
