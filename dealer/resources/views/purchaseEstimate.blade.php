@@ -163,11 +163,12 @@
 
                             </tr>  
                             <tr>
+                                <th  class='bg-grey align-right' style="vertical-align: middle;">統編</th>
+                                <th><input type='text' name='ein' class="form-control" value="" id="ein"></th>
+
                                 <th class='bg-grey align-right' style="vertical-align: middle;">公司抬頭</th>
                                 <th colspan="3"><input type='text' name='company' class="form-control" value="" id="company"></th>
                                 
-                                <th  class='bg-grey align-right' style="vertical-align: middle;">統編</th>
-                                <th><input type='text' name='ein' class="form-control" value="" id="ein"></th>
                             </tr>                             
                             <tr>
                                 <th class='bg-grey align-right' style="vertical-align: middle;">收件地址</th>
