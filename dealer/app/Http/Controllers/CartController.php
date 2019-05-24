@@ -79,7 +79,7 @@ class CartController extends Controller
         }
         
         // 最新商品
-        $newGoods = Goods::whereIn('id',$goodsCanShow)->orderBy('created_at', 'desc')->limit(8)->get();
+        $newGoods = Goods::whereIn('id',$goodsCanShow)->orderBy('id', 'desc')->limit(8)->get();
 
         if( count($newGoods) > 0){
 

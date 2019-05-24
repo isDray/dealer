@@ -209,6 +209,22 @@
                                 </div>                                                   
                                 
                                 <div class="row clearfix">
+                                    <div class="col-sm-3">
+                                       <p><b>推薦</b></p>
+                                        <div class="form-group">
+                                            <div class="demo-checkbox">
+                                                <input type="checkbox" id="recommend" name='recommend'
+                                                @if( $goodsData['recommend'] == 1)
+                                                    checked
+                                                @endif
+                                                />
+                                                <label for="recommend">是否推薦</label>
+                                            </div>              
+                                        </div>                  
+                                    </div> 
+                                </div>  
+
+                                <div class="row clearfix">
                                     <div class="col-sm-12">
                                        <p><b>商品內容</b></p>
                                         <div class="form-group">

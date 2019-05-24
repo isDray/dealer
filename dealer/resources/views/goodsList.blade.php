@@ -48,7 +48,7 @@ a{
                                     <p><b>進階搜尋</b></p>
                                 </div>
 
-                                <div class="col-sm-3">
+                                <div class="col-sm-2">
                                     <p>商品類別</p>
                                     <select class="form-control show-tick myborder" id='category'>
                                         <option value='0' >-選擇-</option>
@@ -83,7 +83,17 @@ a{
                                         <option value="1" @if($dfStatus == 1) selected @endif>上架</option>
                                         <option value="2" @if($dfStatus == 2) selected @endif>下架</option>
                                     </select>
-                                </div>                                 
+                                </div>        
+
+                                <div class="col-sm-1">
+                                    <p>推薦</p>
+                                    <select class="form-control show-tick myborder" id='recommend'>
+                                        <option value='0' >-選擇-</option>
+                                        <option value="1" >推薦</option>
+                                        <option value="2" >無推薦</option>
+                                    </select>
+                                </div> 
+
                                 <div class="col-sm-2">
                                     <p>商品名稱:</p>
                                     <div class="input-group">
@@ -107,6 +117,7 @@ a{
                                             <th>商品名稱</th>
                                             <th>商品貨號</th>
                                             <th>上架</th>
+                                            <th>推薦</th>
                                             <th>售價</th>
                                             <th>批發價</th>
                                             <th>庫存</th>
@@ -203,6 +214,7 @@ $(function(){
                 d.status    = $("#status").val();
                 d.myKeyword  = $("#myKeyword").val(); 
                 d.snKeyword  = $("#snKeyword").val();  
+                d.recommend  = $("#recommend").val();
             }
         },
 
@@ -240,14 +252,27 @@ $(function(){
             },
             {
                 "targets":5,
+                "render" : function ( url, type, full) {
+                    if( full[10] == 1 ){
+
+                        return '<i class="material-icons col-light-green">done</i>';
+
+                    }else if( full[10] == 0 ){
+                        
+                        return '<i class="material-icons col-red">clear</i>';
+                    }
+                }
+            },            
+            {
+                "targets":6,
                 "data": 4,
             },
             {
-                "targets":6,
+                "targets":7,
                 "data": 5,
             },            
             {
-                "targets":7,
+                "targets":8,
                 "data": 6,
                 // "render" : function ( url, type, full) {
                 //     var tmptable = "";
@@ -265,10 +290,10 @@ $(function(){
                 // }
             },   
             {
-                "targets":8,
+                "targets":9,
                 "data": 7,
             },                     
-            {   "targets" : 9 ,
+            {   "targets" : 10 ,
                 "data": "edit",
                 "orderable": false,
                 "render" : function ( url, type, full) {
@@ -312,6 +337,11 @@ $(function(){
         mytable.ajax.reload();
 
     });
+    $("#recommend").bind("change" , function(e){
+
+        mytable.ajax.reload();
+
+    });    
     $("#myKeyword").bind("keyup change", function(e) {
         
         mytable.ajax.reload();

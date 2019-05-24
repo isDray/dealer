@@ -214,6 +214,15 @@ class GoodsController extends Controller
                 $goods->status      = 0;
         
             }
+            if( isset($request->recommend) ){
+                
+                $goods->recommend      = 1;
+ 
+            }else{
+
+                $goods->recommend      = 0;
+        
+            }            
             
             /* 由於圖檔檔名是由商品id產生的,所以必須要先儲存,主圖跟
              * 縮圖後續再以更新的方式寫入
@@ -477,6 +486,16 @@ class GoodsController extends Controller
                 $goods->status      = 0;
         
             }
+
+            if( isset($request->recommend) ){
+                
+                $goods->recommend      = 1;
+ 
+            }else{
+
+                $goods->recommend      = 0;
+        
+            }            
             
             $goods->desc = $request->desc;
             
@@ -799,10 +818,11 @@ class GoodsController extends Controller
         $orderItems  = [
                         '0'=>'id',
                         '4'=>'status',
-                        '5'=>'price',
-                        '6'=>'w_price',
-                        '7'=>'allStock',
-                        '8'=>'updated_at',
+                        '5'=>'recommend',
+                        '6'=>'price',
+                        '4'=>'w_price',
+                        '8'=>'allStock',
+                        '9'=>'updated_at',
                       ];
 
         $orderWay = $request->order['0']['dir'];
@@ -890,6 +910,19 @@ class GoodsController extends Controller
             }
         }
 
+        // 是否推薦
+        if( !empty( $request->recommend ) ){
+            
+            if( $request->recommend == 1){
+                
+                $query->where( 'g.recommend', '1' );
+
+            }else{
+                
+                $query->where( 'g.recommend', '0' );
+            }
+        }
+
         $query->groupBy( 'g.id' );
         
 
@@ -969,6 +1002,7 @@ class GoodsController extends Controller
             $value->updated_at,
             $value->id,
             $returnStock,
+            $value->recommend,
                                 ]);
             
 
