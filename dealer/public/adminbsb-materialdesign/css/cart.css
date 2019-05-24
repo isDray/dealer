@@ -8,7 +8,7 @@
  | #ff55aa
  */
 body{
-
+    overflow-x: hidden;
     /*background: #1e1f26;*/
     font-family: '微軟正黑體';
     /*overflow-x:hidden;*/

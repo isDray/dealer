@@ -11,11 +11,11 @@
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="{{asset('adminbsb-materialdesign/plugins/ckeditor/ckeditor.js')}}"></script>
 
-<div id='categoryBox' class="container-fluid _np">
+<div id='categoryBox' class="container-fluid ">
 
     <div class='categoryLabel _np col-md-8 col-md-offset-2 col-sm-12 col-xs-12' label="{{$cateName}}"></div>
 
-    <div id='categoryGoodsBox' class='col-md-8 col-md-offset-2 col-sm-12 col-xs-12'> 
+    <div id='categoryGoodsBox' class='col-md-8 col-md-offset-2 col-sm-12 col-xs-12 _np'> 
         
         @foreach($goods as $good)
         <div class="col-md-3 col-sm-4 col-xs-6 _psp">
@@ -55,7 +55,9 @@
 <!-- 專屬js -->
 <script type="text/javascript">
 $(function(){
-
+    adjHeight = $("#fixBox").height();
+    // 計算高度
+    $("#categoryBox").css("margin-top",adjHeight);
 });
 </script>
 <!-- /專屬js -->

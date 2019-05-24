@@ -250,6 +250,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='{{$dealerData
 
             <li class='_w'><a href="{{url('')}}/{{$dealerDetect}}/article/1">購物流程</a></li>
 
+            <li class='_w'><a href="{{url('')}}/{{$dealerDetect}}/article/2">常見Q&A</a></li>
           </ul>
           
 
@@ -310,19 +311,25 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='{{$dealerData
 
     <div id='phoneBar' class="container-fluid _p">
         <a href="{{url('')}}/{{$dealerDetect}}">
-        <div class="col-xs-4 col-sm-4 text-center">
+        <div class="col-xs-3 col-sm-3 text-center">
             <i class="glyphicon glyphicon-home"></i><br>
             首頁
         </div>
         </a>
         <a href="{{url('')}}/{{$dealerDetect}}/article/1">
-        <div class="col-xs-4 col-sm-4 text-center">
+        <div class="col-xs-3 col-sm-3 text-center">
             <i class="glyphicon glyphicon-info-sign"></i><br>
             購物流程
         </div>
-        </a>        
+        </a>   
+        <a href="{{url('')}}/{{$dealerDetect}}/article/2">
+        <div class="col-xs-3 col-sm-3 text-center">
+            <i class="glyphicon glyphicon-question-sign"></i><br>
+            Q&A
+        </div>
+        </a>              
         <a href="{{url('')}}/{{$dealerDetect}}/checkout">
-        <div class="col-xs-4 col-sm-4 text-center">
+        <div class="col-xs-3 col-sm-3 text-center">
             <i class="glyphicon glyphicon-shopping-cart"></i><br>
             結帳
         </div>

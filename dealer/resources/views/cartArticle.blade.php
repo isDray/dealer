@@ -26,7 +26,9 @@
 <!-- 專屬js -->
 <script type="text/javascript">
 $(function(){
-
+    adjHeight = $("#fixBox").height();
+    // 計算高度
+    $("#articleBox").css("margin-top",adjHeight);
 });
 </script>
 <!-- /專屬js -->

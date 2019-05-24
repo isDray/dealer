@@ -89,7 +89,7 @@
                     </div>
                 </div>
 
-                <button class="btn btn-primary waves-effect" type="submit">編輯</button>
+                <button class="btn btn-primary waves-effect" type="submit">確定</button>
 
             </form>
 
