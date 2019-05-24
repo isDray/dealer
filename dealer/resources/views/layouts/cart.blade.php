@@ -110,6 +110,20 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='{{$dealerData
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
+          
+          <!--  手機搜尋 -->
+          <div id='phonebox' class='_p' >
+            <form class="navbar-form navbar-right" action="{{url('')}}/{{$dealerDetect}}/cartSearch/1/" method="get" style="margin:0px;padding:0px;">
+                {{ csrf_field() }}
+              <div class="input-group">
+                 <input type="text" class="form-control" placeholder="搜尋商品" name='keyword'>
+                 <span class="input-group-btn">
+                      <button class="btn btn-primary" type="submit">搜尋</button>
+                 </span>
+              </div>
+            </form>
+          </div>
+          <!--  /手機搜尋-->
 
           <div id='cartBox' class="dropdown">
             
@@ -192,7 +206,6 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='{{$dealerData
     
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-          
 <!--           <ul class="nav navbar-nav">
             <li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>
             <li><a href="#">Link</a></li>
