@@ -63,6 +63,8 @@ class CartController extends Controller
         
         // 取出最新商品
         // 取出代理商有庫存之商品
+
+        /*
         $haveStockGoods = GoodsStock::where('dealer_id',$cartUser)->where('goods_num','>',0)->get();
 
         if( count($haveStockGoods) > 0 ){
@@ -77,9 +79,15 @@ class CartController extends Controller
             array_push( $goodsCanShow , $haveStockGood['goods_id'] );
 
         }
+        */
         
         // 最新商品
-        $newGoods = Goods::whereIn('id',$goodsCanShow)->orderBy('id', 'desc')->limit(8)->get();
+        // $newGoods = Goods::whereIn('id',$goodsCanShow)->orderBy('id', 'desc')->limit(8)->get();
+        $newGoods = Goods::
+                    leftJoin( DB::raw("(SELECT goods_id,goods_num as stock from goods_stock WHERE dealer_id = {$cartUser} )as gs") , function($join) {
+                        $join->on('goods.id', '=', 'gs.goods_id');
+                    })->raw("SELECT *, IFNULL(gs.stock,0)")->orderBy('id', 'desc')->where('stock','>',0)->limit(8)->get();
+        
 
         if( count($newGoods) > 0){
 
@@ -108,60 +116,65 @@ class CartController extends Controller
         }
         
         // 熱銷商品
-        $allOrders = Order::where('dealer_id',$cartUser)->get();
-        $allOrderArr = [];
-        $hots = [];
-        if( count($allOrders) > 0 ){
+        // $allOrders = Order::where('dealer_id',$cartUser)->get();
+        // $allOrderArr = [];
+        // $hots = [];
+        // if( count($allOrders) > 0 ){
 
-            foreach ($allOrders as $allOrder ) {
+        //     foreach ($allOrders as $allOrder ) {
 
-                array_push($allOrderArr, $allOrder['id']);
+        //         array_push($allOrderArr, $allOrder['id']);
 
-            }
+        //     }
  
-             //
-            $hots = OrderGoods::whereIn('oid',$allOrderArr)->groupBy('gid')->orderBy('total','DESC')->limit(8)->selectRaw('gid, SUM(num) as total')->get();
+
+        //     $hots = OrderGoods::whereIn('oid',$allOrderArr)->groupBy('gid')->orderBy('total','DESC')->limit(8)->selectRaw('gid, SUM(num) as total')->get();
             
-            if( count($hots) > 0){
+        //     if( count($hots) > 0){
 
-                $hots = json_decode($hots,true);
-                $hotArr = [];
-                foreach ($hots as $hot) {
+        //         $hots = json_decode($hots,true);
+        //         $hotArr = [];
+        //         foreach ($hots as $hot) {
 
-                    array_push($hotArr, $hot['gid']);
-                }
+        //             array_push($hotArr, $hot['gid']);
+        //         }
                 
-                $hots = Goods::whereIn('id',$hotArr)->limit(8)->get();
+        //         $hots = Goods::whereIn('id',$hotArr)->limit(8)->get();
 
-                foreach ($hots as $hotk=> $hot) {
+        //         foreach ($hots as $hotk=> $hot) {
     
-                    // 確認經銷商有無設定價格
-                    $goodsPrice = GoodsPrice::where('dealer_id',$cartUser)->where('goods_id',$hot['id'])->first();
-                    
-                    if( $goodsPrice == NULL){
-    
-                        $goodsPrice = round($dealerDatas['multiple'] * $hot['w_price']);
-    
-                    }else{
-            
-                        $goodsPrice ->toArray();
-                        $goodsPrice = $goodsPrice->price;
-                    }
-                    
-                    $hots[$hotk]['goodsPrice'] = $goodsPrice;
-                }                
 
-            }else{
-                $hots = [];
-            }
+        //             $goodsPrice = GoodsPrice::where('dealer_id',$cartUser)->where('goods_id',$hot['id'])->first();
+                    
+        //             if( $goodsPrice == NULL){
+    
+        //                 $goodsPrice = round($dealerDatas['multiple'] * $hot['w_price']);
+    
+        //             }else{
             
-        }
+        //                 $goodsPrice ->toArray();
+        //                 $goodsPrice = $goodsPrice->price;
+        //             }
+                    
+        //             $hots[$hotk]['goodsPrice'] = $goodsPrice;
+        //         }                
+
+        //     }else{
+        //         $hots = [];
+        //     }
+            
+        // }
 
         // 熱銷商品結束
 
         // 推薦商品
-        $recommendGoods = Goods::whereIn('id',$goodsCanShow)->where('recommend','1')->orderBy('created_at', 'desc')->limit(8)->get();
+        //$recommendGoods = Goods::whereIn('id',$goodsCanShow)->where('recommend','1')->orderBy('created_at', 'desc')->limit(8)->get();
         
+        $recommendGoods =  Goods::
+                    leftJoin( DB::raw("(SELECT goods_id,goods_num as stock from goods_stock WHERE dealer_id = {$cartUser} )as gs") , function($join) {
+                        $join->on('goods.id', '=', 'gs.goods_id');
+                    })->raw("SELECT *, IFNULL(gs.stock,0)")->orderBy('id', 'desc')->where('recommend',1)->where('stock','>',0)->limit(8)->get();
+
         if( count($recommendGoods) > 0){
 
             $recommendGoods = json_decode($recommendGoods,true);
@@ -195,7 +208,7 @@ class CartController extends Controller
         	                             'categorys' => $categorys,
                                          'newGoods'=>$newGoods,
                                          'recommendGoods'=>$recommendGoods,
-                                         'hots'=>$hots,
+                                         'hots'=>$hots=[],
                                          'color'=>'yellow'
                                         ]);     	
     }
@@ -813,7 +826,7 @@ class CartController extends Controller
         }
         
         // 先取出有庫存之商品存成陣列
-        $tmpRes = GoodsStock::where('dealer_id',$cartUser)->where("goods_num",">=",0)->get();
+        /*$tmpRes = GoodsStock::where('dealer_id',$cartUser)->where("goods_num",">=",0)->get();
         $canSells = [];
         if( count( $tmpRes) > 0 ){
             $tmpRes = json_decode($tmpRes,True);
@@ -821,7 +834,7 @@ class CartController extends Controller
             foreach ($tmpRes as $tmpRe) {
                 array_push($canSells, $tmpRe['goods_id']);
             }
-        }
+        }*/
 
         $showNum = 20;
         
@@ -830,20 +843,34 @@ class CartController extends Controller
         $orderBy = 'created_at';
 
         // 計算總筆數
-        $total = Goods::where('cid',$request->cid)->whereIn('id',$canSells)->count();
+        // $total = Goods::where('cid',$request->cid)->whereIn('id',$canSells)->count();
+        $total = Goods::
+                leftJoin( DB::raw("(SELECT goods_id,goods_num as stock from goods_stock WHERE dealer_id = {$cartUser} )as gs") , function($join) {
+                    $join->on('goods.id', '=', 'gs.goods_id');
+                })->raw("SELECT *, IFNULL(gs.stock,0)")->where('cid',$request->cid)->count();
         
         // 計算總頁數
         $totalPage = ceil($total/$showNum);
 
         // 取出要呈現的商品
-        $goods = Goods::where('cid',$request->cid)->whereIn('id',$canSells)->offset( $start )->limit( $showNum )->orderBy( $orderBy )->get();
+        //$goods = Goods::where('cid',$request->cid)->whereIn('id',$canSells)->offset( $start )->limit( $showNum )->orderBy( $orderBy )->get();
         
-        $goods = Goods::leftJoin('goods_cat', function($join) {
+        /*$goods = Goods::leftJoin('goods_cat', function($join) {
                     $join->on('goods.id', '=', 'goods_cat.gid');
                 })->where(function ($query) use( $request ) {
                     $query->where('goods.cid', $request->cid)
                     ->orWhere('goods_cat.cid',  $request->cid);
-                })->offset( $start )->limit( $showNum )->orderBy( $orderBy )->get();
+                })->offset( $start )->limit( $showNum )->orderBy( $orderBy )->get();*/
+
+        $goods =Goods::
+                leftJoin( DB::raw("(SELECT goods_id,goods_num as stock from goods_stock WHERE dealer_id = {$cartUser} )as gs") , function($join) {
+                    $join->on('goods.id', '=', 'gs.goods_id');
+                })->leftJoin('goods_cat', function($join) {
+                    $join->on('goods.id', '=', 'goods_cat.gid');
+                })->where(function ($query) use( $request ) {
+                    $query->where('goods.cid', $request->cid)
+                    ->orWhere('goods_cat.cid',  $request->cid);
+                })->offset( $start )->limit( $showNum )->orderBy( $orderBy )->raw("SELECT *, IFNULL(gs.stock,0)")->get();
         // 計算價格
         foreach ($goods as $goodk => $good) {
             
@@ -917,15 +944,15 @@ class CartController extends Controller
         }
         
         // 先取出有庫存之商品存成陣列
-        $tmpRes = GoodsStock::where('dealer_id',$cartUser)->where("goods_num",">=",0)->get();
-        $canSells = [];
-        if( count( $tmpRes) > 0 ){
-            $tmpRes = json_decode($tmpRes,True);
+        // $tmpRes = GoodsStock::where('dealer_id',$cartUser)->where("goods_num",">=",0)->get();
+        // $canSells = [];
+        // if( count( $tmpRes) > 0 ){
+        //     $tmpRes = json_decode($tmpRes,True);
 
-            foreach ($tmpRes as $tmpRe) {
-                array_push($canSells, $tmpRe['goods_id']);
-            }
-        }
+        //     foreach ($tmpRes as $tmpRe) {
+        //         array_push($canSells, $tmpRe['goods_id']);
+        //     }
+        // }
 
         $showNum = 20;
         
@@ -936,13 +963,22 @@ class CartController extends Controller
         $keyword = Input::get('keyword', false);
 
         // 計算總筆數
-        $total = Goods::where(function ($query) use ($keyword) {
+        // $total = Goods::where(function ($query) use ($keyword) {
+                      
+        //               $query->where('name','like', "%{$keyword}%"  )
+        //               ->orWhere('goods_sn', 'like', "%{$keyword}%" );
+
+        //          })->whereIn('id',$canSells)->count();
+        
+        $total = Goods::
+                leftJoin( DB::raw("(SELECT goods_id,goods_num as stock from goods_stock WHERE dealer_id = {$cartUser} )as gs") , function($join) {
+                    $join->on('goods.id', '=', 'gs.goods_id');
+                })->raw("SELECT *, IFNULL(gs.stock,0)")->where(function ($query) use ($keyword) {
                       
                       $query->where('name','like', "%{$keyword}%"  )
                       ->orWhere('goods_sn', 'like', "%{$keyword}%" );
 
-                 })->whereIn('id',$canSells)->count();
-        
+                 })->count();
         // 計算總頁數
         $totalPage = ceil($total/$showNum);
 
@@ -950,13 +986,21 @@ class CartController extends Controller
 
 
         // 取出要呈現的商品
-        $goods = Goods::where(function ($query) use ($keyword) {
+        // $goods = Goods::where(function ($query) use ($keyword) {
+                      
+        //               $query->where('name','like', "%{$keyword}%"  )
+        //               ->orWhere('goods_sn', 'like', "%{$keyword}%" );
+
+        //          })->whereIn('id',$canSells)->offset( $start )->limit( $showNum )->orderBy( $orderBy )->get();
+
+        $goods = Goods::leftJoin( DB::raw("(SELECT goods_id,goods_num as stock from goods_stock WHERE dealer_id = {$cartUser} )as gs") , function($join) {
+                    $join->on('goods.id', '=', 'gs.goods_id');
+                })->raw("SELECT *, IFNULL(gs.stock,0)")->where(function ($query) use ($keyword) {
                       
                       $query->where('name','like', "%{$keyword}%"  )
                       ->orWhere('goods_sn', 'like', "%{$keyword}%" );
 
-                 })->whereIn('id',$canSells)->offset( $start )->limit( $showNum )->orderBy( $orderBy )->get();
-        
+                })->offset( $start )->limit( $showNum )->orderBy( $orderBy )->get();
         // 計算價格
         foreach ($goods as $goodk => $good) {
             

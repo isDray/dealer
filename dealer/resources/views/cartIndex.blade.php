@@ -134,9 +134,14 @@
             
                 <h5> {{ $newGood['name'] }} </h5>
                 <h4>價格:{{$newGood['goodsPrice'] }}</h4>
+
                 <p class='itemBtn'>
                   <!-- <a href="#" class="btn btn-view" role="button"><span class="glyphicon glyphicon-search"></span>查看商品</a>  -->
-                   <button class="btn btn-primary addone" role="button" goodsId="{{$newGood['id']}}"><span class="glyphicon glyphicon-shopping-cart"></span>加入購物車</button>
+                    @if( $newGood['stock'] > 0)
+                    <button class="btn btn-primary addone" role="button" goodsId="{{$newGood['id']}}"><span class="glyphicon glyphicon-shopping-cart"></span>加入購物車</button>
+                    @else
+                    <button class="btn btn-danger" role="button" goodsId="{{$newGood['id']}}" disabled><span class="glyphicon glyphicon-retweet"></span>補貨中</button>
+                    @endif
                 </p>
                 </div>
             </div>
