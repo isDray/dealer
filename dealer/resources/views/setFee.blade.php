@@ -31,62 +31,45 @@
             <div class='body'>
                 <div class="row clearfix">
                 <div class='col-md-4 col-xs-12 col-sm-12'>
-                <form action="{{url('/setDo')}}" method='POST'>
+                <form action="{{url('/setFeeDo')}}" method='POST'>
                     {{ csrf_field() }}
+                    <table>
                     <div class="input-group">
                             
                         <span class="input-group-addon">
-                        網站名稱:
+                        新會員免運門檻:
                         </span>
                             
                         <div class="form-line">
-                            <input type="text" class="form-control align-left myborder" name='name' value="{{$webSet->name}}">
+                            <input type="text" class="form-control align-left myborder" name='new_free_price' value="{{$webSet->new_free_price}}">
                         </div>
        
                     </div>
-                    
+                            
                     <div class="input-group">
                             
                         <span class="input-group-addon">
-                        呈現方式:
+                        一般免運門檻:
                         </span>
-                        
-                        <input name="showType" id='showType1' type="radio" class="with-gap radio-col-teal rootRole" value="1" @if( $webSet->show_type == 1) checked @endif />
-                        <label for="showType1">表格</label>
-
-                        <input name="showType" id='showType2' type="radio" class="with-gap radio-col-teal rootRole" value="2" @if( $webSet->show_type == 2) checked @endif />
-                        <label for="showType2">列表</label>
-                        
-                    </div>  
+                            
+                        <div class="form-line">
+                            <input type="text" class="form-control align-left myborder" name='free_price' value="{{$webSet->free_price}}">
+                        </div>
+       
+                    </div>                                                                                   
 
                     <div class="input-group">
                             
                         <span class="input-group-addon">
-                        排序方式:
+                        運費:
                         </span>
-                        
-                        <input name="sortType" id='sortType1' type="radio" class="with-gap radio-col-teal rootRole" value="1" @if( $webSet->sort_type == 1) checked @endif />
-                        <label for="sortType1">上架時間</label>
-
-                        <input name="sortType" id='sortType2' type="radio" class="with-gap radio-col-teal rootRole" value="2" @if( $webSet->sort_type == 2) checked @endif />
-                        <label for="sortType2">價格</label>
-                        
-                    </div>
-
-                    <div class="input-group" id='sortSize'>
                             
-                        <span class="input-group-addon">
-                        排序規則:
-                        </span>
-                        
-                        <input name="way" id='way1' type="radio" class="with-gap radio-col-teal rootRole" value="1" @if( $webSet->sort_way == 1) checked @endif />
-                        <label for="way1">小到大</label>
-
-                        <input name="way" id='way2' type="radio" class="with-gap radio-col-teal rootRole" value="2" @if( $webSet->sort_way == 2) checked @endif />
-                        <label for="way2">大到小</label>
-                        
-                    </div>                                                                
-                    
+                        <div class="form-line">
+                            <input type="text" class="form-control align-left myborder" name='ship_fee' value="{{$webSet->ship_fee}}">
+                        </div>
+       
+                    </div>                    
+                    </table>
                     <input type='submit' class='btn btn-primary waves-effect' value='確定'>
                 </form>
                 </div>

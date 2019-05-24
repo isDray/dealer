@@ -81,6 +81,9 @@ Route::group(['middleware' => ['auth','role:Admin'] ], function () {
     // 網站設置
     Route::get('/set','SetController@set');
     Route::post('/setDo','SetController@setDo');
+    Route::get('/setFee','SetController@setFee');
+    Route::post('/setFeeDo','SetController@setFeeDo');
+
     Route::get('/articleList','SetController@articleList');
     Route::get('/articleNew','SetController@articleNew');
     Route::post('/articleNewDo','SetController@articleNewDo');

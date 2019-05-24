@@ -153,6 +153,127 @@ class SetController extends Controller
 
 
     /*----------------------------------------------------------------
+     | 運費設置
+     |----------------------------------------------------------------
+     |
+     */
+    public function setFee( Request $request ){
+        
+        // 如果沒有權限直接跳回
+        if( !Auth::user()->can('setEdit') ){
+
+            return back()->with('errorMsg', '帳號無此操作權限 , 如有需要請切換帳號或聯絡管理員增加權限' );
+
+        }
+
+        $pageTitle = '網站運費設定';
+
+        $set = DB::table('set')->find(1);
+
+        return view('setFee')->with([ 'title' => $pageTitle,
+                                      'webSet'   => $set
+                                         ]); 
+    }
+
+
+
+
+    /*----------------------------------------------------------------
+     | 網站主頁設置實作
+     |----------------------------------------------------------------
+     |
+     */
+    public function setFeeDo( Request $request ){
+        
+        // 如果沒有權限直接跳回
+        if( !Auth::user()->can('setEdit') ){
+
+            return back()->with('errorMsg', '帳號無此操作權限 , 如有需要請切換帳號或聯絡管理員增加權限' );
+            
+        }
+        // 表單驗證
+        $errText = '';
+
+        $validator = Validator::make($request->all(), [
+
+            'new_free_price' => 'required',
+            'free_price' => 'required',
+            'ship_fee' => 'required',
+
+
+        ],[
+            'new_free_price.required'=> '新會員免運門檻為必填',
+            'free_price.required'=> '一般免運門檻為必填',
+            'ship_fee.required'=> '運費為必填',
+
+            
+        ]);
+
+        if ($validator->fails()) {
+
+            $errors = $validator->errors();
+                
+            foreach( $errors->all() as $message ){
+                    
+                $errText .= "$message<br>";
+            
+            }
+            
+        }        
+
+        if( !empty( $errText ) ){
+
+            return back()->with('errorMsg', $errText );
+        }
+        
+        // 判斷資料庫裏面是否已經有一筆資料了
+        $web = DB::table('set')->find(1);
+        
+        // 如果有資料就用更新的 , 沒有就新增一筆
+        if( empty($web) ){
+            
+            // $insertId = DB::table('set')->insertGetId(
+            //     ['name'      => $request->name,
+            //      'show_type' => $request->showType,
+            //      'sort_type' => $request->sortType,
+            //      'sort_way'  => $request->way,
+            //      'created_at' => date('Y-m-d H:i:s'),
+            //      'updated_at' => date('Y-m-d H:i:s'),
+            //     ]
+            // );
+
+            // if( !empty($insertId) ){
+
+            //     return redirect('/set')->with('successMsg', '運費設置成功');
+
+            // }else{
+
+            //     return back()->with('errorMsg', '網站設置失敗 , 請稍後再試' );
+            // }
+
+        }else{
+            
+            $res = DB::table('set')
+            ->where('id', 1)
+            ->update(['new_free_price'  => $request->new_free_price,
+                      'free_price'      => $request->free_price,
+                      'ship_fee'        => $request->ship_fee,     
+                    ]);
+            if( $res ){
+
+                return redirect('/setFee')->with('successMsg', '運費設置成功');
+
+            }else{
+
+                return back()->with('errorMsg', '運費設置失敗 , 請稍後再試' );
+            }
+        }
+    }
+
+
+
+
+    /*----------------------------------------------------------------
      | 文章管理
      |----------------------------------------------------------------
      |

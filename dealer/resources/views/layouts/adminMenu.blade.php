@@ -177,6 +177,9 @@
                                 <a href="{{url('/set')}}">網站資料設定</a>
                             </li>
                             <li>
+                                <a href="{{url('/setFee')}}">運費設置</a>
+                            </li>                            
+                            <li>
                                 <a href="{{url('/articleList')}}">文章管理</a>
                             </li>
                             <li>

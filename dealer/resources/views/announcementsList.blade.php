@@ -67,9 +67,9 @@ a{
                                             <th>{{$announcement->name}}</th>
                                             <th>
                                                 @if($announcement->status)
-                                                    <i class="material-icons col-light-green">fiber_manual_record</i>
+                                                    <i class="material-icons col-light-green">done</i>
                                                 @else
-                                                    <i class="material-icons col-red">fiber_manual_record</i>
+                                                    <i class="material-icons col-red">clear</i>
                                                 @endif
                                             </th>
                                             <th>{{$announcement->sort}}</th>
