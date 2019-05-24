@@ -31,6 +31,7 @@ use App\GoodsPic;
 use App\GoodsCat;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Input;
+use App\Set;
 
 class CartController extends Controller
 {
@@ -840,7 +841,25 @@ class CartController extends Controller
         
         $start = ( $page - 1 ) * $showNum;
         
-        $orderBy = 'created_at';
+        $set = Set::find(1);
+
+        if( $set->sort_type == 1){
+            
+            $orderBy = 'id';
+
+        }else{
+            
+            $orderBy = 'goodsPrice';
+        }
+
+        if( $set->sort_way == 1){
+
+            $sort_way = 'asc';
+        
+        }else{
+
+            $sort_way = 'desc';
+        }
 
         // 計算總筆數
         // $total = Goods::where('cid',$request->cid)->whereIn('id',$canSells)->count();
@@ -861,18 +880,29 @@ class CartController extends Controller
                     $query->where('goods.cid', $request->cid)
                     ->orWhere('goods_cat.cid',  $request->cid);
                 })->offset( $start )->limit( $showNum )->orderBy( $orderBy )->get();*/
+        
+        // $try =DB::table('goods_price')-> select(DB::raw("(SELECT goods_id,price as goodsPrice from goods_price WHERE dealer_id = {$cartUser} )"))->get();
+
 
         $goods =Goods::
                 leftJoin( DB::raw("(SELECT goods_id,goods_num as stock from goods_stock WHERE dealer_id = {$cartUser} )as gs") , function($join) {
                     $join->on('goods.id', '=', 'gs.goods_id');
-                })->leftJoin('goods_cat', function($join) {
+                })
+                ->leftJoin( DB::raw("(SELECT goods_id,price as goodsPrice from goods_price WHERE dealer_id = {$cartUser} )as gp") , function($join) {
+
+                    $join->on('goods.id', '=', 'gp.goods_id');
+                })
+                ->leftJoin('goods_cat', function($join) {
                     $join->on('goods.id', '=', 'goods_cat.gid');
                 })->where(function ($query) use( $request ) {
+
                     $query->where('goods.cid', $request->cid)
                     ->orWhere('goods_cat.cid',  $request->cid);
-                })->offset( $start )->limit( $showNum )->orderBy( $orderBy )->raw("SELECT *, IFNULL(gs.stock,0)")->get();
+
+                })->orderBy( $orderBy , $sort_way )->offset( $start )->limit( $showNum )->selectRaw(" goods.*, IFNULL(stock,0) as stock , IFNULL(goodsPrice,goods.w_price*{$dealerDatas['multiple']}) as goodsPrice")->get();
+
         // 計算價格
-        foreach ($goods as $goodk => $good) {
+        /*foreach ($goods as $goodk => $good) {
             
             $goodsPrice = GoodsPrice::where('dealer_id',$cartUser)->where('goods_id',$good['id'])->first();
                 
@@ -888,7 +918,7 @@ class CartController extends Controller
                 }
                 
                 $goods[$goodk]['goodsPrice'] = $goodsPrice;
-        }
+        }*/
     
         $plist= $this->createPlist(url("/{$request->name}/cartCategory/$request->cid") , $page , $totalPage);
 
@@ -958,7 +988,25 @@ class CartController extends Controller
         
         $start = ( $page - 1 ) * $showNum;
         
-        $orderBy = 'created_at';
+        $set = Set::find(1);
+
+        if( $set->sort_type == 1){
+            
+            $orderBy = 'id';
+
+        }else{
+            
+            $orderBy = 'goodsPrice';
+        }
+
+        if( $set->sort_way == 1){
+
+            $sort_way = 'asc';
+        
+        }else{
+            
+            $sort_way = 'desc';
+        }
 
         $keyword = Input::get('keyword', false);
 
@@ -993,16 +1041,41 @@ class CartController extends Controller
 
         //          })->whereIn('id',$canSells)->offset( $start )->limit( $showNum )->orderBy( $orderBy )->get();
 
+
+// $goods =Goods::
+//                 leftJoin( DB::raw("(SELECT goods_id,goods_num as stock from goods_stock WHERE dealer_id = {$cartUser} )as gs") , function($join) {
+//                     $join->on('goods.id', '=', 'gs.goods_id');
+//                 })
+//                 ->leftJoin( DB::raw("(SELECT goods_id,price as goodsPrice from goods_price WHERE dealer_id = {$cartUser} )as gp") , function($join) {
+
+//                     $join->on('goods.id', '=', 'gp.goods_id');
+//                 })
+//                 ->leftJoin('goods_cat', function($join) {
+//                     $join->on('goods.id', '=', 'goods_cat.gid');
+//                 })->where(function ($query) use( $request ) {
+
+//                     $query->where('goods.cid', $request->cid)
+//                     ->orWhere('goods_cat.cid',  $request->cid);
+
+//                 })->orderBy( $orderBy )->offset( $start )->limit( $showNum )->selectRaw(" goods.*, IFNULL(stock,0) as stock , IFNULL(goodsPrice,goods.w_price*{$dealerDatas['multiple']}) as goodsPrice")->get();
+
+
+
         $goods = Goods::leftJoin( DB::raw("(SELECT goods_id,goods_num as stock from goods_stock WHERE dealer_id = {$cartUser} )as gs") , function($join) {
                     $join->on('goods.id', '=', 'gs.goods_id');
-                })->raw("SELECT *, IFNULL(gs.stock,0)")->where(function ($query) use ($keyword) {
+                })
+                ->leftJoin( DB::raw("(SELECT goods_id,price as goodsPrice from goods_price WHERE dealer_id = {$cartUser} )as gp") , function($join) {
+
+                    $join->on('goods.id', '=', 'gp.goods_id');
+                })
+                ->selectRaw(" goods.*, IFNULL(stock,0) as stock , IFNULL(goodsPrice,goods.w_price*{$dealerDatas['multiple']}) as goodsPrice")->where(function ($query) use ($keyword) {
                       
                       $query->where('name','like', "%{$keyword}%"  )
                       ->orWhere('goods_sn', 'like', "%{$keyword}%" );
 
-                })->offset( $start )->limit( $showNum )->orderBy( $orderBy )->get();
+                })->offset( $start )->limit( $showNum )->orderBy( $orderBy , $sort_way )->get();
         // 計算價格
-        foreach ($goods as $goodk => $good) {
+        /*foreach ($goods as $goodk => $good) {
             
             $goodsPrice = GoodsPrice::where('dealer_id',$cartUser)->where('goods_id',$good['id'])->first();
                 
@@ -1018,7 +1091,7 @@ class CartController extends Controller
                 }
                 
                 $goods[$goodk]['goodsPrice'] = $goodsPrice;
-        }
+        }*/
     
         $plist= $this->createPlist(url("/{$request->name}/cartSearch/") , $page , $totalPage , '' , "/?keyword=$keyword");
 

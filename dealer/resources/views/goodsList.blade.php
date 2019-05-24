@@ -95,17 +95,19 @@ a{
                                 </div> 
 
                                 <div class="col-sm-2">
+                                    <p>商品貨號:</p>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control myborder" placeholder="" id='snKeyword' value=''>
+                                    </div>
+                                </div>  
+                                
+                                <div class="col-sm-2">
                                     <p>商品名稱:</p>
                                     <div class="input-group">
                                         <input type="text" class="form-control myborder" placeholder="" id='myKeyword' value=''>
                                     </div>
                                 </div>
-                                <div class="col-sm-2">
-                                    <p>商品貨號:</p>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control myborder" placeholder="" id='snKeyword' value=''>
-                                    </div>
-                                </div>                                
+                              
                             </div>
 
                             <div class="table-responsive">
@@ -308,7 +310,7 @@ $(function(){
      | 觸發查詢
      |----------------------------------------------------------------
      |
-     
+     */
     $("#min_price").bind("keyup change", function(e) {
         
         mytable.ajax.reload();

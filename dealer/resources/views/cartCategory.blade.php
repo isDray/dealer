@@ -25,7 +25,7 @@
                 </a>
                 <div class="caption">
             
-                <h5> {{ $good['name'] }} </h5>
+                <h5> {{ $good['name'] }}</h5>
                 <h4>價格:{{$good['goodsPrice'] }}</h4>
                 
                 <p class='itemBtn'>
