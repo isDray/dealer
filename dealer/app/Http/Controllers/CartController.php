@@ -902,7 +902,7 @@ class CartController extends Controller
                     $query->where('goods.cid', $request->cid)
                     ->orWhere('goods_cat.cid',  $request->cid);
 
-                })->orderBy( $orderBy , $sort_way )->offset( $start )->limit( $showNum )->selectRaw(" goods.*, IFNULL(stock,0) as stock , IFNULL(goodsPrice,goods.w_price*{$dealerDatas['multiple']}) as goodsPrice")->get();
+                })->orderBy( $orderBy , $sort_way )->offset( $start )->limit( $showNum )->selectRaw(" goods.*, IFNULL(stock,0) as stock , round(IFNULL(goodsPrice,goods.w_price*{$dealerDatas['multiple']})) as goodsPrice")->get();
 
         // 計算價格
         /*foreach ($goods as $goodk => $good) {
@@ -1072,7 +1072,7 @@ class CartController extends Controller
 
                     $join->on('goods.id', '=', 'gp.goods_id');
                 })
-                ->selectRaw(" goods.*, IFNULL(stock,0) as stock , IFNULL(goodsPrice,goods.w_price*{$dealerDatas['multiple']}) as goodsPrice")->where(function ($query) use ($keyword) {
+                ->selectRaw(" goods.*, IFNULL(stock,0) as stock , round(IFNULL(goodsPrice,goods.w_price*{$dealerDatas['multiple']})) as goodsPrice")->where(function ($query) use ($keyword) {
                       
                       $query->where('name','like', "%{$keyword}%"  )
                       ->orWhere('goods_sn', 'like', "%{$keyword}%" );
