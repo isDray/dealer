@@ -163,14 +163,14 @@ Route::group(['middleware' => ['auth','role:Admin|Dealer'] ], function () {
 
 
     // 經銷商網站管理
-    Route::get('/n_dealer','DealerController@index');
-    Route::post('/n_dealerQuery','DealerController@query');
-    Route::get('/n_dealerNew','DealerController@dealerNew');      // 新增經銷商介面
-    Route::post('/n_dealerNewDo','DealerController@dealerNewDo'); // 新增經銷商實作
-    Route::get('/n_dealerEdit/{id}','DealerController@dealerEdit');// 編輯經銷商頁面
-    Route::post('/n_dealerEditDo','DealerController@dealerEditDo'); // 編輯經銷商實作
-    Route::post('/n_dealerDeleteDo','DealerController@dealerDeleteDo'); // 刪除經銷商
-    Route::get('/n_dealerQr/{id}','DealerController@qrDownload');
+    Route::get('/newdealer','DealerController@index');
+    Route::post('/newdealerQuery','DealerController@query');
+    Route::get('/newdealerNew','DealerController@dealerNew');      // 新增經銷商介面
+    Route::post('/newdealerNewDo','DealerController@dealerNewDo'); // 新增經銷商實作
+    Route::get('/newdealerEdit/{id}','DealerController@dealerEdit');// 編輯經銷商頁面
+    Route::post('/newdealerEditDo','DealerController@dealerEditDo'); // 編輯經銷商實作
+    Route::post('/newdealerDeleteDo','DealerController@dealerDeleteDo'); // 刪除經銷商
+    Route::get('/newdealerQr/{id}','DealerController@qrDownload');
 
     // 經銷商設定商品價格
     Route::get('/price' , 'PriceController@index');// 商品價格列表

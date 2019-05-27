@@ -34,7 +34,7 @@
 
         <div class="body">
         
-            <form action="{{url('/dealerEditDo')}}" method="POST" enctype="multipart/form-data">
+            <form action="{{url('/newdealerEditDo')}}" method="POST" enctype="multipart/form-data">
                 <input type='hidden' name="dealerId" value="{{ $dealer['uid'] }}" >
                 {{ csrf_field() }} 
                 <div class='col-sm-12'>

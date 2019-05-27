@@ -32,7 +32,7 @@
 
         <div class="body">
         
-            <form action="{{url('/dealerNewDo')}}" method="POST" enctype="multipart/form-data">
+            <form action="{{url('/newdealerNewDo')}}" method="POST" enctype="multipart/form-data">
 
                 {{ csrf_field() }} 
                 <div class='col-sm-12'>

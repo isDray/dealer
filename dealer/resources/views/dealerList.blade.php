@@ -34,7 +34,7 @@ a{
                     -->
                     
                     
-                    <a href="{{url('/n_dealerNew')}}">
+                    <a href="{{url('/newdealerNew')}}">
                         <span type="button" class="btn btn-primary waves-effect">
                         新增經銷商
                         </span>
@@ -168,7 +168,7 @@ a{
                     </div>
                 </div>
 
-                <form action="{{url('/n_dealerDeleteDo')}}" method="POST" id='deleteDealerForm'>
+                <form action="{{url('/newdealerDeleteDo')}}" method="POST" id='deleteDealerForm'>
                     {{ csrf_field() }}
                     <input type='hidden' id='deleteInput' name='id'>
                 </form>
@@ -223,7 +223,7 @@ $(function(){
         "serverSide": true,
 
         "ajax": {
-            "url" :"{{url('/n_dealerQuery')}}",
+            "url" :"{{url('/newdealerQuery')}}",
             "type": "POST",
             "data": function ( d ) { 
                 d._token = "{{csrf_token()}}";
@@ -313,7 +313,7 @@ $(function(){
                 "orderable": false,
                 "render" : function ( url, type, full) {
                     //console.log( full );
-                    return  '<a href="'+"{{url('/n_dealerEdit')}}/"+full[0]+'">'+
+                    return  '<a href="'+"{{url('/newdealerEdit')}}/"+full[0]+'">'+
                             @role('Admin')
                             @permission('purchaseEdit')
                             '<button type="button" class="btn btn-success waves-effect">'+
@@ -335,7 +335,7 @@ $(function(){
                             '<span>刪除</span>'+
                             '</button>&nbsp;'+
 
-                            '<a href="{{url('')}}/n_dealerQr/'+full[0]+'">'+
+                            '<a href="{{url('')}}/newdealerQr/'+full[0]+'">'+
                             '<button type="button" class="btn bg-grey waves-effect">'+
                             '<i class="material-icons">file_download</i>'+
                             '<span>QR-code</span>'+
