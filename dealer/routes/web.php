@@ -163,14 +163,14 @@ Route::group(['middleware' => ['auth','role:Admin|Dealer'] ], function () {
 
 
     // 經銷商網站管理
-    Route::get('/dealer','DealerController@index');
-    Route::post('/dealerQuery','DealerController@query');
-    Route::get('/dealerNew','DealerController@dealerNew');      // 新增經銷商介面
-    Route::post('/dealerNewDo','DealerController@dealerNewDo'); // 新增經銷商實作
-    Route::get('/dealerEdit/{id}','DealerController@dealerEdit');// 編輯經銷商頁面
-    Route::post('/dealerEditDo','DealerController@dealerEditDo'); // 編輯經銷商實作
-    Route::post('/dealerDeleteDo','DealerController@dealerDeleteDo'); // 刪除經銷商
-    Route::get('/dealerQr/{id}','DealerController@qrDownload');
+    Route::get('/n_dealer','DealerController@index');
+    Route::post('/n_dealerQuery','DealerController@query');
+    Route::get('/n_dealerNew','DealerController@dealerNew');      // 新增經銷商介面
+    Route::post('/n_dealerNewDo','DealerController@dealerNewDo'); // 新增經銷商實作
+    Route::get('/n_dealerEdit/{id}','DealerController@dealerEdit');// 編輯經銷商頁面
+    Route::post('/n_dealerEditDo','DealerController@dealerEditDo'); // 編輯經銷商實作
+    Route::post('/n_dealerDeleteDo','DealerController@dealerDeleteDo'); // 刪除經銷商
+    Route::get('/n_dealerQr/{id}','DealerController@qrDownload');
 
     // 經銷商設定商品價格
     Route::get('/price' , 'PriceController@index');// 商品價格列表
@@ -193,11 +193,14 @@ Route::post('/{name}/deleteItem/','CartController@deleteItem')->middleware(['car
 Route::get('/{name}/checkout/','CartController@checkout')->middleware(['cart']);
 Route::post('/{name}/newOrder/','CartController@newOrder')->middleware(['cart']);
 Route::get('/{name}/thank/','CartController@thank')->middleware(['cart']);
-//Route::get('/{name}/import/','CartController@import')->middleware(['cart']);
-//Route::get('/{name}/stock/','CartController@stock')->middleware(['cart']);
+
 Route::get('/{name}/cartCategory/{cid}/{page?}','CartController@cartCategory')->middleware(['cart']);
 Route::get('/{name}/cartSearch/{page?}/','CartController@cartSearch')->middleware(['cart']);
 Route::get('/{name}/article/{aid}','CartController@article')->middleware(['cart']);
+Route::get('/{name}/curl2/','CartController@curl2')->middleware(['cart']);
 
+
+// Route::get('/{name}/import/','CartController@import')->middleware(['cart']);
+// Route::get('/{name}/stock/','CartController@stock')->middleware(['cart']);
 // Route::get('/{name}/desc/','CartController@desc')->middleware(['cart']);
 // Route::get('/{name}/rename/','CartController@rename')->middleware(['cart']);

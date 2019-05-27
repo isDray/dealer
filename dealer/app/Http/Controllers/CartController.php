@@ -287,6 +287,7 @@ class CartController extends Controller
                                          'categorys'    => $categorys,
                                          'goods'        => $goods,
                                          'goodPics'     => $goodPics,
+                                         'isviewGoods'  => true,
                                         ]); 
      }
 
@@ -1492,12 +1493,13 @@ class CartController extends Controller
         //$request->file('mainpic')->storeAs("logo/{$user->id}/","wlogo.$mainpicExtension",'goodsImage');
 
         $rows = $datas->toArray();
-        $today = '20190514';
+
+
+        $today = '20190527';
         // dd($rows);
         DB::beginTransaction();
         // 女性gigh
         $type1 = ['85','86','87','88','89','90','91','92','94','95','96','98','99','105','106','107','108','109','110','111','112','114','115','116','121','122','123','125','126','127','128','129','130','131','132','134','135','136','137','138','139','140','141','144','146','147','148','149','150','151','152','153','156','157','159','160','161','162','164'];
-
         // 男性增強
         $type2 = ['93','100','113','117','118','120','124','142','143','145','163'];
         // 另類
@@ -1506,169 +1508,340 @@ class CartController extends Controller
         $type4 = ['35','36','37','38','39','40','41','42','43','44','45','46','47','48','49','50','51','52','53','54','55','56','57','58','59','60','61','62','63','64','65','66','67','68','69','70','71','72','73','74','75','76','77','78','79','80','81','82','83','84'];
         // 內褲
         $type5 = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34'];
-
+       
         try {
             
             foreach ($rows as $rowk => $row) {
-                if( in_array($rowk, $type1)){
-                    $class='2';
-                }elseif(in_array($rowk, $type2)){
-                    $class='3';
-                }elseif(in_array($rowk, $type3)){
-                    $class='4';
-                }elseif(in_array($rowk, $type4)){
-                    $class='6';
-                }elseif(in_array($rowk, $type5)){
-                    $class='7';
-                }else{
-                    $class='2';
-                }                    
+
+            
+            $class = '';
+
+            if( $row[6] == '女High ‧ 多功能按摩棒'){
+                $class = 1;
+            }
+            if( $row[6] == '女High ‧ G點震動按摩棒/器'){
+                $class = 3;
+            }
+            if( $row[6] == '女High ‧ 逼真老二按摩棒'){
+                $class = 4;
+            }
+            if( $row[6] == '女High ‧ AV女優潮吹棒'){
+                $class = 5;
+            }
+            if( $row[6] == '女High ‧ 激愛挑逗跳蛋'){
+                $class = 6;
+            }
+            if( $row[6] == '猛男 ‧ 加強裝備/長/粗/久'){
+                $class = 7;
+            }
+            if( $row[6] == '男女合歡輔助品'){
+                $class = 8;
+            }
+            if( $row[6] == '其他/特殊商品'){
+                $class = 9;
+            }
+            if( $row[6] == '挑逗心機情趣睡衣'){
+                $class = 10;
+            }
+            if( $row[6] == '誘惑角色扮演戰鬥服'){
+                $class = 11;
+            }
+            if( $row[6] == '野性貓裝網衣/絲網襪'){
+                $class = 12;
+            }
+            if( $row[6] == '浪漫勾魂內褲'){
+                $class = 13;
+            }
+            /*-------*/
+            $class2 = '';
+            if( $row[7] == '女High ‧ 多功能按摩棒'){
+                $class2 = 1;
+            }
+            if( $row[7] == '女High ‧ G點震動按摩棒/器'){
+                $class2 = 3;
+            }
+            if( $row[7] == '女High ‧ 逼真老二按摩棒'){
+                $class2 = 4;
+            }
+            if( $row[7] == '女High ‧ AV女優潮吹棒'){
+                $class2 = 5;
+            }
+            if( $row[7] == '女High ‧ 激愛挑逗跳蛋'){
+                $class2 = 6;
+            }
+            if( $row[7] == '猛男 ‧ 加強裝備/長/粗/久'){
+                $class2 = 7;
+            }
+            if( $row[7] == '男女合歡輔助品'){
+                $class2 = 8;
+            }
+            if( $row[7] == '其他/特殊商品'){
+                $class2 = 9;
+            }
+            if( $row[7] == '挑逗心機情趣睡衣'){
+                $class2 = 10;
+            }
+            if( $row[7] == '誘惑角色扮演戰鬥服'){
+                $class2 = 11;
+            }
+            if( $row[7] == '野性貓裝網衣/絲網襪'){
+                $class2 = 12;
+            }
+            if( $row[7] == '浪漫勾魂內褲'){
+                $class2 = 13;
+            }            
+
             if( $rowk > 0){
-                
-                $goods = new Goods;
 
-                $goods->name       = $row['1'];
-
-                $goods->goods_sn   = $row['3'];
-
-                $goods->cid        = $class;
-
-                $goods->price      = intval($row['5']);
-
-                $goods->w_price    = intval($row['4']);
-                
-                $tmpExtension1 = explode('.', $row['7'])[1];
-
-                $goods->main_pic  = "main/{$today}/{$today}_{$rowk}.{$tmpExtension1}";
-
-                $tmpExtension0 = explode('.', $row['6'])[1];
-
-                $goods->thumbnail = "thumbnail/{$today}/{$today}_{$rowk}.{$tmpExtension0}";
-                $goods->status = 1;
-                $goods->created_at = date("Y-m-d H:i:s");
-
-                $goods->updated_at = date("Y-m-d H:i:s");
-                $goods->desc = '首批商品';
-
-                $goods->save();
-
-                if( !empty($row['8']) ){
-
+                if( Storage::disk('small')->exists($row['8']) ){
+    
                     $tmpExtension = explode('.', $row['8'])[1];
-
-                    $goodsPic = new GoodsPic;
-
-                    $goodsPic->gid       = $goods->id;
-
-                    $goodsPic->pic       = "images/other/{$today}/{$today}_{$rowk}".'_'."1.$tmpExtension";
-
-                    $goodsPic->sort      = 1;
-
-                    $goodsPic->save();                    
+    
+                    $contents = Storage::disk('small')->get($row['8']);
+    
+                    Storage::disk("goodsImage")->put("/images/thumbnail/{$today}/{$today}_{$rowk}.{$tmpExtension}", $contents);
+                  
                 }
-                if( !empty($row['9']) ){
-
+                if( Storage::disk('commom')->exists($row['9']) ){
+    
                     $tmpExtension = explode('.', $row['9'])[1];
-
-                    $goodsPic = new GoodsPic;
-
-                    $goodsPic->gid       = $goods->id;
-
-                    $goodsPic->pic       = "images/other/{$today}/{$today}_{$rowk}".'_'."2.$tmpExtension";
-
-                    $goodsPic->sort      = 2;
-
-                    $goodsPic->save();                    
-                }
-                if( !empty($row['10']) ){
-
+    
+                    $contents = Storage::disk('commom')->get($row['9']);
+    
+                    Storage::disk("goodsImage")->put("/images/main/{$today}/{$today}_{$rowk}.{$tmpExtension}", $contents);
+                  
+                }   
+                if( Storage::disk('commom')->exists($row['10']) && !empty($row['10'])){
+    
                     $tmpExtension = explode('.', $row['10'])[1];
-
-                    $goodsPic = new GoodsPic;
-
-                    $goodsPic->gid       = $goods->id;
-
-                    $goodsPic->pic       = "images/other/{$today}/{$today}_{$rowk}".'_'."3.$tmpExtension";
-
-                    $goodsPic->sort      = 3;
-
-                    $goodsPic->save();                    
-                }                                
-                if( !empty($row['11']) ){
-
-                    $tmpExtension = explode('.', $row['11'])[1];
-
-                    $goodsPic = new GoodsPic;
-
-                    $goodsPic->gid       = $goods->id;
-
-                    $goodsPic->pic       = "images/other/{$today}/{$today}_{$rowk}".'_'."4.$tmpExtension";
-
-                    $goodsPic->sort      = 4;
-
-                    $goodsPic->save();                    
-                }  
-                if( !empty($row['12']) ){
-
-                    $tmpExtension = explode('.', $row['12'])[1];
-
-                    $goodsPic = new GoodsPic;
-
-                    $goodsPic->gid       = $goods->id;
-
-                    $goodsPic->pic       = "images/other/{$today}/{$today}_{$rowk}".'_'."5.$tmpExtension";
-
-                    $goodsPic->sort      = 5;
-
-                    $goodsPic->save();                    
-                }  
-                if( !empty($row['13']) ){
-
-                    $tmpExtension = explode('.', $row['13'])[1];
-
-                    $goodsPic = new GoodsPic;
-
-                    $goodsPic->gid       = $goods->id;
-
-                    $goodsPic->pic       = "images/other/{$today}/{$today}_{$rowk}".'_'."6.$tmpExtension";
-
-                    $goodsPic->sort      = 6;
-
-                    $goodsPic->save();                    
-                } 
-                if( !empty($row['14']) ){
-
-                    $tmpExtension = explode('.', $row['14'])[1];
-
-                    $goodsPic = new GoodsPic;
-
-                    $goodsPic->gid       = $goods->id;
-
-                    $goodsPic->pic       = "images/other/{$today}/{$today}_{$rowk}".'_'."7.$tmpExtension";
-
-                    $goodsPic->sort      = 7;
-
-                    $goodsPic->save();                    
+    
+                    $contents = Storage::disk('commom')->get($row['10']);
+    
+                    Storage::disk("goodsImage")->put("/images/other/{$today}/{$today}_{$rowk}_1.{$tmpExtension}", $contents);
+                  
                 }
-                if( !empty($row['15']) ){
-
+                if( Storage::disk('commom')->exists($row['11']) && !empty($row['11'])){
+    
+                    $tmpExtension = explode('.', $row['11'])[1];
+    
+                    $contents = Storage::disk('commom')->get($row['11']);
+    
+                    Storage::disk("goodsImage")->put("/images/other/{$today}/{$today}_{$rowk}_2.{$tmpExtension}", $contents);
+                  
+                }
+                if( Storage::disk('commom')->exists($row['12']) && !empty($row['12'])){
+    
+                    $tmpExtension = explode('.', $row['12'])[1];
+    
+                    $contents = Storage::disk('commom')->get($row['12']);
+    
+                    Storage::disk("goodsImage")->put("/images/other/{$today}/{$today}_{$rowk}_3.{$tmpExtension}", $contents);
+                  
+                }            
+                if( Storage::disk('commom')->exists($row['13']) && !empty($row['13'])){
+    
+                    $tmpExtension = explode('.', $row['13'])[1];
+    
+                    $contents = Storage::disk('commom')->get($row['13']);
+    
+                    Storage::disk("goodsImage")->put("/images/other/{$today}/{$today}_{$rowk}_4.{$tmpExtension}", $contents);
+                  
+                }
+                if( Storage::disk('commom')->exists($row['14']) && !empty($row['14'])){
+    
+                    $tmpExtension = explode('.', $row['14'])[1];
+    
+                    $contents = Storage::disk('commom')->get($row['14']);
+    
+                    Storage::disk("goodsImage")->put("/images/other/{$today}/{$today}_{$rowk}_5.{$tmpExtension}", $contents);
+                  
+                }     
+                if( Storage::disk('commom')->exists($row['15']) && !empty($row['15'])){
+    
                     $tmpExtension = explode('.', $row['15'])[1];
+    
+                    $contents = Storage::disk('commom')->get($row['15']);
+    
+                    Storage::disk("goodsImage")->put("/images/other/{$today}/{$today}_{$rowk}_6.{$tmpExtension}", $contents);
+                  
+                }     
+                if( Storage::disk('commom')->exists($row['16']) && !empty($row['16'])){
+    
+                    $tmpExtension = explode('.', $row['16'])[1];
+    
+                    $contents = Storage::disk('commom')->get($row['16']);
+    
+                    Storage::disk("goodsImage")->put("/images/other/{$today}/{$today}_{$rowk}_7.{$tmpExtension}", $contents);
+                  
+                }     
+                if( Storage::disk('commom')->exists($row['17']) && !empty($row['17'])){
+    
+                    $tmpExtension = explode('.', $row['17'])[1];
+    
+                    $contents = Storage::disk('commom')->get($row['17']);
+    
+                    Storage::disk("goodsImage")->put("/images/other/{$today}/{$today}_{$rowk}_8.{$tmpExtension}", $contents);
+                  
+                }  
 
-                    $goodsPic = new GoodsPic;
 
-                    $goodsPic->gid       = $goods->id;
+                // $goods = new Goods;
 
-                    $goodsPic->pic       = "images/other/{$today}/{$today}_{$rowk}".'_'."8.$tmpExtension";
+                // $goods->name       = $row['1'];
 
-                    $goodsPic->sort      = 8;
+                // $goods->goods_sn   = $row['3'];
 
-                    $goodsPic->save();                    
-                }                                                                                               
+                // $goods->cid        = $class;
+
+                // $goods->price      = intval($row['5']);
+
+                // $goods->w_price    = intval($row['4']);
+                
+                // $tmpExtension1 = explode('.', $row['9'])[1];
+
+                // $goods->main_pic  = "main/{$today}/{$today}_{$rowk}.{$tmpExtension1}";
+
+                // $tmpExtension0 = explode('.', $row['8'])[1];
+
+                // $goods->thumbnail = "thumbnail/{$today}/{$today}_{$rowk}.{$tmpExtension0}";
+                // $goods->status = 1;
+                // $goods->created_at = date("Y-m-d H:i:s");
+
+                // $goods->updated_at = date("Y-m-d H:i:s");
+                // $goods->desc = '首批';
+
+                // $goods->save();
+
+                // if( !empty($row['10']) ){
+
+                //     $tmpExtension = explode('.', $row['10'])[1];
+
+                //     $goodsPic = new GoodsPic;
+
+                //     $goodsPic->gid       = $goods->id;
+
+                //     $goodsPic->pic       = "images/other/{$today}/{$today}_{$rowk}".'_'."1.$tmpExtension";
+
+                //     $goodsPic->sort      = 1;
+
+                //     $goodsPic->save();                    
+                // }
+                // if( !empty($row['11']) ){
+
+                //     $tmpExtension = explode('.', $row['11'])[1];
+
+                //     $goodsPic = new GoodsPic;
+
+                //     $goodsPic->gid       = $goods->id;
+
+                //     $goodsPic->pic       = "images/other/{$today}/{$today}_{$rowk}".'_'."2.$tmpExtension";
+
+                //     $goodsPic->sort      = 2;
+
+                //     $goodsPic->save();                    
+                // }
+                // if( !empty($row['12']) ){
+
+                //     $tmpExtension = explode('.', $row['12'])[1];
+
+                //     $goodsPic = new GoodsPic;
+
+                //     $goodsPic->gid       = $goods->id;
+
+                //     $goodsPic->pic       = "images/other/{$today}/{$today}_{$rowk}".'_'."3.$tmpExtension";
+
+                //     $goodsPic->sort      = 3;
+
+                //     $goodsPic->save();                    
+                // }                                
+                // if( !empty($row['13']) ){
+
+                //     $tmpExtension = explode('.', $row['13'])[1];
+
+                //     $goodsPic = new GoodsPic;
+
+                //     $goodsPic->gid       = $goods->id;
+
+                //     $goodsPic->pic       = "images/other/{$today}/{$today}_{$rowk}".'_'."4.$tmpExtension";
+
+                //     $goodsPic->sort      = 4;
+
+                //     $goodsPic->save();                    
+                // }  
+                // if( !empty($row['14']) ){
+
+                //     $tmpExtension = explode('.', $row['14'])[1];
+
+                //     $goodsPic = new GoodsPic;
+
+                //     $goodsPic->gid       = $goods->id;
+
+                //     $goodsPic->pic       = "images/other/{$today}/{$today}_{$rowk}".'_'."5.$tmpExtension";
+
+                //     $goodsPic->sort      = 5;
+
+                //     $goodsPic->save();                    
+                // }  
+                // if( !empty($row['15']) ){
+
+                //     $tmpExtension = explode('.', $row['15'])[1];
+
+                //     $goodsPic = new GoodsPic;
+
+                //     $goodsPic->gid       = $goods->id;
+
+                //     $goodsPic->pic       = "images/other/{$today}/{$today}_{$rowk}".'_'."6.$tmpExtension";
+
+                //     $goodsPic->sort      = 6;
+
+                //     $goodsPic->save();                    
+                // } 
+                // if( !empty($row['16']) ){
+
+                //     $tmpExtension = explode('.', $row['16'])[1];
+
+                //     $goodsPic = new GoodsPic;
+
+                //     $goodsPic->gid       = $goods->id;
+
+                //     $goodsPic->pic       = "images/other/{$today}/{$today}_{$rowk}".'_'."7.$tmpExtension";
+
+                //     $goodsPic->sort      = 7;
+
+                //     $goodsPic->save();                    
+                // }
+                // if( !empty($row['17']) ){
+
+                //     $tmpExtension = explode('.', $row['17'])[1];
+
+                //     $goodsPic = new GoodsPic;
+
+                //     $goodsPic->gid       = $goods->id;
+
+                //     $goodsPic->pic       = "images/other/{$today}/{$today}_{$rowk}".'_'."8.$tmpExtension";
+
+                //     $goodsPic->sort      = 8;
+
+                //     $goodsPic->save();                    
+                // }    
+
+                // if( !empty($class2) ){
+    
+                //     $GoodsCat = new GoodsCat;
+    
+                //     $GoodsCat->gid = $goods->id;
+                    
+                //     $GoodsCat->cid = $class2;
+                    
+                //     $GoodsCat->save();
+                // }                                                                                                           
             }
 
+
+
             }
 
-            DB::commit();
+             DB::commit();
         
         } catch (Exception $e) {
 
@@ -1703,9 +1876,8 @@ class CartController extends Controller
         }
     }
     public function desc( Request $request ){
-        
-       exit;
-        echo "ENTER";
+        exit;
+
         $goods = Goods::orderBy('id')->get();
         $goods = json_decode($goods,true);
 
@@ -1713,71 +1885,83 @@ class CartController extends Controller
 
         try {
             
-            foreach ($goods as $good) {
-            //echo $good['goods_sn'];
+            foreach ($goods as $fj=> $good) {
+                echo $tmpSn = $good['goods_sn'];
 
-                $datas = DB::connection('mysql2')->table('xyzs_goods')->select("cat_id")->where('goods_sn',$good['goods_sn'])->first();
+
+                $datas = DB::connection('mysql2')->table('xyzs_goods')->select("goods_desc")->where('goods_sn','like',"%{$tmpSn}%")->first();
                 
 
 
                 if( $datas != NULL){
-                    echo $good['id'];
-                    echo '<br>';
-                    switch ($datas->cat_id) {
-                        case '154':
-                            $tmpCat = 10;
-                            break;
-                        case '155':
-                            $tmpCat = 11;
-                            break;                        
-                        case '156':
-                            $tmpCat = 12;
-                            break;
-                        case '157':
-                            $tmpCat = 13;
-                            break;
-                        case '158':
-                            $tmpCat = 14;
-                            break;
-                        case '159':
-                            $tmpCat = 1;
-                            break;
-                        case '160':
-                            $tmpCat = 3;
-                            break;
-                        case '161':
-                            $tmpCat = 6;
-                            break;
-                        case '162':
-                            $tmpCat = 7;
-                            break;
-                        case '163':
-                            $tmpCat = 9;
-                            break;
-                        case '164':
-                            $tmpCat = 4;
-                            break;
-                        case '165':
-                            $tmpCat = 2;
-                            break;
-                        case '166':
-                            $tmpCat = 5;
-                            break;    
-                        case '167':
-                            $tmpCat = 8;
-                            break;                                                                                                                                                                                                                                                                                                                                            
-                        default:
-                            $tmpCat = 1;
-                            break;
-                    }
+                    
                     $flight = Goods::find($good['id']);
 
-                    $flight->cid = $tmpCat;
+                    $flight->desc = $datas->goods_desc;
 
                     $flight->save();
-                }else{
-                    //echo $good['goods_sn'].'找不到<br>';
                 }
+
+
+
+                // if( $datas != NULL){
+                //     echo $good['id'];
+                //     echo '<br>';
+                //     switch ($datas->cat_id) {
+                //         case '154':
+                //             $tmpCat = 10;
+                //             break;
+                //         case '155':
+                //             $tmpCat = 11;
+                //             break;                        
+                //         case '156':
+                //             $tmpCat = 12;
+                //             break;
+                //         case '157':
+                //             $tmpCat = 13;
+                //             break;
+                //         case '158':
+                //             $tmpCat = 14;
+                //             break;
+                //         case '159':
+                //             $tmpCat = 1;
+                //             break;
+                //         case '160':
+                //             $tmpCat = 3;
+                //             break;
+                //         case '161':
+                //             $tmpCat = 6;
+                //             break;
+                //         case '162':
+                //             $tmpCat = 7;
+                //             break;
+                //         case '163':
+                //             $tmpCat = 9;
+                //             break;
+                //         case '164':
+                //             $tmpCat = 4;
+                //             break;
+                //         case '165':
+                //             $tmpCat = 2;
+                //             break;
+                //         case '166':
+                //             $tmpCat = 5;
+                //             break;    
+                //         case '167':
+                //             $tmpCat = 8;
+                //             break;                                                                                                                                                                                                                                                                                                                                            
+                //         default:
+                //             $tmpCat = 1;
+                //             break;
+                //     }
+                    // $flight = Goods::find($good['id']);
+
+                    // $flight->cid = $tmpCat;
+
+                    // $flight->save();
+                //}else{
+                    //echo $good['goods_sn'].'找不到<br>';
+                //}
 
             }
 
@@ -1790,6 +1974,52 @@ class CartController extends Controller
 
         
     }
+
+
+    public function curl2( Request $request ){
+
+
+$curl = curl_init();
+
+$arr = [1,2,3,3,4,85,6,5];
+
+curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query());
+curl_setopt_array($curl, array(
+  CURLOPT_URL => "http://127.0.0.1/***REMOVED***2/dealer_order.php",
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_ENCODING => "",
+  CURLOPT_MAXREDIRS => 10,
+  CURLOPT_TIMEOUT => 30,
+  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+  CURLOPT_CUSTOMREQUEST => "POST",
+  CURLOPT_POSTFIELDS => array('key'=>'a459ec4a-be91-461c-8b98-896d8283da64',
+                              'order'=>$arr),
+  CURLOPT_HTTPHEADER => array(
+    "Content-Type: application/x-www-form-urlencoded",
+    "Postman-Token: ad84451f-8f6e-4b7c-a106-6d08febeabe8",
+    "cache-control: no-cache",
+    "key: a459ec4a-be91-461c-8b98-896d8283da64"
+  ),
+));
+
+$response = curl_exec($curl);
+$err = curl_error($curl);
+
+
+$response = json_decode($response,true);
+
+var_dump($response);
+
+curl_close($curl);
+
+if ($err) {
+  echo "cURL Error #:" . $err;
+} else {
+  echo $response;
+}
+
+}
+
 }
 
             // 確認檔案存在(縮圖)

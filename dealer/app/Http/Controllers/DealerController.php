@@ -276,7 +276,7 @@ class DealerController extends Controller
         }
         if( !empty( $errText ) ){
 
-            return redirect('/dealerNew')->withInput()->with('errorMsg', $errText );
+            return redirect('/n_dealerNew')->withInput()->with('errorMsg', $errText );
 
         }
 
@@ -419,7 +419,7 @@ class DealerController extends Controller
 
             DB::commit();
 
-            return redirect('/dealer')->with('successMsg', '經銷商新增成功');
+            return redirect('/n_dealer')->with('successMsg', '經銷商新增成功');
 
         } catch (Exception $e) {
 
@@ -768,7 +768,7 @@ class DealerController extends Controller
                 DB::commit();
                 if( Auth::user()->hasRole('Admin') ){
     
-                    return redirect('/dealer')->with('successMsg', '經銷商編輯成功');
+                    return redirect('/n_dealer')->with('successMsg', '經銷商編輯成功');
     
                 }elseif( Auth::user()->hasRole('Dealer') ){
                     return redirect('dealerEdit/'.$user->id)->with('successMsg', '經銷商編輯成功');
@@ -890,11 +890,11 @@ class DealerController extends Controller
 
         if( $dealer->delete() ){
 
-            return redirect('/dealer')->with('successMsg', '經銷商刪除成功');
+            return redirect('/n_dealer')->with('successMsg', '經銷商刪除成功');
 
         }else{
 
-            return redirect('/dealer')->with('erroeMsg', '經銷商刪除失敗請稍後再試');
+            return redirect('/n_dealer')->with('erroeMsg', '經銷商刪除失敗請稍後再試');
         }
 
     }

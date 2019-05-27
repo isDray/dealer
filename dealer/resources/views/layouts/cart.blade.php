@@ -308,7 +308,41 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='{{$dealerData
         </div>
     </div>
     <!-- /footer -->
-
+     
+    @if( isset($isviewGoods) && $isviewGoods == true)
+    <div id='phoneBar' class="container-fluid _p">
+        <a href="{{url('')}}/{{$dealerDetect}}">
+        <div style='padding-left:5px; padding-right:5px;width:20%;float:left;text-align:center;'>
+            <i class="glyphicon glyphicon-home"></i><br>
+            首頁
+        </div>
+        </a>
+        <a href="{{url('')}}/{{$dealerDetect}}/article/1">
+        <div style='padding-left:5px; padding-right:5px;width:20%;float:left;text-align:center;'>
+            <i class="glyphicon glyphicon-info-sign"></i><br>
+            購物流程
+        </div>
+        </a>   
+        <a href="{{url('')}}/{{$dealerDetect}}/article/2">
+        <div style='padding-left:5px; padding-right:5px;width:20%;float:left;text-align:center;'>
+            <i class="glyphicon glyphicon-question-sign"></i><br>
+            Q&A
+        </div>
+        </a>    
+        <a > 
+        <div style='padding-left:5px; padding-right:5px;width:20%;float:left;text-align:center;' class='addone' goodsid="{{$goods['id']}}">
+            <i class="glyphicon glyphicon-plus"></i><br>
+            購買
+        </div>
+        </a>
+        <a href="{{url('')}}/{{$dealerDetect}}/checkout">
+        <div style='padding-left:5px; padding-right:5px;width:20%;float:left;text-align:center;'>
+            <i class="glyphicon glyphicon-shopping-cart"></i><br>
+            結帳
+        </div>
+        </a>        
+    </div>
+    @else
     <div id='phoneBar' class="container-fluid _p">
         <a href="{{url('')}}/{{$dealerDetect}}">
         <div class="col-xs-3 col-sm-3 text-center">
@@ -334,7 +368,8 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='{{$dealerData
             結帳
         </div>
         </a>        
-    </div>
+    </div>    
+    @endif
 
 
 
