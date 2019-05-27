@@ -127,13 +127,13 @@
 
                             @role('Admin')
                             <li>
-                               <a href="{{url('/dealer')}}">經銷商網站設定</a>
+                               <a href="{{url('/n_dealer')}}">經銷商網站設定</a>
                             </li>         
                             @endrole
 
                             @role('Dealer')
                             <li>
-                               <a href="{{url('/dealerEdit')}}/{{Auth::id()}}">經銷商網站設定</a>
+                               <a href="{{url('/n_dealerEdit')}}/{{Auth::id()}}">經銷商網站設定</a>
                             </li>                            
                             @endrole
                           
