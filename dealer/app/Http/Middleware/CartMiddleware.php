@@ -32,7 +32,15 @@ class CartMiddleware
 
             }  
             
-            $cartUser = User::whereIn('id',$dealerArr)->where('detect',$request->name)->first();
+            $cartUser = User::leftJoin('dealer', function($join) {
+                                  $join->on('users.id', '=', 'dealer.dealer_id');
+                              })
+            ->whereIn('users.id',$dealerArr)
+            ->where('users.detect',$request->name)
+            ->where('dealer.status',1)
+            ->select('users.*')
+            ->first();
+
 
             if( $cartUser != NULL ){
 
