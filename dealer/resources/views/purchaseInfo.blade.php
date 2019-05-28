@@ -150,7 +150,54 @@
             </div>
 
         </div>
+        <!-- 備註區塊 -->
+        @role('Admin')        
+        <div class='card'>
 
+            
+            <div class="header bg-red">
+                <h2>備註</h2>
+            </div>
+
+            <div class='body'>
+                
+                <form action="{{url('/puchaseNote')}}" method="POST">
+                    <div class="row clearfix">
+                    {{ csrf_field() }}
+
+                    <input type="hidden" name="purchaseId" value="{{$purchaseData['id']}}">
+
+                    <div class="col-md-7 col-sm-12 col-xs-12">
+                        
+                        <b>系統備註:</b>
+                        <div class="form-group">
+                        <div class="form-line myborder" >
+                            <textarea name='admin_note' class="form-control no-resize" row="2">{!!$purchaseData['admin_note']!!}</textarea>
+                        </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-7 col-sm-12 col-xs-12">
+                        
+                        <b>經銷商備註:</b>
+                        <div class="form-group">
+                        <div class="form-line myborder" >
+                            <textarea name='dealer_note' class="form-control no-resize" row="2" disabled>{!!$purchaseData['dealer_note']!!}</textarea>
+                        </div>
+                        </div>
+
+                        <input type="submit" value="確定" class="btn btn-primary  waves-effect" >
+                    </div>     
+                    
+
+                    </div>
+
+                </form>
+            </div>
+
+        </div>        
+        @endrole
+        <!-- /備註區塊 -->
         <!-- 操作區塊 -->
         <div class='card'>
 
@@ -274,7 +321,7 @@
 <!-- 專屬js -->
 <script type="text/javascript">
 $(function(){
-
+    $(".focused").removeClass("focused");
 })
 </script>
 <!-- /專屬js -->

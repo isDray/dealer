@@ -227,7 +227,6 @@ class PurchaseController extends Controller
         // $query->offset( $request->start );
 
         // $query->limit( $request->length );  
-
         $purchase = $query->select('purchase.*')->get();
 
         $purchase = $purchase->toArray();
@@ -1714,6 +1713,58 @@ class PurchaseController extends Controller
             return back()->with('errorMsg', '進貨單操作失敗 , 請稍後再嘗試');          
         }            
     
+    }
+
+
+
+
+    /*----------------------------------------------------------------
+     | 更新備註
+     |----------------------------------------------------------------
+     |
+     */
+    public function updateNote( Request $request ){
+        if( !Auth::user()->hasRole('Admin') ){
+            return back()->with(['errorMsg'=> '無此操作權限 , 請勿嘗試非法操作']);
+        }
+            
+        if( !Auth::user()->can('purchaseEdit') ){
+
+            return back()->with(['errorMsg'=> '帳號無此操作權限 , 如有需要請切換帳號或聯絡管理員增加權限']);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'purchaseId'   => 'required|exists:purchase,id',
+        ],[
+            'purchaseId.required'=> '缺少進貨單編號',
+            'purchaseId.exists'  => '進貨單不存在',
+        ] );
+
+        if ($validator->fails()) {
+                
+            $errText = '';
+
+            $errors = $validator->errors();
+                
+            foreach( $errors->all() as $message ){
+                    
+                $errText .= "$message<br>";
+            }
+
+            return back()->with(['errorMsg'=> $errText]);
+        }
+        $Purchase = Purchase::find( $request->purchaseId );
+
+        $Purchase->admin_note = $request->admin_note;
+        
+        if( $Purchase->save() ){
+            
+            return back()->with('successMsg', '進貨單修改備註成功');
+
+        }else{
+            
+            return back()->with('errorMsg', '進貨單修改備註失敗 , 請稍後再嘗試');     
+        }
     }
 
 
