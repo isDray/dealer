@@ -64,9 +64,17 @@
                             <td>{{$purchaseData['tel']}}</td>                            
                         </tr>
                         <tr>
+                            <td class='bg-grey' width='10%'>統編</td>
+                            <td>{{$purchaseData['ein']}}</td>
+                            <td class='bg-grey' width='10%' >公司名稱</td>
+                            <td colspan=3>{{$purchaseData['company']}}</td>                         
+                        </tr>                        
+                        @role('Admin')
+                        <tr>
                             <td class='bg-grey' width='10%'>管理員備註</td>
                             <td colspan='5'>{{$purchaseData['admin_note']}}</td>                          
-                        </tr>                        
+                        </tr>  
+                        @endrole                   
                         <tr>
                             <td class='bg-grey' width='10%'>買家備註</td>
                             <td colspan='5'>{{$purchaseData['dealer_note']}}</td>                          

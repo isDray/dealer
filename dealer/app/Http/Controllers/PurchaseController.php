@@ -1165,7 +1165,9 @@ class PurchaseController extends Controller
             $Purchase->phone        = $request->phone;
             $Purchase->tel          = $request->tel;
             $Purchase->address      = $request->address;
-            $Purchase->dealer_note  = $request->dealer_note;            
+            $Purchase->dealer_note  = $request->dealer_note; 
+            $Purchase->ein  = $request->ein; 
+            $Purchase->company  = $request->company;            
             $Purchase->save();
 
             for ($i=0; $i <$loopTime ; $i++) { 
