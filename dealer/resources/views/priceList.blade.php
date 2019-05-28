@@ -162,8 +162,9 @@ a{
                                     <thead>
                                         <tr>
                                             <th>ID</th>
-                                            <th>商品貨號</th>
+                                            <th>商品縮圖</th>
                                             <th>商品名稱</th>
+                                            <th>商品貨號</th>
                                             <th>批發價</th>
                                             <th>售價</th>
                                             <th>庫存</th>   
@@ -264,27 +265,34 @@ $(function(){
         "columnDefs" : [
             {   "targets" : 0 ,
                 "data":6
-            },        
+            },
             {   "targets" : 1 ,
                 "orderable": false,
-                "data":0
-            },
+                "render" : function ( url, type, full) {
+
+                    return '<img height="80px" width="80px" src="'+"{{url('/images')}}/"+full[7]+'"/>';
+                }
+            },      
             {   "targets" : 2 ,
                 "orderable": false,               
                 "data":1
-            },     
+            },                           
             {   "targets" : 3 ,
+                "orderable": false,
+                "data":0
+            },    
+            {   "targets" : 4 ,
                 "data":2
 
             }, 
-            {   "targets" : 4,
+            {   "targets" : 5,
                 "data":3
             },
-            {   "targets" : 5,
+            {   "targets" : 6,
 
                 "data":4
             },            
-            {   "targets" : 6,
+            {   "targets" : 7,
                 "data":5
             },            
             /*                            
@@ -321,7 +329,7 @@ $(function(){
             {   "targets" : 9 ,
                 "orderable": true,
             },*/                          
-            {   "targets" : 7 ,
+            {   "targets" : 8 ,
                 "data": "edit",
                 "orderable": false,
                 "render" : function ( url, type, full) {

@@ -309,6 +309,7 @@ class PriceController extends Controller
                 $value->allStock,
                 $value->updated_at,
                 $value->id,
+                $value->thumbnail,
 
 
             ]);
