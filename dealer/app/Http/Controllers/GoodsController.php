@@ -838,7 +838,7 @@ class GoodsController extends Controller
         $recordsTotal = Goods::count();
          
 
-        $query = DB::table('goods as g');
+        $query = DB::table('goods as g')->selectRaw("g.* , IFNULL(gs.allStock,0) as allStock");
         
         $query->leftJoin('goods_cat as gc', 'g.id', '=', 'gc.gid');
 
