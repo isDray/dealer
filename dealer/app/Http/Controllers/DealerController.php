@@ -935,7 +935,9 @@ class DealerController extends Controller
 
 
         $image = QrCode::format('png')
-                        ->size(110)->errorCorrection('H')
+                        ->size(100)
+                        ->errorCorrection('H')
+                        ->margin(0)
                         ->generate($url);
         
         $output_file = 'qr/1/qrcode'.'.png';
