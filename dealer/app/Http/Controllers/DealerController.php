@@ -415,6 +415,8 @@ class DealerController extends Controller
 
             $dealer->banner_type_m = $mobileBanner;
             
+            $dealer->note          = $request->note;
+            
             $dealer->save();
 
             DB::commit();
@@ -735,6 +737,7 @@ class DealerController extends Controller
                 }*/
                 $dealer->multiple      = isset( $request->multiple)?trim($request->multiple):'2.2';
                 
+                $dealer->note          = $request->note;
 
                 // banner儲存
                 $bannerArr = ["0","1","2","3"];

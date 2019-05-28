@@ -61,8 +61,10 @@ class CreateDealerTable extends Migration
             
             $table->nullableTimestamps('enable_date')->comment('合作日期');
 
-            $table->unsignedTinyInteger('banner_type')->comment('banner設定');
+            $table->unsignedTinyInteger('banner_type_w')->comment('banner設定');
+            $table->unsignedTinyInteger('banner_type_m')->comment('banner設定');
 
+            $table->text('note')->nullable()->comment('經銷商備註');
             $table->timestamps();
         });
     }

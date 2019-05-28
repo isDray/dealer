@@ -100,7 +100,15 @@
                             </div>
                         </div>
 
-
+                        <div class="col-md-7 col-sm-12 col-xs-12">
+                            
+                            <b>經銷商備註:</b>
+                            <div class="form-group">
+                            <div class="form-line myborder" >
+                                <textarea name='note' class="form-control no-resize" row="2"></textarea>
+                            </div>
+                            </div>
+                        </div>
 <!--                         <div class="col-md-3 col-sm-12 col-xs-12">
                             <b>&nbsp;</b>
                             <div class="form-group">
