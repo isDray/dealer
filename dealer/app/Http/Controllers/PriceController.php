@@ -167,6 +167,27 @@ class PriceController extends Controller
 
         }
         
+        /* 針對數量做比較 */
+
+        if( isset($request->compare) && !empty($request->compare) && $request->compareStock != '' ){
+            $stockGoodsArr = [];
+            if( $request->compare == 1){$cps = '>';}
+            if( $request->compare == 2){$cps = '=';}
+            if( $request->compare == 3){$cps = '<';}  
+
+            $stockGoods =  GoodsStock::where('dealer_id',Auth::id())->where('goods_num',$cps,$request->compareStock)->get(); 
+
+            if( count( $stockGoods ) > 0 ){
+
+                $stockGoods = json_decode($stockGoods,true);
+
+                foreach ($stockGoods as $stockGood) {
+
+                    array_push($stockGoodsArr, $stockGood['goods_id']);
+                }
+
+            }                         
+        }
         if( isset($request->myKeyword) && !empty($request->myKeyword) ){
                
             $filterSearch = $request->myKeyword;

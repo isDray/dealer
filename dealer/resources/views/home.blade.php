@@ -119,7 +119,7 @@
                     </a>
                     @endrole
                                        
-                    @role('Dealer')
+<!--                     @role('Dealer')
                     <a href="{{url('price')}}/?stock=2">
                     @endrole
                     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
@@ -133,7 +133,9 @@
                         </div>
                     </div>
                     </div>
+                    @role('Dealer')
                     </a>
+                    @endrole -->
 
                     </div>                    
                     <!--/商品相關 -->

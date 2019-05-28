@@ -86,17 +86,24 @@ a{
                                     </div>
                                 </div>  
 
+                                <div class="col-sm-3">
+                                    <p>庫存</p>
+                                    <div class="input-group">
+                                        
+                                            <select class="form-control show-tick myborder" id='compare' style='padding:0px;'>
 
-                                <div class="col-sm-1">
-                                    <p>商品數量</p>
-                                    <select class="form-control show-tick myborder" id='stock'>
-                                        <option value='0' >-選擇-</option>
-                                        <option value='1' @if($dfStock==1) selected @endif>充足</option>
-                                        <option value='2' @if($dfStock==2) selected @endif>低庫存</option>
-                                        <option value='3' @if($dfStock==3) selected @endif>無庫存</option>
-                                    </select>
-                                </div> 
+                                                <option value='1' >大於</option>
+                                                <option value='2' >等於</option>
+                                                <option value='3' >小於</option>
+                                            </select>
+                                        
+                                        <span class="input-group-addon" style='padding:10px;'></span>
 
+                                        <div class="form-line">
+                                            <input type="text" class="form-control myborder" placeholder="" id='compareStock'>
+                                        </div>                                        
+                                    </div>
+                                </div>
                                 <!--
                                 <div class="col-sm-2">
                                     <p>價格</p>
@@ -250,6 +257,8 @@ $(function(){
                 d.nameKeyword = $("#nameKeyword").val();
                 d.stock      = $("#stock").val();
                 d.category  = $("#category").val();
+                d.compare = $("#compare").val();
+                d.compareStock = $("#compareStock").val();
             }
         },
         "columnDefs" : [
@@ -376,6 +385,16 @@ $(function(){
         orderTable.ajax.reload();
 
     });    
+    $("#compare").bind("change", function(e) {
+        
+        orderTable.ajax.reload();
+    });
+    $("#compareStock").bind("keyup change", function(e) {
+        
+        orderTable.ajax.reload();
+
+    });
+    
     /*
     $("#max_price").bind("keyup change", function(e) {
         
