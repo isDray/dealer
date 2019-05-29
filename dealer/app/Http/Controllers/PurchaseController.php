@@ -1480,6 +1480,13 @@ class PurchaseController extends Controller
      |
      */
     public function updateStatus( Request $request ){
+       
+        /*測試*/
+        // $tmp = DB::connection('mysql3')->select("SELECT * FROM xyzs_order_info WHERE order_id = '372730'")->get();
+        //$tmp = DB::connection('mysql3')->table('xyzs_order_info')->select("*")->where('order_id','=',"372730")->first();
+        //var_dump($tmp);
+
+        /*測試結束*/
 
         $validator = Validator::make($request->all(), [
             'purchaseId'   => 'required|exists:purchase,id',
@@ -1644,6 +1651,56 @@ class PurchaseController extends Controller
             if( $tmpStatus == 3){
 
                 $Purchase->shipdate = date('Y-m-d H:i:s');
+                
+                $curlPurchase = $Purchase->toArray();
+                
+                $curlPurchaseGoods = PurchaseGoods::where('purchase_id',$request->purchaseId)->get();
+                $curlPurchaseGoods = json_decode($curlPurchaseGoods,true);
+
+                //$newOrder = $tmp = DB::connection('mysql3')->table('xyzs_order_info');
+                
+                $ch = curl_init ();
+                $tmpData = ['order'=>$curlPurchase , 'orderGoods'=>$curlPurchaseGoods ,'key'=>'a459ec4a-be91-461c-8b98-896d8283da64'];
+
+                
+                $data = http_build_query($tmpData);
+                // print_r($ch);
+                curl_setopt ( $ch, CURLOPT_URL, 'http://127.0.0.1/***REMOVED***2/dealer_order.php' );
+                curl_setopt ( $ch, CURLOPT_POST, 1 );
+                curl_setopt ( $ch, CURLOPT_HEADER, 0 );
+                curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );
+                curl_setopt ( $ch, CURLOPT_POSTFIELDS, $data );
+                $return = curl_exec ( $ch );
+                curl_close ( $ch );
+                $return = json_decode($return,true);         
+
+                /*$newOrder->insert(
+
+                    ['user_id'      => '0', 
+                     'order_status' => '0',
+                     'shipping_status' => '0',
+                     'pay_status' => '0',
+                     'consignee' => $Purchase->consignee,
+                     'country' => 1,
+                     'province' =>'',
+                     'city' =>'',
+                     'address'=>$Purchase->address,
+                     'mobile' =>$Purchase->phone,//$this->mobileEncode( '1' , trim($Purchase->phone) ),
+                     'shipping_id'=>14,
+                     'shipping_name'=>'宅配到府',
+                     'shipping_fee'=>$Purchase->ship_fee,
+                     'pay_id'=>'3',
+                     'pay_name'=>'貨到付款',
+                     'goods_amount'=>$Purchase->amount,
+                     'from_ad'=>'0',
+                     'referer'=>'本站',
+                     'add_time'=>time() - date('Z'),
+                     'order_amount'=>$Purchase->final_amount,
+                     'postscript'=>($Purchase->dealer_note == NULL)? '': $Purchase->dealer_note,
+                     'order_sn' => $this->get_order_sn()
+                    ]
+                );*/
+
             }
 
             
@@ -1952,7 +2009,7 @@ class PurchaseController extends Controller
                 $goodsStock = GoodsStock::where('dealer_id',Auth::id())->where('goods_id',$request->goodsId[$i])->first();
                 
                 // 已有庫存就累加 , 無庫存則新增庫存
-                if( count($goodsStock) > 0){
+                if( $goodsStock != NULL){
 
                     if( $goodsStock->goods_num + $request->stockNum[$i] < 0){
                     
@@ -2177,5 +2234,70 @@ class PurchaseController extends Controller
 
         return $useableStatus;
  
+    }
+
+
+
+
+    /*----------------------------------------------------------------
+     | 產生訂單編號
+     |----------------------------------------------------------------
+     |
+     */
+    public function get_order_sn(){
+        
+        /* 选择一个随机的方案 */
+        mt_srand((double) microtime() * 1000000);
+
+        return date('Ymd') . str_pad(mt_rand(1, 99999), 5, '0', STR_PAD_LEFT);
+    }
+
+
+
+
+    /*----------
+     | 手機加密
+     |----------
+     |
+     */
+    public function mobileEncode( $_key , $_num ){
+
+      $_key = '8610';
+    
+      $idNums  = preg_split('//', $_key, -1, PREG_SPLIT_NO_EMPTY);
+    
+      $idSum   = 0;
+      
+      foreach ($idNums as $idNumk => $idNum) {
+       
+        $idSum += $idNum;
+    
+    
+      }
+    
+      $position = $idSum % mb_strlen( $_num , "utf-8");
+    
+      if( $position == 0 ){
+    
+        $mergeNum = $_num.$_key;
+    
+        $iv_size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC);
+        $iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);  
+        //return base64_encode(trim(mcrypt_encrypt(MCRYPT_RIJNDAEL_128, md5($_key),$mergeNum, MCRYPT_MODE_ECB, $iv)));
+        return base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_128, md5($_key),$mergeNum, MCRYPT_MODE_ECB, $iv));
+        
+      }else{
+       
+        $mergeNum[0] = substr($_num, 0, $position);
+        $mergeNum[1] = $_key;
+        $mergeNum[2] = substr($_num, $position);
+        $iv_size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC);
+        $iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);  
+       
+        //return base64_encode(trim(mcrypt_encrypt(MCRYPT_RIJNDAEL_128, md5($_key),implode("",$mergeNum), MCRYPT_MODE_ECB, $iv)));
+        return base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_128, md5($_key),implode("",$mergeNum), MCRYPT_MODE_ECB, $iv));
+    
+      }
+
     }
 }

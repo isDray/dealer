@@ -1981,9 +1981,7 @@ class CartController extends Controller
 
 $curl = curl_init();
 
-$arr = [1,2,3,3,4,85,6,5];
-
-curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query());
+//curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query());
 curl_setopt_array($curl, array(
   CURLOPT_URL => "http://127.0.0.1/***REMOVED***2/dealer_order.php",
   CURLOPT_RETURNTRANSFER => true,
@@ -1993,13 +1991,14 @@ curl_setopt_array($curl, array(
   CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
   CURLOPT_CUSTOMREQUEST => "POST",
   CURLOPT_POSTFIELDS => array('key'=>'a459ec4a-be91-461c-8b98-896d8283da64',
-                              'order'=>$arr),
-  CURLOPT_HTTPHEADER => array(
+                              'order'=>http_build_query($arr)
+                              ),
+  /*CURLOPT_HTTPHEADER => array(
     "Content-Type: application/x-www-form-urlencoded",
     "Postman-Token: ad84451f-8f6e-4b7c-a106-6d08febeabe8",
     "cache-control: no-cache",
     "key: a459ec4a-be91-461c-8b98-896d8283da64"
-  ),
+  ),*/
 ));
 
 $response = curl_exec($curl);
@@ -2012,11 +2011,11 @@ var_dump($response);
 
 curl_close($curl);
 
-if ($err) {
-  echo "cURL Error #:" . $err;
-} else {
-  echo $response;
-}
+// if ($err) {
+//   echo "cURL Error #:" . $err;
+// } else {
+//   echo $response;
+// }
 
 }
 
