@@ -112,7 +112,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='{{$dealerData
           </button>
           
           <!--  手機搜尋 -->
-          <div id='phonebox' class='_p' >
+<!--           <div id='phonebox' class='_p' >
             <form class="navbar-form navbar-right" action="{{url('')}}/{{$dealerDetect}}/cartSearch/1/" method="get" style="margin:0px;padding:0px;">
                 {{ csrf_field() }}
               <div class="input-group">
@@ -122,7 +122,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='{{$dealerData
                  </span>
               </div>
             </form>
-          </div>
+          </div> -->
           <!--  /手機搜尋-->
 
           <div id='cartBox' class="dropdown">
@@ -257,13 +257,13 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='{{$dealerData
 
 
 
-          <form class="navbar-form navbar-right _w" action="{{url('')}}/{{$dealerDetect}}/cartSearch/1/" method="get">
+<!--           <form class="navbar-form navbar-right _w" action="{{url('')}}/{{$dealerDetect}}/cartSearch/1/" method="get">
             {{ csrf_field() }}
             <div class="form-group">
               <input type="text" class="form-control" placeholder="搜尋商品" name='keyword'>
             </div>
             <button type="submit" class="btn btn-primary">搜尋</button>
-          </form>
+          </form> -->
 
 
 
@@ -288,21 +288,21 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='{{$dealerData
         <div id='dealerInfo' class='col-md-4 col-md-offset-1 col-sm-12 col-xs-12'>
             <h3>{{$dealerDatas['hotel_name']}}</h3>
             <ul>
-                @if( !empty($dealerDatas['hotel_address']) )
+<!--                 @if( !empty($dealerDatas['hotel_address']) )
                 <li><p><span class="glyphicon glyphicon-map-marker"></span> {{$dealerDatas['hotel_address']}}</p></li>
-                @endif
+                @endif -->
 
                 @if( !empty($dealerDatas['hotel_tel']) )
                 <li><p><span class="glyphicon glyphicon-earphone"></span> {{$dealerDatas['hotel_tel']}}</p></li>
                 @endif
 
-                @if( !empty($dealerDatas['hotel_email']) )
+<!--                 @if( !empty($dealerDatas['hotel_email']) )
                 <li><p><span class="glyphicon glyphicon-envelope"></span> {{$dealerDatas['hotel_email']}}</p></li>
                 @endif
 
                 @if( !empty($dealerDatas['web_url']) )
                 <li><p><span class="glyphicon glyphicon-globe"></span> {{$dealerDatas['web_url']}}</p></li>
-                @endif                                
+                @endif  -->                               
             </ul>
 
         </div>
@@ -345,25 +345,25 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='{{$dealerData
     @else
     <div id='phoneBar' class="container-fluid _p">
         <a href="{{url('')}}/{{$dealerDetect}}">
-        <div class="col-xs-3 col-sm-3 text-center">
+        <div class="col-xs-3 col-sm-3 text-center" style="padding-right:5px;padding-left:5px;">
             <i class="glyphicon glyphicon-home"></i><br>
             首頁
         </div>
         </a>
         <a href="{{url('')}}/{{$dealerDetect}}/article/1">
-        <div class="col-xs-3 col-sm-3 text-center">
+        <div class="col-xs-3 col-sm-3 text-center" style="padding-right:5px;padding-left:5px;">
             <i class="glyphicon glyphicon-info-sign"></i><br>
             購物流程
         </div>
         </a>   
         <a href="{{url('')}}/{{$dealerDetect}}/article/2">
-        <div class="col-xs-3 col-sm-3 text-center">
+        <div class="col-xs-3 col-sm-3 text-center" style="padding-right:5px;padding-left:5px;">
             <i class="glyphicon glyphicon-question-sign"></i><br>
             Q&A
         </div>
         </a>              
         <a href="{{url('')}}/{{$dealerDetect}}/checkout">
-        <div class="col-xs-3 col-sm-3 text-center">
+        <div class="col-xs-3 col-sm-3 text-center" style="padding-right:5px;padding-left:5px;">
             <i class="glyphicon glyphicon-shopping-cart"></i><br>
             結帳
         </div>

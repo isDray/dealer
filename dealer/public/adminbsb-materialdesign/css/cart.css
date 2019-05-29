@@ -140,7 +140,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f93434', end
 	position: relative;
 	border-radius: 50%;
 	height: 3px;
-	margin-top: 20px;
+	margin-top: 10px;
 	margin-bottom: 40px;
 	background-image: rgb(249,52,52); /* Old browsers */
  background-image: -moz-linear-gradient(45deg, rgba(249,52,52,1) 0%, rgba(226,111,167,1) 100%); /* FF3.6-15 */
@@ -195,11 +195,11 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f93434', end
 /* 頁腳 */
 #footer{
 	border-top:2px solid #252525;
-	height: 210px;
+	height: 100px;
 	background-color: #131313;
 	/*box-shadow: 10px 2px 40px -21px #e8308c;*/
 	padding-top: 10px;
-	overflow: hidden;
+	/*overflow: hidden;*/
 }
 #footerLogo{
 	/*height: 200px;*/
@@ -324,6 +324,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f93434', end
 
 /* 快速分類 */
 #fastBox{
+	min-height: calc(100vh - 100px);
 	margin-top: 150px;
 	padding-top: 40px!important;
 
@@ -365,6 +366,9 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f93434', end
     color: #ececec;
     font-weight: 900;
     font-size: 20px;
+  overflow : hidden;
+  text-overflow : ellipsis;
+  white-space : nowrap;    
 }
 
 /* 展開按鈕 */
@@ -432,6 +436,9 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f93434', end
 #dealerInfo>h3 {
 	text-align: center;
 }
+#dealerInfo>ul>li {
+    text-align: center;
+}
 #cartBox{
 	margin-right: 15px;
 }
@@ -494,6 +501,17 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f93434', end
 }
 
 }
+/* 針對平板做例外處理 */
+@media (min-width: 768px) and (max-width: 1024px) {
+.fastItem>div:nth-child(2),.fastItem>div:last-child{
+	text-align: center;
+    width: 100%;
+    color: #ececec;
+    font-weight: 900;
+    font-size: 12px;
+}
+}
+
 @media (min-width: 768px) and (max-width: 991px) {
 ._w{
 	display: none!important;
@@ -513,6 +531,9 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f93434', end
 }
 #dealerInfo>h3{
 	text-align: center;
+}
+#dealerInfo>ul>li {
+    text-align: center;
 }
 #cartBox{
 	margin-right: 15px;
