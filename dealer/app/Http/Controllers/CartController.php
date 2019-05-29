@@ -866,11 +866,27 @@ class CartController extends Controller
 
         // 計算總筆數
         // $total = Goods::where('cid',$request->cid)->whereIn('id',$canSells)->count();
-        $total = Goods::
+        /*$total = Goods::
                 leftJoin( DB::raw("(SELECT goods_id,goods_num as stock from goods_stock WHERE dealer_id = {$cartUser} )as gs") , function($join) {
                     $join->on('goods.id', '=', 'gs.goods_id');
                 })->raw("SELECT *, IFNULL(gs.stock,0)")->where('cid',$request->cid)->count();
-        
+        */
+        $total = Goods::
+                leftJoin( DB::raw("(SELECT goods_id,goods_num as stock from goods_stock WHERE dealer_id = {$cartUser} )as gs") , function($join) {
+                    $join->on('goods.id', '=', 'gs.goods_id');
+                })
+                ->leftJoin( DB::raw("(SELECT goods_id,price as goodsPrice from goods_price WHERE dealer_id = {$cartUser} )as gp") , function($join) {
+
+                    $join->on('goods.id', '=', 'gp.goods_id');
+                })
+                ->leftJoin('goods_cat', function($join) {
+                    $join->on('goods.id', '=', 'goods_cat.gid');
+                })->where(function ($query) use( $request ) {
+
+                    $query->where('goods.cid', $request->cid)
+                    ->orWhere('goods_cat.cid',  $request->cid);
+
+                })->where('stock','>',0)->orderBy( $orderBy , $sort_way )->offset( $start )->limit( $showNum )->selectRaw(" goods.*, IFNULL(stock,0) as stock , round(IFNULL(goodsPrice,goods.w_price*{$dealerDatas['multiple']})) as goodsPrice")->count();
         // 計算總頁數
         $totalPage = ceil($total/$showNum);
 
@@ -902,7 +918,7 @@ class CartController extends Controller
                     $query->where('goods.cid', $request->cid)
                     ->orWhere('goods_cat.cid',  $request->cid);
 
-                })->orderBy( $orderBy , $sort_way )->offset( $start )->limit( $showNum )->selectRaw(" goods.*, IFNULL(stock,0) as stock , round(IFNULL(goodsPrice,goods.w_price*{$dealerDatas['multiple']})) as goodsPrice")->get();
+                })->where('stock','>',0)->orderBy( $orderBy , $sort_way )->offset( $start )->limit( $showNum )->selectRaw(" goods.*, IFNULL(stock,0) as stock , round(IFNULL(goodsPrice,goods.w_price*{$dealerDatas['multiple']})) as goodsPrice")->get();
 
         // 計算價格
         /*foreach ($goods as $goodk => $good) {
