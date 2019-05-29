@@ -142,7 +142,7 @@ a{
                                     <thead>
                                         <tr>
                                             <th>經銷商ID</th>
-                                            <th>經銷商名稱</th>
+                                            <th>旅館名稱</th>
                                             <th>聯絡人</th>
                                             <th>email</th>
                                             <th>手機</th>

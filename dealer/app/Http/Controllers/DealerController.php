@@ -142,7 +142,7 @@ class DealerController extends Controller
                 $value->user_name,
                 $value->email,
                 $value->user_phone,
-                $value->created_at,
+                explode(' ',$value->enable_date)[0],
                 $value->detect,
                 $value->status,
 

@@ -136,6 +136,7 @@
                                 <th class='align-center'>總銷售數量</th>
                                 <th class='align-center'>銷售數量</th>
                                 <th class='align-center'>庫存</th>
+                                <th class='align-center'>批發價</th>
                                 <th class='align-center' width='20%'>需補貨數量</th>
                                 <th class='align-right'>小計</th>
                             </tr>
@@ -266,6 +267,7 @@ $(function(){
                 formHtml += "<td class='align-center'>"+_datas['allSalesNum'][i]+"</td>";
                 formHtml += "<td class='align-center'>"+_datas['salesNum'][i]+"</td>";
                 formHtml += "<td class='align-center'>"+_datas['stock'][i]+"</td>";
+                formHtml += "<td class='align-center'>"+_datas['w_price'][i]+"</td>";
                 formHtml += "<td class='align-center'><input type='number' name='needNum[]' value='"+_datas['needNum'][i]+"' class='form-control changeNum' min='0' w_price='"+_datas['w_price'][i]+"' changet='total"+i+"'/></td>";
                 formHtml += "<td class='align-right subtotal' id='total"+i+"' >"+ _datas['needNum'][i] * _datas['w_price'][i] +"</td>";
                 formHtml += "</tr>";
@@ -283,7 +285,7 @@ $(function(){
             formHtml = '';
             // 添加價格總計
             formHtml += "<tr>";
-            formHtml += "<td colspan='5'></td>";
+            formHtml += "<td colspan='6'></td>";
             formHtml += "<td class='align-right'>總計</td>";
             formHtml += "<td id='allTotal' class='align-right' >"+allTotal+"</td>";
             formHtml += "</tr>";
@@ -306,7 +308,7 @@ $(function(){
             }
 
             formHtml += "<tr>";
-            formHtml += "<td colspan='5' class='align-right' id='taxTip'>免運門檻:"+_datas['free_price']+"元,再"+diffFree+"元即可免運</td>";
+            formHtml += "<td colspan='6' class='align-right' id='taxTip'>免運門檻:"+_datas['free_price']+"元,再"+diffFree+"元即可免運</td>";
             formHtml += "<td class='align-right'>運費</td>";
             formHtml += "<td id='shipFee' class='align-right' freeFee='"+_datas['free_price']+"' shipFee='"+shipFee+"'>"+shipFee+"</td>";
             formHtml += "</tr>";               
@@ -321,7 +323,7 @@ $(function(){
                 tax = Math.round( (allTotal+shipFee) * 0.05 );
             }
             formHtml += "<tr>";
-            formHtml += "<td colspan='5'></td>";
+            formHtml += "<td colspan='6'></td>";
             formHtml += "<td class='align-right'>稅金</td>";
             formHtml += "<td id='tax' class='align-right' >"+tax+"</td>";
             formHtml += "</tr>";            
@@ -332,7 +334,7 @@ $(function(){
             needPay = allTotal+shipFee+tax;
 
             formHtml += "<tr>";
-            formHtml += "<td colspan='5'></td>";
+            formHtml += "<td colspan='6'></td>";
             formHtml += "<td class='align-right'>應付金額</td>";
             formHtml += "<td id='needPay' class='align-right' >"+needPay+"</td>";
             formHtml += "</tr>"; 
@@ -347,7 +349,7 @@ $(function(){
             
             // 如果沒有商品則呈現無商品訊息
             formHtml += "<tr id='noRecord'>";
-            formHtml += "<td colspan='7'> 無銷售紀錄,或不需要補貨 </td>";
+            formHtml += "<td colspan='8'> 無銷售紀錄,或不需要補貨 </td>";
             formHtml += "</tr>";
             // 清空所有form
             $('#purchaseFormTable').empty();
@@ -358,7 +360,7 @@ $(function(){
             formHtml = '';
             // 添加價格總計
             formHtml += "<tr>";
-            formHtml += "<td colspan='5'></td>";
+            formHtml += "<td colspan='6'></td>";
             formHtml += "<td class='align-right'>總計</td>";
             formHtml += "<td id='allTotal' class='align-right' >"+allTotal+"</td>";
             formHtml += "</tr>";
@@ -381,7 +383,7 @@ $(function(){
             }
 
             formHtml += "<tr>";
-            formHtml += "<td colspan='5' class='align-right' id='taxTip'>免運門檻:"+_datas['free_price']+"元,再"+diffFree+"元即可免運</td>";
+            formHtml += "<td colspan='6' class='align-right' id='taxTip'>免運門檻:"+_datas['free_price']+"元,再"+diffFree+"元即可免運</td>";
             formHtml += "<td class='align-right'>運費</td>";
             formHtml += "<td id='shipFee' class='align-right' freeFee='"+_datas['free_price']+"' shipFee='"+shipFee+"'>"+shipFee+"</td>";
             formHtml += "</tr>";               
@@ -396,7 +398,7 @@ $(function(){
                 tax = Math.round( (allTotal+shipFee) * 0.05 );
             }
             formHtml += "<tr>";
-            formHtml += "<td colspan='5'></td>";
+            formHtml += "<td colspan='6'></td>";
             formHtml += "<td class='align-right'>稅金</td>";
             formHtml += "<td id='tax' class='align-right' >"+tax+"</td>";
             formHtml += "</tr>";            
@@ -407,7 +409,7 @@ $(function(){
             needPay = allTotal+shipFee+tax;
 
             formHtml += "<tr>";
-            formHtml += "<td colspan='5'></td>";
+            formHtml += "<td colspan='6'></td>";
             formHtml += "<td class='align-right'>應付金額</td>";
             formHtml += "<td id='needPay' class='align-right' >"+needPay+"</td>";
             formHtml += "</tr>"; 
@@ -669,6 +671,7 @@ $(function(){
         formHtml += "<td class='align-center'>"+_datas['allSalesNum']+"</td>";
         formHtml += "<td class='align-center'>"+0+"</td>";
         formHtml += "<td class='align-center'>0</td>";
+        formHtml += "<td class='align-center'>"+_datas['w_price']+"</td>";
         formHtml += "<td><input type='number' name='needNum[]' value='"+_datas['addNum']+"' class='form-control changeNum' w_price='"+_datas['w_price']+"' changet='total"+rowCount+"' /></td>";
         formHtml += "<td class='align-right subtotal' id='total"+rowCount+"'>"+ _datas['addNum'] * _datas['w_price']+"</td>";
         formHtml += "</tr>";
