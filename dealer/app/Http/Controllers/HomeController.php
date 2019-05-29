@@ -94,7 +94,8 @@ class HomeController extends Controller
 
             // 取出已完成訂單數量
             $doneNum = Order::where('dealer_id',Auth::id())->where('status',4)->count();
-            $checkedNum = Order::where('status',3)->count();
+
+            $checkedNum = Order::where('dealer_id',Auth::id())->where('status',3)->count();
             // 可用商品數
             $useGoodsNum =  Goods::leftJoin('goods_stock', function($join) {
                                 $join->on('goods.id', '=', 'goods_stock.goods_id');

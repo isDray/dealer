@@ -93,14 +93,14 @@ a{
                                             <select class="form-control show-tick myborder" id='compare' style='padding:0px;'>
 
                                                 <option value='1' >大於</option>
-                                                <option value='2' >等於</option>
+                                                <option value='2' @if($dfCompare == 2) selected @endif>等於</option>
                                                 <option value='3' >小於</option>
                                             </select>
                                         
                                         <span class="input-group-addon" style='padding:10px;'></span>
 
                                         <div class="form-line">
-                                            <input type="text" class="form-control myborder" placeholder="" id='compareStock'>
+                                            <input type="text" class="form-control myborder" placeholder="" id='compareStock' @if($dfCompare == 2 && $dfStock ==0) value=0 @endif >
                                         </div>                                        
                                     </div>
                                 </div>

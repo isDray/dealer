@@ -104,7 +104,7 @@
                     @endrole
 
                     @role('Dealer')
-                    <a href="{{url('price')}}/?stock=3"> 
+                    <a href="{{url('price')}}/?stock=0&compare=2"> 
                     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                     <div class="info-box bg-indigo hover-zoom-effect">
                         <div class="icon">

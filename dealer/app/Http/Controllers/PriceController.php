@@ -53,6 +53,13 @@ class PriceController extends Controller
             $dfStock = $dfInput['stock'];
         }
 
+        $dfCompare = "";
+
+        if( isset($dfInput['compare']) ){
+
+            echo $dfCompare = $dfInput['compare'];
+        }
+
         $pageTitle = '商品售價列表';
 
         if( Auth::user()->hasRole('Admin') ){
@@ -68,8 +75,9 @@ class PriceController extends Controller
         }
         // 取出所有分類
         $categorys = categoryTool::getAllCategoryForSelect();
-        return view('priceList')->with([ 'title'   => $pageTitle,
-                                         'dfStock' => $dfStock,
+        return view('priceList')->with([ 'title'     => $pageTitle,
+                                         'dfStock'   => $dfStock,
+                                         'dfCompare' => $dfCompare,
                                          'categorys' => $categorys
                                          //'goods'   => $dealers
                                        ]); 
@@ -134,7 +142,7 @@ class PriceController extends Controller
         // 針對庫存做過濾
         
 
-        if( isset($request->stock) && !empty($request->stock) ){
+        /*if( isset($request->stock) && !empty($request->stock) ){
 
             $stockGoodsArr = [];
 
@@ -165,18 +173,25 @@ class PriceController extends Controller
 
             }
 
-        }
+        }*/
         
         /* 針對數量做比較 */
 
         if( isset($request->compare) && !empty($request->compare) && $request->compareStock != '' ){
-            $stockGoodsArr = [];
+
+            //stockGoodsArr = [];
+
             if( $request->compare == 1){$cps = '>';}
+
             if( $request->compare == 2){$cps = '=';}
+
             if( $request->compare == 3){$cps = '<';}  
+            
 
-            $stockGoods =  GoodsStock::where('dealer_id',Auth::id())->where('goods_num',$cps,$request->compareStock)->get(); 
-
+            //$query->where('allStock',$cps,$request->compareStock);
+            $query->whereRaw("IFNULL( gs.allStock, 0) $cps {$request->compareStock}");
+            /*$stockGoods =  GoodsStock::where('dealer_id',Auth::id())->where('goods_num',$cps,$request->compareStock)->get(); 
+            
             if( count( $stockGoods ) > 0 ){
 
                 $stockGoods = json_decode($stockGoods,true);
@@ -186,7 +201,7 @@ class PriceController extends Controller
                     array_push($stockGoodsArr, $stockGood['goods_id']);
                 }
 
-            }                         
+            } */
         }
         if( isset($request->myKeyword) && !empty($request->myKeyword) ){
                
@@ -203,12 +218,15 @@ class PriceController extends Controller
                
             $query->where('g.name','LIKE',"%{$request->nameKeyword}%");
         }
-
+        
+        /*
         if( isset($stockGoodsArr) ){
             
             $query->whereIn('id',$stockGoodsArr);
 
         }
+        */
+
         if( !empty( $request->category ) ){
             
             $filterCategory = $request->category;
@@ -242,10 +260,10 @@ class PriceController extends Controller
 
 
         $allFilter = $query->count();
-
+        
+        //echo $query->toSql();
         $goods = $query->selectRaw("g.* , IFNULL( gs.allStock, 0) as allStock , ROUND(IFNULL( gp.selfPrice , g.w_price*".$tmpMutiple.")) as selfPrice")->get();
         
-
         $goods = $goods->toArray();
         
 
