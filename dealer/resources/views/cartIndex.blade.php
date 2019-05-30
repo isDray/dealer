@@ -279,17 +279,23 @@ $(function(){
     reduceHeight = adjHeight + footerHeight +1 ;
     
     fastBoxHeight= $("#fastBox").innerHeight();
+
+    reduceHeightM = fastBoxHeight+adjHeight;
     // 計算高度
     $("#fastBox").css("margin-top",adjHeight);
+    
+    if( $(window ).width() >= 768) {
+        
+        if( fastBoxHeight < $(window).height() - reduceHeight){
 
-    console.log( fastBoxHeight);
-    console.log( $(window).height() - reduceHeight);
-    if( fastBoxHeight < $(window).height() - reduceHeight){
+            $("#fastBox").css("height","calc(100vh - "+reduceHeight+"px)");
+        }
 
-        $("#fastBox").css("height","calc(100vh - "+reduceHeight+"px)");
+    }else{
+
+        $("#footer").css("height","calc(100vh - "+reduceHeightM+"px)");
     }
-     //$("#fastBox").css("height","100vh");
-    console.log( "calc(100vh - "+adjHeight+"px -"+footerHeight+"px)");
+
 })
 </script>
 <!-- /專屬js -->
