@@ -122,6 +122,8 @@ $(function(){
 
     $('.js-basic-example').DataTable({
         responsive: true,
+        lengthMenu: [ 20, 50, 100 ],
+        pageLength: 20,           
         language:{
             "processing":   "處理中...",
             "loadingRecords": "載入中...",

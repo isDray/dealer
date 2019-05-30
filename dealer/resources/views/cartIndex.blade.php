@@ -18,7 +18,7 @@
 </script>
 
 
-<div id='fastBox' class="container-fluid" style='margin-bottom:40px;'>
+<div id='fastBox' class="container-fluid">
 
 <!-- 輪播 -->
 <!-- <div id='carouselBox' class='col-md-12 col-sm-12 col-xs-12 _np'>
@@ -272,9 +272,19 @@
 <!-- 專屬js -->
 <script type="text/javascript">
 $(function(){
-    adjHeight = $("#fixBox").height();
+
+    adjHeight = $("#fixBox").outerHeight();
+    footerHeight =  $("#footer").outerHeight();
+    
+    reduceHeight = adjHeight + footerHeight +1 ;
+    console.log(footerHeight);
     // 計算高度
     $("#fastBox").css("margin-top",adjHeight);
+    //$("#fastBox").css("height","calc(100vh - "+adjHeight+"px -"+footerHeight+"px)");
+
+    $("#fastBox").css("height","calc(100vh - "+reduceHeight+"px)");
+     //$("#fastBox").css("height","100vh");
+    console.log( "calc(100vh - "+adjHeight+"px -"+footerHeight+"px)");
 })
 </script>
 <!-- /專屬js -->

@@ -140,6 +140,8 @@ $(function(){
         responsive: true,
         stateSave: true, 
         searching:false,        
+        lengthMenu: [ 20, 50, 100 ],
+        pageLength: 20,           
         dom: '<"top"<"col-md-6"<"inlinebox"li>><"col-md-6"f>>rt<"bottom"p><"clear">',             
         language:{
             "processing":   "處理中...",
