@@ -11,7 +11,7 @@
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="{{asset('adminbsb-materialdesign/plugins/ckeditor/ckeditor.js')}}"></script>
 
-<div id='thankBox' class="container-fluid _np">
+<div id='thankBox' class="container-fluid ">
 
     <div class='thankLabel _np col-md-8 col-md-offset-2 col-sm-12 col-xs-12' label='訂購成功'></div>
 
@@ -33,6 +33,34 @@
 <script type="text/javascript">
 $(function(){
 
+adjHeight = $("#fixBox").height();
+// 計算高度
+$("#thankBox").css("margin-top",adjHeight);
+
+adjHeight = $("#fixBox").outerHeight();
+    footerHeight =  $("#footer").outerHeight();
+    
+    reduceHeight = adjHeight + footerHeight +1 ;
+    
+    fastBoxHeight= $("#thankBox").innerHeight();
+
+    reduceHeightM = fastBoxHeight+adjHeight;
+
+    console.log(reduceHeightM);
+    // 計算高度
+    $("#thankBox").css("margin-top",adjHeight);
+    
+    if( $(window ).width() >= 768) {
+        
+        if( fastBoxHeight < $(window).height() - reduceHeight){
+
+            $("#thankBox").css("height","calc(100vh - "+reduceHeight+"px)");
+        }
+
+    }else{
+
+        $("#footer").css("height","calc(100vh - "+reduceHeightM+"px)");
+    }
 $(document).on( 'change', '.checkoutNum', function(e){
     
     if (e.handled !== true) {

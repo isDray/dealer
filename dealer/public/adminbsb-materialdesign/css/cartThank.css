@@ -1,13 +1,13 @@
 #thankBox{
     margin-top: 150px;
-    min-height: 100vh;
+    /*min-height: 100vh;*/
 }
 /* 區塊標籤 */
 .thankLabel{
 	position: relative;
 	border-radius: 50%;
 	height: 3px;
-	margin-top: 100px;
+	margin-top: 60px;
 	margin-bottom: 10px;
 	background-image: rgb(249,52,52); /* Old browsers */
  background-image: -moz-linear-gradient(45deg, rgba(249,52,52,1) 0%, rgba(226,111,167,1) 100%); /* FF3.6-15 */
@@ -36,6 +36,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f93434', end
 	padding-top: 15px;
 	padding-bottom: 15px;
 	background-color: #ececec;
+	margin-bottom: 10px;
 }
 
 @media (max-width: 767px) {
