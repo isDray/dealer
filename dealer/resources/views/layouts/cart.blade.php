@@ -281,11 +281,11 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='{{$dealerData
     <!-- footer -->
     <div id='footer' class="container-fluid">
 
-        <div id='footerLogo' class='col-md-3 col-md-offset-2 col-sm-12 col-xs-12'>
-            <!-- <img src="{{url('logo')}}/{{$cartUser}}/{{$dealerDatas['logo1']}}"> -->
-        </div>
+<!--         <div id='footerLogo' class='col-md-3 col-md-offset-2 col-sm-12 col-xs-12'>
+            <img src="{{url('logo')}}/{{$cartUser}}/{{$dealerDatas['logo1']}}">
+        </div> -->
 
-        <div id='dealerInfo' class='col-md-4 col-md-offset-1 col-sm-12 col-xs-12'>
+        <div id='dealerInfo' class='col-md-4 col-md-offset-4 col-sm-12 col-xs-12 text-center'>
             <h3>{{$dealerDatas['hotel_name']}}</h3>
             <ul>
 <!--                 @if( !empty($dealerDatas['hotel_address']) )

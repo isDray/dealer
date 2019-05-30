@@ -18,3 +18,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::post('/try', 'ApiController@index');
+
+// 改狀態為已出貨
+Route::post('/toShipped', 'ApiController@toShipped');
+
