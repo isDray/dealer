@@ -232,6 +232,9 @@
 
                         @role('Dealer')
                             @if($purchaseData['status'] == 1)
+
+                            <input type="submit" name="checked" class="btn btn-primary waves-effect" value="確認下單">
+
                             <input type="submit" name="cancel" class="btn btn-primary waves-effect" value="取消">
                             @endif
 

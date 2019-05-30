@@ -934,11 +934,11 @@ class DealerController extends Controller
 
         $tmpDatas = User::find( $request->id );
 
-        $url = $_SERVER['SERVER_NAME'].'/'.$tmpDatas->detect;
+        $url = "https://".$_SERVER['SERVER_NAME'].'/'.$tmpDatas->detect;
 
 
         $image = QrCode::format('png')
-                        ->size(100)
+                        ->size(110)
                         ->errorCorrection('H')
                         ->margin(0)
                         ->generate($url);

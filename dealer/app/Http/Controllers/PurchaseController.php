@@ -1536,7 +1536,7 @@ class PurchaseController extends Controller
             }
 
             // 進貨單產生後 , 經銷商不可以將進貨單轉換為 待處理,已確認,已出貨
-            if( isset( $request->pending ) || isset( $request->checked ) || isset( $request->shipped ) ){
+            if( isset( $request->pending ) || isset( $request->shipped ) ){
 
                 return back()->with(['errorMsg'=> '帳號無此操作權限 , 請勿嘗試非法操作']);
             }
@@ -1646,25 +1646,22 @@ class PurchaseController extends Controller
                 $Purchase->status = $tmpStatus;
 
             }
-
             
-            if( $tmpStatus == 3){
+            // 如果是
+            if( $tmpStatus == 2 && $purchase['status'] == 1){
 
-                $Purchase->shipdate = date('Y-m-d H:i:s');
-                
                 $curlPurchase = $Purchase->toArray();
                 
                 $curlPurchaseGoods = PurchaseGoods::where('purchase_id',$request->purchaseId)->get();
                 $curlPurchaseGoods = json_decode($curlPurchaseGoods,true);
 
-                //$newOrder = $tmp = DB::connection('mysql3')->table('xyzs_order_info');
-                
                 $ch = curl_init ();
                 $tmpData = ['order'=>$curlPurchase , 'orderGoods'=>$curlPurchaseGoods ,'key'=>'a459ec4a-be91-461c-8b98-896d8283da64'];
 
                 
                 $data = http_build_query($tmpData);
                 // print_r($ch);
+                //https://www.***REMOVED***.com/***REMOVED***/dealer_order.php
                 curl_setopt ( $ch, CURLOPT_URL, 'http://127.0.0.1/***REMOVED***2/dealer_order.php' );
                 curl_setopt ( $ch, CURLOPT_POST, 1 );
                 curl_setopt ( $ch, CURLOPT_HEADER, 0 );
@@ -1674,33 +1671,13 @@ class PurchaseController extends Controller
                 curl_close ( $ch );
                 $return = json_decode($return,true);         
 
-                /*$newOrder->insert(
+            }
 
-                    ['user_id'      => '0', 
-                     'order_status' => '0',
-                     'shipping_status' => '0',
-                     'pay_status' => '0',
-                     'consignee' => $Purchase->consignee,
-                     'country' => 1,
-                     'province' =>'',
-                     'city' =>'',
-                     'address'=>$Purchase->address,
-                     'mobile' =>$Purchase->phone,//$this->mobileEncode( '1' , trim($Purchase->phone) ),
-                     'shipping_id'=>14,
-                     'shipping_name'=>'宅配到府',
-                     'shipping_fee'=>$Purchase->ship_fee,
-                     'pay_id'=>'3',
-                     'pay_name'=>'貨到付款',
-                     'goods_amount'=>$Purchase->amount,
-                     'from_ad'=>'0',
-                     'referer'=>'本站',
-                     'add_time'=>time() - date('Z'),
-                     'order_amount'=>$Purchase->final_amount,
-                     'postscript'=>($Purchase->dealer_note == NULL)? '': $Purchase->dealer_note,
-                     'order_sn' => $this->get_order_sn()
-                    ]
-                );*/
+            
+            if( $tmpStatus == 3){
 
+                $Purchase->shipdate = date('Y-m-d H:i:s');
+            
             }
 
             
