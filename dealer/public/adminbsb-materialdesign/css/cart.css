@@ -141,7 +141,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f93434', end
 	border-radius: 50%;
 	height: 3px;
 	margin-top: 10px;
-	margin-bottom: 40px;
+	margin-bottom: 10px;
 	background-image: rgb(249,52,52); /* Old browsers */
  background-image: -moz-linear-gradient(45deg, rgba(249,52,52,1) 0%, rgba(226,111,167,1) 100%); /* FF3.6-15 */
 background-image: -webkit-linear-gradient(45deg, rgba(249,52,52,1) 0%,rgba(226,111,167,1) 100%); /* Chrome10-25,Safari5.1-6 */
@@ -213,6 +213,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f93434', end
 }
 #dealerInfo>h3{
 	font-weight: 900;
+	color: #bdbdbd;
 }
 #dealerInfo>ul{
 	padding-left: 0px;
@@ -452,6 +453,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f93434', end
 	padding-top: 15px;
 	padding-bottom: 15px;
 	position: fixed;
+	z-index: 999;
 	left:0px;
 	bottom: 0px;
 	width: 100%;

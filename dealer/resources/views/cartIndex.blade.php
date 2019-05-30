@@ -277,12 +277,17 @@ $(function(){
     footerHeight =  $("#footer").outerHeight();
     
     reduceHeight = adjHeight + footerHeight +1 ;
-    console.log(footerHeight);
+    
+    fastBoxHeight= $("#fastBox").innerHeight();
     // 計算高度
     $("#fastBox").css("margin-top",adjHeight);
-    //$("#fastBox").css("height","calc(100vh - "+adjHeight+"px -"+footerHeight+"px)");
 
-    $("#fastBox").css("height","calc(100vh - "+reduceHeight+"px)");
+    console.log( fastBoxHeight);
+    console.log( $(window).height() - reduceHeight);
+    if( fastBoxHeight < $(window).height() - reduceHeight){
+
+        $("#fastBox").css("height","calc(100vh - "+reduceHeight+"px)");
+    }
      //$("#fastBox").css("height","100vh");
     console.log( "calc(100vh - "+adjHeight+"px -"+footerHeight+"px)");
 })
