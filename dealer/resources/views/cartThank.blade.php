@@ -44,7 +44,7 @@ adjHeight = $("#fixBox").outerHeight();
     
     fastBoxHeight= $("#thankBox").innerHeight();
 
-    reduceHeightM = fastBoxHeight+adjHeight;
+    reduceHeightM = fastBoxHeight+adjHeight-100;
 
     console.log(reduceHeightM);
     // 計算高度
