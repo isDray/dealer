@@ -119,7 +119,7 @@ a{
                                             <th>商品名稱</th>
                                             <th>商品貨號</th>
                                             <th>上架</th>
-                                            <th>推薦</th>
+                                            <!-- <th class='never'>推薦</th> -->
                                             <th>售價</th>
                                             <th>批發價</th>
                                             <th>庫存</th>
@@ -252,29 +252,33 @@ $(function(){
                 }
         
             },
+            // {
+            //     "targets":5,
+
+
+            //     "render" : function ( url, type, full) {
+            //         if( full[10] == 1 ){
+
+            //             return '<i class="material-icons col-light-green">done</i>';
+
+            //         }else if( full[10] == 0 ){
+                        
+            //             return '<i class="material-icons col-red">clear</i>';
+            //         }
+            //     },
+            //     // "data":10,
+                              
+            // },            
             {
                 "targets":5,
-                "render" : function ( url, type, full) {
-                    if( full[10] == 1 ){
-
-                        return '<i class="material-icons col-light-green">done</i>';
-
-                    }else if( full[10] == 0 ){
-                        
-                        return '<i class="material-icons col-red">clear</i>';
-                    }
-                }
-            },            
-            {
-                "targets":6,
                 "data": 4,
             },
             {
-                "targets":7,
+                "targets":6,
                 "data": 5,
             },            
             {
-                "targets":8,
+                "targets":7,
                 //"data": 6,
                 "render" : function ( url, type, full) {
                     return "<a target='_blank' href='"+"{{url('/goodsStockDetail')}}/"+full[8]+"'>"+full[6]+"</a>";
@@ -282,10 +286,10 @@ $(function(){
                 }
             },   
             {
-                "targets":9,
+                "targets":8,
                 "data": 7,
             },                     
-            {   "targets" : 10 ,
+            {   "targets" : 9 ,
                 "data": "edit",
                 "orderable": false,
                 "render" : function ( url, type, full) {

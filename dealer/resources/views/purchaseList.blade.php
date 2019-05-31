@@ -92,7 +92,7 @@ a{
                                     </div>
                                 </div>
 
-                                <div class="col-sm-1">
+<!--                                 <div class="col-sm-1">
                                     <p>手機號碼:</p>
                                     <div class="input-group">
                                         <input type="text" class="form-control myborder" placeholder="" id='pohneKeyword' value=''>
@@ -110,7 +110,7 @@ a{
                                             <input type="text" class="form-control" placeholder="" id='max_price'>
                                         </div>                                        
                                     </div>
-                                </div>
+                                </div> -->
 
                                 <!-- 訂單時間選擇 -->
                                 <div class="col-xs-2">

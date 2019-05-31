@@ -818,11 +818,11 @@ class GoodsController extends Controller
         $orderItems  = [
                         '0'=>'id',
                         '4'=>'status',
-                        '5'=>'recommend',
-                        '6'=>'price',
-                        '4'=>'w_price',
-                        '8'=>'allStock',
-                        '9'=>'updated_at',
+                        // '5'=>'recommend',
+                        '5'=>'price',
+                        '6'=>'w_price',
+                        '7'=>'allStock',
+                        '8'=>'updated_at',
                       ];
 
         $orderWay = $request->order['0']['dir'];
