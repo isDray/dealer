@@ -111,7 +111,7 @@ class ReportController extends Controller
         $allDatas  = $query->get();
         
         // 已出貨訂單
-        $shipDatas = $query->where('status',3)->get();
+        $shipDatas = $query->where('status',4)->get();
             
         // 全部轉換為陣列格式
         $allDatas  = json_decode($allDatas,true);
@@ -446,7 +446,7 @@ class ReportController extends Controller
         // 取出時間內所有確定成交的訂單
         $query->select('order_goods.gid');
 
-        $datas = $query->where('order.status',3)->groupBy('gid')->get();
+        $datas = $query->where('order.status',4)->groupBy('gid')->get();
         
         $datas = json_decode($datas,true);
         

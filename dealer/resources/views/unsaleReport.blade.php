@@ -71,7 +71,7 @@ a{
                     -->
                     <!-- 訂單時間選擇 -->
                     <div class="col-xs-3">       
-                        <p>進貨單時間</p>
+                        <p>銷售時間</p>
                         <div class="input-group">
                             <div class="form-line" id='orderSatrtBox'>
                             
