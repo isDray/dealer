@@ -2194,15 +2194,15 @@ class PurchaseController extends Controller
         switch ( $_stayus ) {
             // 待處理
             case '1':
-              $useableStatus = [2,5];
+              $useableStatus = [2,4];
               break;
             // 已確認
             case '2':
-              $useableStatus = [1,3,5];
+              $useableStatus = [1,3,4];
               break;
             // 已出貨
             case '3':
-              $useableStatus = [2,4,5];
+              $useableStatus = [2,4];
               break;
             // 取消
             case '4':

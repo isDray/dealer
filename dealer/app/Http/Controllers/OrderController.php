@@ -1592,23 +1592,53 @@ class OrderController extends Controller
                     //$request->id[$i];
     
                     if( !$this->chkIfUpdate( $request->orderid , $request->id[$i] , $request->num[$i] , $request->price[$i] ) ){
-                        /*
-                        $OrderGoods = OrderGoods::where( 'oid' , $request->orderid)
-                                                ->where( 'gid' , $request->id[$i])
-                                                ->first();
+                        
+                        $orderDealer = Order::find($request->orderid);
+                        $orderDealer = $orderDealer->dealer_id;
 
-                        $OrderGoods->price     = $request->price[$i];
-                        $OrderGoods->num       = $request->num[$i];
-                        $OrderGoods->subtotal  = ($request->price[$i] * $request->num[$i]);
+                        // $originalNum = GoodsStock::where('dealer_id',$orderDealer)->where('goods_id', $request->id[$i])->first();
+                        // $originalNum = $originalNum->goods_num;
 
-                        $OrderGoods->save();
-                        */
+                        // 商品庫存補回
+                        if( GoodsStock::where('dealer_id',$orderDealer)->where('goods_id',$request->id[$i])->exists() ){
+                    
+                            $goodStock = GoodsStock::where('dealer_id',$orderDealer)->where('goods_id',$request->id[$i])->first();
+                    
+                            $originalNum = $goodStock->goods_num;
+                            
+                            // 訂單中原來該商品的數量
+                            $orderGoodsNum = OrderGoods::where('oid', $request->orderid)->where( 'gid' , $request->id[$i])->first();
+                            $orderGoodsNum = $orderGoodsNum->num;
+                            
+                            // 原來訂單商品數 - 要修改的商品數的差值
+                            $diffNum = abs( $orderGoodsNum - $request->num[$i] );
+
+                            // 如果原來訂單的商品數量 大於 後來要修改的數量
+                            if( $orderGoodsNum > $request->num[$i]){
+                                
+                                $updateNum = $originalNum + $diffNum;
+                            }
+
+                            // 如果原來訂單的商品數量 小於 後來要修改的數量
+                            if( $orderGoodsNum < $request->num[$i]){
+                                
+                                $updateNum = $originalNum - $diffNum;
+                            }                            
+                            
+                            GoodsStock::where('dealer_id', $orderDealer)
+                            ->where('goods_id',$request->id[$i])
+                            ->update(['goods_num' => $updateNum]);
+                    
+                        }                        
+
                         DB::table('order_goods')
                         ->where('oid', $request->orderid)
                         ->where( 'gid' , $request->id[$i])
                         ->update(['price' => $request->price[$i],
                                   'num'   => $request->num[$i], 
                                   'subtotal' => ($request->price[$i] * $request->num[$i]) ]);
+
+
                     }
     
                 }
@@ -1673,17 +1703,45 @@ class OrderController extends Controller
                     //$request->id[$i];
     
                     if( !$this->chkIfUpdate( $request->orderid , $request->id[$i] , $request->num[$i] , $request->price[$i] ) ){
-                        /*
-                        $OrderGoods = OrderGoods::where( 'oid' , $request->orderid)
-                                                ->where( 'gid' , $request->id[$i])
-                                                ->first();
+                        
+                        $orderDealer = Order::find($request->orderid);
+                        $orderDealer = $orderDealer->dealer_id;
 
-                        $OrderGoods->price     = $request->price[$i];
-                        $OrderGoods->num       = $request->num[$i];
-                        $OrderGoods->subtotal  = ($request->price[$i] * $request->num[$i]);
+                        // $originalNum = GoodsStock::where('dealer_id',$orderDealer)->where('goods_id', $request->id[$i])->first();
+                        // $originalNum = $originalNum->goods_num;
 
-                        $OrderGoods->save();
-                        */
+                        // 商品庫存補回
+                        if( GoodsStock::where('dealer_id',$orderDealer)->where('goods_id',$request->id[$i])->exists() ){
+                    
+                            $goodStock = GoodsStock::where('dealer_id',$orderDealer)->where('goods_id',$request->id[$i])->first();
+                    
+                            $originalNum = $goodStock->goods_num;
+                            
+                            // 訂單中原來該商品的數量
+                            $orderGoodsNum = OrderGoods::where('oid', $request->orderid)->where( 'gid' , $request->id[$i])->first();
+                            $orderGoodsNum = $orderGoodsNum->num;
+                            
+                            // 原來訂單商品數 - 要修改的商品數的差值
+                            $diffNum = abs( $orderGoodsNum - $request->num[$i] );
+
+                            // 如果原來訂單的商品數量 大於 後來要修改的數量
+                            if( $orderGoodsNum > $request->num[$i]){
+                                
+                                $updateNum = $originalNum + $diffNum;
+                            }
+
+                            // 如果原來訂單的商品數量 小於 後來要修改的數量
+                            if( $orderGoodsNum < $request->num[$i]){
+                                
+                                $updateNum = $originalNum - $diffNum;
+                            }                            
+                            
+                            GoodsStock::where('dealer_id', $orderDealer)
+                            ->where('goods_id',$request->id[$i])
+                            ->update(['goods_num' => $updateNum]);
+                    
+                        }  
+
                         DB::table('order_goods')
                         ->where('oid', $request->orderid)
                         ->where( 'gid' , $request->id[$i])
@@ -1886,15 +1944,24 @@ class OrderController extends Controller
                 return back()->with('errorMsg', '無對應訂單商品,請重整頁面後再試一次');
             }
             
-            $res = DB::table('order_goods')
+            /*$res = DB::table('order_goods')
             ->where('oid', $request->oid)
             ->where('gid', $request->gid)
-            ->delete();
+            ->delete();*/
 
             DB::beginTransaction();
 
             try {
                 
+                $orderGoodsNum = OrderGoods::where('oid', $request->oid)->where('gid', $request->gid)->first();
+                
+                $backNum = 0;
+
+                if( $orderGoodsNum != NULL ){
+
+                    $backNum = $orderGoodsNum->num;
+                }
+
                 $res = DB::table('order_goods')
                 ->where('oid', $request->oid)
                 ->where('gid', $request->gid)
@@ -1917,6 +1984,21 @@ class OrderController extends Controller
                 $Order->final_amount = $orderAmount - $Order->discount;
 
                 $Order->save();
+                
+                // 商品庫存補回
+                if( GoodsStock::where('dealer_id',$Order->dealer_id)->where('goods_id',$request->gid)->exists() ){
+                    
+                    $goodStock = GoodsStock::where('dealer_id',$Order->dealer_id)->where('goods_id',$request->gid)->first();
+                    
+                    $originalNum = $goodStock->goods_num;
+
+                    $updateNum = ($originalNum + $backNum < 0 )?'0':$originalNum + $backNum;
+
+                    GoodsStock::where('dealer_id', $Order->dealer_id)
+                    ->where('goods_id',$request->gid)
+                    ->update(['goods_num' => $updateNum]);
+                    
+                }
 
                 DB::commit();
 
@@ -1956,15 +2038,24 @@ class OrderController extends Controller
                 return back()->with('errorMsg', '無對應訂單商品,請重整頁面後再試一次');
             }
             
-            $res = DB::table('order_goods')
+            /*$res = DB::table('order_goods')
             ->where('oid', $request->oid)
             ->where('gid', $request->gid)
-            ->delete();
+            ->delete();*/
 
             DB::beginTransaction();
 
             try {
                 
+                $orderGoodsNum = OrderGoods::where('oid', $request->oid)->where('gid', $request->gid)->first();
+                
+                $backNum = 0;
+
+                if( $orderGoodsNum != NULL ){
+
+                    $backNum = $orderGoodsNum->num;
+                }
+
                 $res = DB::table('order_goods')
                 ->where('oid', $request->oid)
                 ->where('gid', $request->gid)
@@ -1988,6 +2079,20 @@ class OrderController extends Controller
 
                 $Order->save();
 
+                // 商品庫存補回
+                if( GoodsStock::where('dealer_id',$Order->dealer_id)->where('goods_id',$request->gid)->exists() ){
+                    
+                    $goodStock = GoodsStock::where('dealer_id',$Order->dealer_id)->where('goods_id',$request->gid)->first();
+                    
+                    $originalNum = $goodStock->goods_num;
+
+                    $updateNum = ($originalNum + $backNum < 0 )?'0':$originalNum + $backNum;
+
+                    GoodsStock::where('dealer_id', $Order->dealer_id)
+                    ->where('goods_id',$request->gid)
+                    ->update(['goods_num' => $updateNum]);
+                    
+                }
                 DB::commit();
 
                 return redirect("/orderEdit/{$request->oid}")->with('successMsg', '訂單商品移除成功');
@@ -2114,6 +2219,22 @@ class OrderController extends Controller
                 $Order->final_amount = $orderAmount - $Order->discount;
 
                 $Order->save();
+              
+
+                // 扣除庫存
+                if( GoodsStock::where('dealer_id',$Order->dealer_id)->where('goods_id',$_goodsID)->exists() ){
+                    
+                    $goodStock = GoodsStock::where('dealer_id',$Order->dealer_id)->where('goods_id',$_goodsID)->first();
+                    
+                    $originalNum = $goodStock->goods_num;
+                    $updateNum = ($originalNum - $_number < 0 )?'0':$originalNum - $_number;
+
+                    GoodsStock::where('dealer_id', $Order->dealer_id)
+                    ->where('goods_id',$_goodsID)
+                    ->update(['goods_num' => $updateNum]);
+                    
+
+                }
 
                 DB::commit();
 
