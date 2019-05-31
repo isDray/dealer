@@ -656,7 +656,7 @@ class PurchaseController extends Controller
                 }
                 
                 // 算出會員該商品的全部銷售量(不限時間)
-                $allSalesDatas  =  Order::select('order_goods.gid',DB::raw('SUM(order_goods.num) as allSales'))
+                /*$allSalesDatas  =  Order::select('order_goods.gid',DB::raw('SUM(order_goods.num) as allSales'))
                     ->leftJoin('order_goods', function($join) {
                         
                         $join->on('order.id', '=', 'order_goods.oid');
@@ -669,13 +669,18 @@ class PurchaseController extends Controller
                     ->where('order_goods.gid',$saleData['gid'])
                     ->where('order.status','3')
                     ->groupBy('order_goods.gid')
-                    ->first(); 
+                    ->first();*/
+
+                $allSalesDatas = GoodsStock::where('dealer_id',$dealerId)->where('goods_id',$saleData['gid'])->first();
                 
-           
                 if( $allSalesDatas != NULL ){
-                    $allSalesNum[] = $allSalesDatas->allSales;
+
+                    $allSalesNum[] = $allSalesDatas->total_sales;
+
                 }else{
+
                     $allSalesNum[] = 0;
+
                 }
 
 
