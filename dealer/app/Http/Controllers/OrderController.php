@@ -245,6 +245,16 @@ class OrderController extends Controller
             $pageTitle = "編輯訂單商品";
         
         }
+
+        $tmpOrder = Order::find( $request->id );
+
+        if( $tmpOrder != NULL ){
+            
+            if( $tmpOrder->status == '4' ){
+              
+                return back()->with('errorMsg', '訂單目前無法進行商品編輯');
+            }
+        }
         /* 系統方會員專屬訂單查詢
          *----------------------------------------------------------------
          *

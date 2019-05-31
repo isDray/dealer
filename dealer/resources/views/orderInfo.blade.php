@@ -136,9 +136,13 @@
                 </table> 
                 
                 <div class='row align-center'>
+                    @if($order['status'] == 4)
+                    <span class='btn btn-primary waves-effect' disabled>編輯訂單商品</span>
+                    @else
                     <a href="{{url('/orderEdit/'.$order['id'])}}">
-                        <span class='btn btn-primary waves-effect'>編輯訂單商品</span>
+                        <span class='btn btn-primary waves-effect' >編輯訂單商品</span>
                     </a>
+                    @endif
                 </div>
             </div>        
             <!-- /訂單明細 --> 
