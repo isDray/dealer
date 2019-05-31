@@ -1112,11 +1112,13 @@ class PurchaseController extends Controller
 
             if( $getEnableDate->enable_date != NULL ){
             
-                $startdate=strtotime('now');
-                $enddate=strtotime($getEnableDate->enable_date);    
-                $diffDays=abs(round(($enddate-$startdate)/3600/24));
+                $startdate = strtotime('now');
+
+                $lastDay = strtotime(date("Y-m-d H:i:s", strtotime("+3 month", strtotime($getEnableDate->enable_date) ) ) );
+                //$enddate   = strtotime($getEnableDate->enable_date);    
+                //$diffDays  = abs(round(($enddate-$startdate)/3600/24));
             
-                if( $diffDays > 90 ){
+            if( $startdate > $lastDay ){
 
                     $free_price = $getSetData->free_price;
 
