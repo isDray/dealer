@@ -727,6 +727,41 @@ class OrderController extends Controller
                         
                         $Order->ship_at = date("Y-m-d H:i:s");
 
+                        // 如果為出貨時需要將個商品數量加至總銷售
+                        $orderGoods = OrderGoods::where('oid',$request->orderId)->get();
+
+                        if( count( $orderGoods ) > 0 ){
+
+                            $orderGoods = json_decode($orderGoods,true);
+
+                            foreach ($orderGoods as $orderGood) {
+
+                                $goodsStock = GoodsStock::where('dealer_id',$dealerId)->where('goods_id',$orderGood['gid'])->first();
+                                if( $goodsStock != NULL ){
+
+                                    $originalTotalSales = $goodsStock->total_sales;
+                                    $updateTotalSales   = $originalTotalSales + $orderGood['num'];
+                                    
+                                    GoodsStock::where('dealer_id', $dealerId)
+                                                ->where('goods_id', $orderGood['gid'])
+                                                ->update(['total_sales' => $updateTotalSales]);                                    
+                                }else{
+                                    
+                                    $updateTotalSales   = $orderGood['num'];
+
+                                    $newGoodsStock = new GoodsStock;
+
+                                    $newGoodsStock->dealer_id = $dealerId;
+
+                                    $newGoodsStock->goods_id = $orderGood['gid'];
+
+                                    $newGoodsStock->total_sales = $updateTotalSales;
+
+                                    $newGoodsStock->save();
+                                }    
+                            }
+                        }
+
                     }else{
 
                         $Order->ship_at = '';
@@ -755,6 +790,43 @@ class OrderController extends Controller
 
                                 }
                             }
+
+                            // 訂單取消 , 須將總銷售量扣除訂單內各商品數量
+                            $orderGoods = OrderGoods::where('oid',$request->orderId)->get();
+    
+                            if( count( $orderGoods ) > 0 ){
+    
+                                $orderGoods = json_decode($orderGoods,true);
+    
+                                foreach ($orderGoods as $orderGood) {
+    
+                                    $goodsStock = GoodsStock::where('dealer_id',$dealerId)->where('goods_id',$orderGood['gid'])->first();
+                                    if( $goodsStock != NULL ){
+    
+                                        $originalTotalSales = $goodsStock->total_sales;
+                                        $updateTotalSales   = $originalTotalSales - $orderGood['num'];
+                                        
+                                        GoodsStock::where('dealer_id', $dealerId)
+                                                    ->where('goods_id', $orderGood['gid'])
+                                                    ->update(['total_sales' => $updateTotalSales]);                                    
+                                    }else{
+                                    
+                                        $updateTotalSales   = 0;
+    
+                                        $newGoodsStock = new GoodsStock;
+    
+                                        $newGoodsStock->dealer_id = $dealerId;
+    
+                                        $newGoodsStock->goods_id = $orderGood['gid'];
+    
+                                        $newGoodsStock->total_sales = $updateTotalSales;
+    
+                                        $newGoodsStock->save();
+                                    }                                        
+                                }
+                            }
+                            // 訂單取消 , 須將總銷售量扣除訂單內各商品數量 END
+
                         }
                         
                         // 取消的訂單轉回後再將數值扣除
@@ -862,6 +934,42 @@ class OrderController extends Controller
                         
                         $Order->ship_at = date("Y-m-d H:i:s");
 
+                        // 如果為出貨時需要將個商品數量加至總銷售
+                        $orderGoods = OrderGoods::where('oid',$request->orderId)->get();
+
+                        if( count( $orderGoods ) > 0 ){
+
+                            $orderGoods = json_decode($orderGoods,true);
+
+                            foreach ($orderGoods as $orderGood) {
+
+                                $goodsStock = GoodsStock::where('dealer_id',$dealerId)->where('goods_id',$orderGood['gid'])->first();
+                                if( $goodsStock != NULL ){
+
+                                    $originalTotalSales = $goodsStock->total_sales;
+                                    $updateTotalSales   = $originalTotalSales + $orderGood['num'];
+                                    
+                                    GoodsStock::where('dealer_id', $dealerId)
+                                                ->where('goods_id', $orderGood['gid'])
+                                                ->update(['total_sales' => $updateTotalSales]);                                    
+                                }else{
+                                    
+                                    $updateTotalSales   = $orderGood['num'];
+
+                                    $newGoodsStock = new GoodsStock;
+
+                                    $newGoodsStock->dealer_id = $dealerId;
+
+                                    $newGoodsStock->goods_id = $orderGood['gid'];
+
+                                    $newGoodsStock->total_sales = $updateTotalSales;
+
+                                    $newGoodsStock->save();
+                                }    
+                            }
+                        }    
+                        // 如果為出貨時需要將個商品數量加至總銷售END                    
+
                     }else{
 
                         $Order->ship_at = '';
@@ -889,6 +997,42 @@ class OrderController extends Controller
 
                                 }
                             }
+
+                            // 訂單取消 , 須將總銷售量扣除訂單內各商品數量
+                            $orderGoods = OrderGoods::where('oid',$request->orderId)->get();
+    
+                            if( count( $orderGoods ) > 0 ){
+    
+                                $orderGoods = json_decode($orderGoods,true);
+    
+                                foreach ($orderGoods as $orderGood) {
+    
+                                    $goodsStock = GoodsStock::where('dealer_id',$dealerId)->where('goods_id',$orderGood['gid'])->first();
+                                    if( $goodsStock != NULL ){
+    
+                                        $originalTotalSales = $goodsStock->total_sales;
+                                        $updateTotalSales   = $originalTotalSales - $orderGood['num'];
+                                        
+                                        GoodsStock::where('dealer_id', $dealerId)
+                                                    ->where('goods_id', $orderGood['gid'])
+                                                    ->update(['total_sales' => $updateTotalSales]);                                    
+                                    }else{
+                                    
+                                        $updateTotalSales   = 0;
+    
+                                        $newGoodsStock = new GoodsStock;
+    
+                                        $newGoodsStock->dealer_id = $dealerId;
+    
+                                        $newGoodsStock->goods_id = $orderGood['gid'];
+    
+                                        $newGoodsStock->total_sales = $updateTotalSales;
+    
+                                        $newGoodsStock->save();
+                                    }                                        
+                                }
+                            }
+                            // 訂單取消 , 須將總銷售量扣除訂單內各商品數量 END                            
                         } 
                         
                         // 取消的訂單轉回後再將數值扣除
