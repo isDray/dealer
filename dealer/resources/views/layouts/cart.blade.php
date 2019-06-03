@@ -292,9 +292,9 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='{{$dealerData
                 <li><p><span class="glyphicon glyphicon-map-marker"></span> {{$dealerDatas['hotel_address']}}</p></li>
                 @endif -->
 
-                @if( !empty($dealerDatas['hotel_tel']) )
-                <li><p><span class="glyphicon glyphicon-earphone"></span>請撥打分機 @if(!empty($dealerDatas['hotel_extension'])):{{$dealerDatas['hotel_extension']}}@endif</p></li>
-                @endif
+                <!-- @if( !empty($dealerDatas['hotel_tel']) )@endif -->
+                <li><p><span class="glyphicon glyphicon-earphone"></span>可撥打分機 @if(!empty($dealerDatas['hotel_extension'])):{{$dealerDatas['hotel_extension']}}@endif</p></li>
+                
 
 <!--                 @if( !empty($dealerDatas['hotel_email']) )
                 <li><p><span class="glyphicon glyphicon-envelope"></span> {{$dealerDatas['hotel_email']}}</p></li>

@@ -13,7 +13,7 @@
 
 <div id='checkoutBox' class="container-fluid _np">
     
-    <h4 style='color:red;font-weight:900;text-align:center;padding-left:15px;padding-right:15px;'>訂單送出後，請可撥打分機，告知櫃檯人員已訂購商品，以便盡快處理您的訂單，謝謝!</h4>
+    <h4 style='color:red;font-weight:900;text-align:center;padding-left:15px;padding-right:15px;'>訂單送出後，請可撥打分機@if(!empty($dealerDatas['hotel_extension'])):{{$dealerDatas['hotel_extension']}}@endif，告知櫃檯人員已訂購商品，以便盡快處理您的訂單，謝謝!</h4>
 
     <div class='checkoutLabel _np col-md-8 col-md-offset-2 col-sm-12 col-xs-12' label='購買清單'></div>
 
@@ -91,7 +91,9 @@
                  房號:<input type='text' class='form-control' name="room" style="margin-top:10px;" >
                 付款方式: <select class='form-control' style="margin-top:10px;" name='payway'>
                             <option value="現金付款">現金付款</option>
+                            @if( $dealerDatas['credit_pay'] == 1)
                             <option value="櫃檯刷卡">櫃檯刷卡</option>
+                            @endif
                           </select>    
                 <textarea class="form-control" rows="3" placeholder="備註欄位" style="margin-top:10px;margin-bottom:10px;" name="note"></textarea>         
                 
