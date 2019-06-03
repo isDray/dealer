@@ -212,7 +212,8 @@ class CartController extends Controller
                                          'recommendGoods'=>$recommendGoods,
                                          'hots'=>$hots=[],
                                          'color'=>'yellow',
-                                         'displayWay' => $set->show_type
+                                         'displayWay' => $set->show_type,
+                                         'pageName'=>'首頁',
                                         ]);     	
     }
     
@@ -288,6 +289,8 @@ class CartController extends Controller
                                          'goods'        => $goods,
                                          'goodPics'     => $goodPics,
                                          'isviewGoods'  => true,
+                                         'pageName'     => '商品內頁',
+                                         'pageMsg'      => $goods['name'],                                         
                                         ]); 
      }
 
@@ -556,7 +559,9 @@ class CartController extends Controller
                                             'cartUser'     => $cartUser, 
                                             'dealerDatas'  => $dealerDatas,
                                             'categorys'    => $categorys,
-                                            'carts'=> $carts
+                                            'carts'=> $carts,
+                                            'pageName'     => '結帳頁面',
+                                            //'pageMsg'      => $goods['name'],                                                
                                         ]); 
 
     }
@@ -792,6 +797,7 @@ class CartController extends Controller
                                          'categorys'    => $categorys,
                                          'orderSn'      => $request->session()->get('orderSn'),
                                          'orderAmount'  => $request->session()->get('orderAmount'),
+                                         'pageName'     => '感謝購買頁面',
                                        ]);           
     }
     
@@ -955,7 +961,10 @@ class CartController extends Controller
                                             'goods'        => $goods,
                                             'plist'        => $plist,
                                             'cateName'     => $cateName,
-                                            'displayWay'   => $set->show_type
+                                            'displayWay'   => $set->show_type,
+                                            'pageName'     => '分類',
+                                            'pageMsg'      => $cateName,
+
                                         ]);
     }
 
@@ -1176,7 +1185,9 @@ class CartController extends Controller
                                             'cartUser'     => $cartUser, 
                                             'dealerDatas'  => $dealerDatas,
                                             'categorys'    => $categorys,
-                                            'article'      => $article
+                                            'article'      => $article,
+                                            // 'pageName'     => '感謝購買頁面',
+                                            'pageMsg'      => $article['name'],
 
                                         ]);
 

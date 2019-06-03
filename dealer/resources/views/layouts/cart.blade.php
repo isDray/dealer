@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title> 購物車 </title>
+    <title> @if( !empty($dealerDatas['hotel_name'])){{$dealerDatas['hotel_name']}}@endif  @if(!empty($pageName))-{{$pageName}}@endif @if(!empty($pageMsg))-{{$pageMsg}}@endif</title>
     <!-- Favicon-->
     <link rel="icon" href="{{asset('/adminbsb-materialdesign/favicon.ico')}}" type="image/x-icon">
 
