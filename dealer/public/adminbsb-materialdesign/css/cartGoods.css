@@ -64,6 +64,10 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f93434', end
 	color: #ee526d;
 	/*border:2px solid #e8308c;*/
 }
+#bottomAdd{
+	background-color: white;
+	margin-bottom: 40px;
+}
 @media (max-width: 767px) {
 #goodsInfo{
 	height: auto;

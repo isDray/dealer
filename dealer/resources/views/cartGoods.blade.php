@@ -28,22 +28,24 @@
             <h4>售價: {{$goods['dealerPrice']}}</h4>
             <h4>編號: {{$goods['goods_sn']}}</h4>
         
-            <form id="addCartForm" class="form-inline" action="{{url('/'.$dealerDetect.'/addToCart/')}}" method="post">
-
-              <div class="form-group">
+            <!-- <form id="addCartForm" class="form-inline" action="{{url('/'.$dealerDetect.'/addToCart/')}}" method="post"> -->
+            <form id="addCartForm" action="{{url('/'.$dealerDetect.'/addToCart/')}}" method="post">
+              <!-- <div class="form-group"> -->
 
                 {{ csrf_field() }} 
                 <input type='hidden' name='goodsId' value="{{$goods['id']}}">
-
-                <select class='form-control' id='goodsNum' name='goodsNum'>
+                <input type="hidden" id='goodsNum' name='goodsNum' value="1">
+<!--                 <select class='form-control' id='goodsNum' name='goodsNum'>
                 <option value='0'> 請選擇購買數量 </option>
                 @for($i = 1; $i <= $goods['stock']; $i++)
                 <option value="{{$i}}">{{$i}}</option>
                 @endfor
-                </select>
-              </div>
-
-              <button type="submit" class="btn btn-primary">加入購物車</button>
+                </select> -->
+              <!-- </div> -->
+              <h4>
+              數量:&nbsp;1&nbsp;&nbsp;&nbsp;<button type="submit" class="btn btn-primary">加入購物車</button>
+              </h4>
+              
 
             </form>
 
@@ -60,6 +62,34 @@
         {!!$goods['desc']!!}
     </div>
 
+    <div id="bottomAdd" class='col-md-8 col-md-offset-2 col-sm-12 col-xs-12 '>
+            <!-- <h3>{{$goods['name']}}</h3> -->
+
+            <h4>售價: {{$goods['dealerPrice']}}</h4>
+            <!-- <h4>編號: {{$goods['goods_sn']}}</h4> -->
+        
+            <!-- <form id="addCartForm" class="form-inline" action="{{url('/'.$dealerDetect.'/addToCart/')}}" method="post"> -->
+            <form id="addCartForm2" action="{{url('/'.$dealerDetect.'/addToCart/')}}" method="post">
+              <!-- <div class="form-group"> -->
+
+                {{ csrf_field() }} 
+                <input type='hidden' name='goodsId' value="{{$goods['id']}}">
+                <input type="hidden" id='goodsNum' name='goodsNum' value="1">
+<!--                 <select class='form-control' id='goodsNum' name='goodsNum'>
+                <option value='0'> 請選擇購買數量 </option>
+                @for($i = 1; $i <= $goods['stock']; $i++)
+                <option value="{{$i}}">{{$i}}</option>
+                @endfor
+                </select> -->
+              <!-- </div> -->
+              <h4>
+              數量:&nbsp;1&nbsp;&nbsp;&nbsp;<button type="submit" class="btn btn-primary">加入購物車</button>
+              </h4>
+              
+
+            </form>
+    </div>
+
 </div>
 
 <script src="{{asset('adminbsb-materialdesign/plugins/bootstrap-notify/bootstrap-notify.js')}}"></script>
@@ -69,6 +99,34 @@
 $(function(){
 
 $("#addCartForm").submit(function(e) {
+
+    e.preventDefault(); // avoid to execute the actual submit of the form.
+
+    var form = $(this);
+    var url = form.attr('action');
+
+    $.ajax({
+            type: "POST",
+            url: url,
+            dataType: 'json',
+            data: form.serialize(), // serializes the form's elements.
+            success: function(data){
+                
+                if( data['res'] == true){
+                    refreshItem( data['cartDatas'] );
+                    cusMsg( data['res'] , data['msg'] );
+
+                }else{
+
+                    cusMsg( data['res'] , data['msg'] );
+                }
+            }
+    });
+
+
+});
+
+$("#addCartForm2").submit(function(e) {
 
     e.preventDefault(); // avoid to execute the actual submit of the form.
 
