@@ -99,7 +99,15 @@
                             </div>
                             </div>
                         </div>
-
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <b>&nbsp;</b>
+                            <div class="form-group">
+                            <div>
+                                <input type="checkbox" class="filled-in" id="credit_pay" name='credit_pay' >
+                                <label for="credit_pay">啟用信用卡付款</label>
+                            </div>
+                            </div>
+                        </div>  
                         <div class="col-md-7 col-sm-12 col-xs-12">
                             
                             <b>經銷商備註:</b>
@@ -193,7 +201,17 @@
                                 <input type="text" class="form-control myborder" name="hotel_email" id="hotel_email" placeholder="" value="" />
                             </div>
                             </div>
-                        </div>                        
+                        </div>      
+                        
+                        <div class="col-md-3 col-sm-12 col-xs-12">
+                            <b>旅館分機:</b>
+                            <div class="form-group">
+                            <div class="form-line">
+                                <input type="text" class="form-control myborder" name="hotel_extension" id="hotel_extension" placeholder="" value="" />
+                            </div>
+                            </div>
+                        </div> 
+
                         <div class="col-md-9 col-sm-12 col-xs-12">
                             <b>旅館地址:</b>
                             <div class="form-group">

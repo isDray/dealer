@@ -223,6 +223,7 @@ class DealerController extends Controller
             'user_tel'   => 'nullable|regex:/^[0-9]{9,12}$/',
             'hotel_name' => 'nullable|max:64',
             'hotel_tel'  => 'nullable|regex:/^[0-9]{9,12}$/',
+            'hotel_extension' => 'nullable|max:8',
             'hotel_phone' => 'nullable|regex:/^09[0-9]{8}$/',
             // 'hotel_address' => 'required',
             'ship_name' => 'nullable|max:64',
@@ -252,6 +253,7 @@ class DealerController extends Controller
             'hotel_name.max'=> '旅館名稱最多為64字元',
             // 'hotel_tel.required' => '旅館電話為必填',
             'hotel_tel.regex' => '旅館電話格式錯誤',
+            'hotel_extension.max'=>'旅館分機最多為8個字元',
             'hotel_phone.regex' => '旅館手機格式錯誤',
             'hotel_email.email'=> '旅館信箱格式錯誤',
             // 'hotel_address.required' => '旅館地址為必填',
@@ -364,6 +366,7 @@ class DealerController extends Controller
             $dealer->web_url       = isset( $request->hotel_url)? trim( $request->hotel_url):''; 
             $dealer->hotel_phone   = isset( $request->hotel_phone )? trim( $request->hotel_phone ):'';
             $dealer->hotel_tel     = isset( $request->hotel_tel )? trim( $request->hotel_tel):'';
+            $dealer->hotel_extension = isset( $request->hotel_extension )? trim( $request->hotel_extension):'';
             $dealer->hotel_email   = isset( $request->hotel_email )? trim( $request->hotel_email):'';
             $dealer->hotel_address = isset( $request->hotel_address )? trim( $request->hotel_address ):'';
             $dealer->user_name     = isset( $request->user_name )? trim( $request->user_name ):'';
@@ -386,6 +389,7 @@ class DealerController extends Controller
             }
             $dealer->multiple      = isset( $request->multiple)?trim($request->multiple):'2.0';
             $dealer->status        = 1;
+            $dealer->credit_pay    = isset( $request->credit_pay)?1:0;            
             $dealer->enable_date   = isset( $request->enable_date)?trim($enableDate):'';            
             $dealer->logo_color1   = isset( $request->logocolor1)?trim($request->logocolor1):'#fff';
             $dealer->logo_color2   = isset( $request->logocolor2)?trim($request->logocolor2):'#fff';
@@ -566,6 +570,7 @@ class DealerController extends Controller
             'user_tel'   => 'nullable|regex:/^[0-9]{9,12}$/',
             'hotel_name' => 'nullable|max:64',
             'hotel_tel'  => 'nullable|regex:/^[0-9]{9,12}$/',
+            'hotel_extension' => 'nullable|max:8',
             'hotel_phone' => 'nullable|regex:/^09[0-9]{8}$/',
             // 'hotel_address' => 'required',
             'ship_name' => 'nullable|max:64',
@@ -597,6 +602,7 @@ class DealerController extends Controller
             'hotel_tel.regex' => '旅館電話格式錯誤',
             'hotel_email.email'=> '旅館信箱格式錯誤',
             'hotel_phone.regex' => '旅館手機格式錯誤',
+            'hotel_extension.max'=>'分機最多為8個字元',
             // 'hotel_address.required' => '旅館地址為必填',
             'ship_name.max'=>'預設收貨人姓名最多為64字元',
             'ship_phone.regex'=>'預設收貨手機格式錯誤',
@@ -710,6 +716,8 @@ class DealerController extends Controller
                 $dealer->web_url       = isset( $request->hotel_url)? trim( $request->hotel_url):''; 
                 $dealer->hotel_phone   = isset( $request->hotel_phone )? trim( $request->hotel_phone ):'';
                 $dealer->hotel_tel     = isset( $request->hotel_tel )? trim( $request->hotel_tel):'';
+                $dealer->hotel_extension = isset( $request->hotel_extension )? trim( $request->hotel_extension):'';
+                
                 $dealer->hotel_email   = isset( $request->hotel_email )? trim( $request->hotel_email):'';
                 $dealer->hotel_address = isset( $request->hotel_address )? trim( $request->hotel_address ):'';
                 $dealer->user_name     = isset( $request->user_name )? trim( $request->user_name ):'';
@@ -721,6 +729,8 @@ class DealerController extends Controller
                 $dealer->ship_tel      = isset( $request->ship_tel)?trim($request->ship_tel):'';
                 $dealer->ship_address  = isset( $request->ship_address)?trim($request->ship_address):'';
                 $dealer->status        = isset( $request->status)?1:0;
+                $dealer->credit_pay    = isset( $request->credit_pay)?1:0;
+                
                 $dealer->enable_date   = isset( $request->enable_date)?trim($enableDate):'';
                 $dealer->logo_color1   = isset( $request->logocolor1)?trim($request->logocolor1):'#fff';
                 $dealer->logo_color2   = isset( $request->logocolor2)?trim($request->logocolor2):'#fff';
