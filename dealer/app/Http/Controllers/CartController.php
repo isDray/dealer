@@ -1351,8 +1351,8 @@ class CartController extends Controller
             
             //$orderSn =
             
-            $radmonNUm = rand(0,999999);
-            $radmonNUm = str_pad($radmonNUm,6,'0',STR_PAD_LEFT);
+            $radmonNUm = rand(0,99999);
+            $radmonNUm = str_pad($radmonNUm,5,'0',STR_PAD_LEFT);
             
             try {
             
