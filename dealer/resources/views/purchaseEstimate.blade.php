@@ -53,6 +53,8 @@
                         @else
                         <input type="hidden" value="{{$DealerId}}" name="dealerId">
                         @endif
+                    </div>
+                    <div class="col-md-8 col-xs-12 col-sm-12">
                         <div class="input-group">
                             
                             <span class="input-group-addon">
