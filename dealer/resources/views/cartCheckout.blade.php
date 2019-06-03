@@ -13,7 +13,7 @@
 
 <div id='checkoutBox' class="container-fluid _np">
     
-    <h4 style='color:red;font-weight:900;text-align:center;padding-left:15px;padding-right:15px;'>訂單送出後，請可撥打分機@if(!empty($dealerDatas['hotel_extension'])):{{$dealerDatas['hotel_extension']}}@endif，告知櫃檯人員已訂購商品，以便盡快處理您的訂單，謝謝!</h4>
+    <h4 style='color:red;font-weight:900;text-align:center;padding-left:15px;padding-right:15px;'>訂單送出後，請可撥打分機@if(!empty($dealerDatas['hotel_extension']))"{{$dealerDatas['hotel_extension']}}"@endif，告知櫃檯人員已訂購商品，以便盡快處理您的訂單，謝謝!</h4>
 
     <div class='checkoutLabel _np col-md-8 col-md-offset-2 col-sm-12 col-xs-12' label='購買清單'></div>
 
