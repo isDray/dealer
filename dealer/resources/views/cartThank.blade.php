@@ -18,13 +18,9 @@
     <div id='thankMsgBox' class='col-md-8 col-md-offset-2 col-sm-12 col-xs-12'> 
 
         <h3 style='font-weight:900;'>感謝您的購買 , 以下為您的購買相關資料:</h3>
-        <br>
         <h4 style='font-weight:900;'>訂單編號:{{$orderSn}}</h4>
-        <br>
         <h4 style='font-weight:900;'>訂單金額:<span style="color:red;font-size:30px;">{{$orderAmount}}元</span></h4>
-        <br>
         <h4 style='color:red;font-weight:900;'>訂單送出後，請可撥打分機@if(!empty($dealerDatas['hotel_extension'])):{{$dealerDatas['hotel_extension']}}@endif，告知櫃檯人員已訂購商品，以便盡快處理您的訂單，謝謝!</h4>
-        <br><br>
         <a href="{{url('')}}/{{$dealerDetect}}" class='btn btn-primary'>回首頁</a>
     </div>
 </div>
