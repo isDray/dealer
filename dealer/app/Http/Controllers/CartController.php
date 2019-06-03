@@ -735,11 +735,25 @@ class CartController extends Controller
             if( !empty($dealerDatas['hotel_email']) ){
                 $to      = $dealerDatas['hotel_email'];
                 $subject = '新訂單通知';
-
-                $message = "接收到一筆新訂單 , \r\n";
+                /*
+                $message  = "<div>";
+                $message .= "接收到一筆新訂單 , \r\n";
                 $message .= "訂單編號:{$Order->order_sn} , 房號: {$Order->room} , 總金額: {$Order->final_amount} \r\n";
+                $message .= "<div>";
+                */
+                $message  = "<html><body>";
+                $message .= "<div style='border:1px solid #ee526d; border-radius:4px;font-weight:900; background-color:#fefefe;font-family:Microsoft JhengHei;'>";
+                $message .= "<p style='background-color:#ee526d;margin:0px;font-size:20px;font-family:Microsoft JhengHei;'>新訂單通知</p>";
+                $message .= "<h3 style='padding-left:5px'>親愛的店家您好：</h3>";
+                $message .= "<p style='padding-left:5px'>已接收到一筆新訂單 ,</p>";
+                $message .= "<p style='padding-left:5px'>訂單編號:{$Order->order_sn} , 房號: {$Order->room} , 總金額: {$Order->final_amount}</p>";
+                $message .= "<p style='padding-left:5px'>謝謝!</p>";
+                $message .= "</div>";
+                $message .= "</body></html>";
 
-                $headers = 'From: admin@ilover520.com' . "\r\n" ;
+                $headers  = 'From: admin@ilover520.com' . "\r\n" ;
+                $headers .= "MIME-Version: 1.0\r\n";
+                $headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";                
 
                 @mail($to, $subject, $message, $headers);
             }
