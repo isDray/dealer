@@ -377,8 +377,8 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='{{$dealerData
     <script type="text/javascript">
         $(function(){
         swal.fire({
-            title: "執行成功",
-            html: "{!!session('successMsg')!!}",
+            title: "{!!session('successMsg')!!}",
+            html: " ",
             type:'success'
         });
         });
@@ -389,8 +389,8 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='{{$dealerData
     <script type="text/javascript">
         $(function(){
         swal.fire({
-            title: "執行失誤",
-            html: "{!!session('errorMsg')!!}",
+            title: "{!!session('errorMsg')!!",
+            html: " ",
             type:'error'
         });
         });
@@ -406,8 +406,8 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='{{$dealerData
         @endforeach
         $(function(){
             swal.fire({
-                title: "執行失誤",
-                html: errorHtml,
+                title: errorHtml,
+                html: " ",
                 type:'error'
             });    
         });    
@@ -519,8 +519,8 @@ function cusMsg( _res , _msg ){
 
     swal.fire({
         
-        title: msgTile,
-        html: _msg,
+        title: _msg,
+        html: ' ',
         type:msgType
     
     });
