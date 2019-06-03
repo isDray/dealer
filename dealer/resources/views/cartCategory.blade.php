@@ -27,7 +27,7 @@
                 <div class="caption">
             
                 <h5> {{ $good['name'] }}</h5>
-                <h4>價格:{{$good['goodsPrice'] }}</h4>
+                <h4>售價:{{$good['goodsPrice'] }}</h4>
                 
                 <p class='itemBtn'>
                    
@@ -53,7 +53,7 @@
           </div>
           <div class="media-body">
                 <h5> {{ $good['name'] }}</h5>
-                <h4>價格:{{$good['goodsPrice'] }}</h4>
+                <h4>售價:{{$good['goodsPrice'] }}</h4>
                 <p class='itemBtn'>
                   <!-- <a href="#" class="btn btn-view" role="button"><span class="glyphicon glyphicon-search"></span>查看商品</a>  -->
                    
