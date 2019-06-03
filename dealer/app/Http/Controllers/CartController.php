@@ -743,11 +743,11 @@ class CartController extends Controller
                 */
                 $message  = "<html><body>";
                 $message .= "<div style='border:1px solid #ee526d; border-radius:4px;font-weight:900; background-color:#fefefe;font-family:Microsoft JhengHei;'>";
-                $message .= "<p style='background-color:#ee526d;margin:0px;font-size:20px;font-family:Microsoft JhengHei;'>新訂單通知</p>";
-                $message .= "<h3 style='padding-left:5px'>親愛的店家您好：</h3>";
-                $message .= "<p style='padding-left:5px'>已接收到一筆新訂單 ,</p>";
-                $message .= "<p style='padding-left:5px'>訂單編號:{$Order->order_sn} , 房號: {$Order->room} , 總金額: {$Order->final_amount}</p>";
-                $message .= "<p style='padding-left:5px'>謝謝!</p>";
+                $message .= "<p style='background-color:#ee526d;margin:0px;font-size:20px;font-family:Microsoft JhengHei;padding-left:5px;'>新訂單通知</p>";
+                $message .= "<h3 style='padding-left:5px;font-size:18px;'>親愛的店家您好：</h3>";
+                $message .= "<p style='padding-left:5px;font-size:16px;'>已接收到一筆新訂單 ,</p>";
+                $message .= "<p style='padding-left:5px;font-size:16px;'>訂單編號:{$Order->order_sn} , 房號: {$Order->room} , 總金額: {$Order->final_amount}</p>";
+                $message .= "<p style='padding-left:5px;font-size:16px;'>謝謝!</p>";
                 $message .= "</div>";
                 $message .= "</body></html>";
 
