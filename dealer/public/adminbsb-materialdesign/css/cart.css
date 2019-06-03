@@ -414,6 +414,41 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f93434', end
 	float: left;
 
 }
+/* 漢堡標籤 */
+#hamburger::before{
+	display: block;
+	content: " ";
+	position:absolute;
+    font-weight: 900;
+	right: -10px;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 5px 6px 5px 0px;
+    border-color: transparent rgba(249,52,52,1) transparent transparent;	
+	top:calc(15px - 6px);
+	z-index: 998;	
+}
+#hamburger::after{
+	display: block;
+	content: "分類";
+	position:absolute;
+    padding: 4px;
+    border-radius: 2px;
+    width: 40px;
+    height: 30px;
+    font-weight: 900;
+	background-color: red;
+	right: -50px;
+	top:0px;
+	z-index: 999;
+background: rgb(249,52,52); /* Old browsers */
+background: -moz-linear-gradient(45deg, rgba(249,52,52,1) 0%, rgba(226,111,167,1) 100%); /* FF3.6-15 */
+background: -webkit-linear-gradient(45deg, rgba(249,52,52,1) 0%,rgba(226,111,167,1) 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(45deg, rgba(249,52,52,1) 0%,rgba(226,111,167,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f93434', endColorstr='#e26fa7',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */		
+
+}
 @media (max-width: 767px) {
 ._w{
 	display: none!important;
