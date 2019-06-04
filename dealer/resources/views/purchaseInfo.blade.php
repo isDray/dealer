@@ -145,6 +145,10 @@
                         <td>{{$purchaseData['ship_fee']}}</td>
                     </tr>
                     <tr>
+                        <td colspan='4' class='align-right'>發票稅額</td>
+                        <td>{{$purchaseData['tax']}}</td>
+                    </tr>                    
+                    <tr>
 
                         <td colspan='4' class='align-right'>總金額</td>
                         <td>{{$purchaseData['final_amount']}}</td>
@@ -154,6 +158,20 @@
 
 
                 </table>
+                
+
+                <div class="row clearfix">
+                    <div class='col-md-12 col-sm-12 col-xs-12 text-center'>
+                        @if( $purchaseData['status'] == 1 )
+                        <a href="{{url('purchaseEdit')}}/{{$purchaseData['id']}}">
+                            <span class='btn btn-primary'>編輯進貨單商品</span>
+                        </a>
+                        @else
+                        <span class='btn bg-grey disabled'>編輯進貨單商品</span>
+                        @endif
+                    </div>
+                </div>
+
 
             </div>
 
@@ -225,7 +243,7 @@
                         @role('Admin')
                        
                         <input type="submit" name="pending" class="btn @if( !in_array(1,$useableStatus) ) bg-grey @else btn-primary @endif waves-effect" value="待處理" @if( !in_array(1,$useableStatus) )disabled="disabled" @endif>
-                        <input type="submit" name="checked" class="btn @if( !in_array(2,$useableStatus) ) bg-grey @else btn-primary @endif waves-effect" value="已確認" @if( !in_array(2,$useableStatus) )disabled="disabled" @endif>
+                        <input type="submit" name="checked" class="btn @if( !in_array(2,$useableStatus) ) bg-grey @else btn-primary @endif waves-effect" value="確認下單" @if( !in_array(2,$useableStatus) )disabled="disabled" @endif>
                         <input type="submit" name="shipped" class="btn @if( !in_array(3,$useableStatus) ) bg-grey @else btn-primary @endif waves-effect" value="已出貨" @if( !in_array(3,$useableStatus) )disabled="disabled" @endif>
                         <input type="submit" name="cancel" class="btn  @if( !in_array(4,$useableStatus) ) bg-grey @else btn-primary @endif waves-effect" value="取消"   @if( !in_array(4,$useableStatus) )disabled="disabled" @endif>
                         @endrole

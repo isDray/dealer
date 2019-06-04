@@ -150,7 +150,13 @@ Route::group(['middleware' => ['auth','role:Admin|Dealer'] ], function () {
     Route::post('/puchaseStatus','PurchaseController@updateStatus');
     Route::post('/puchaseNote','PurchaseController@updateNote');
     Route::post('/puchasePayStatus','PurchaseController@updatePayStatus');
-    
+
+
+    Route::get('/purchaseEdit/{id}','PurchaseController@edit');
+    Route::post('/purchaseAddGoods','PurchaseController@purchaseAddGoods');
+    Route::post('/purchaseDeleteGoods','PurchaseController@purchaseDeleteGoods');
+    Route::post('/purchaseEditGoods','PurchaseController@editGoods');
+
     Route::post('/purchaseDeleteDo','PurchaseController@purchaseDelete');
     Route::get('/addStockException/{id}','PurchaseController@addStockException'); // 特殊狀況入庫 
     Route::post('ajaxAddStockGoods','PurchaseController@ajaxAddStockGoods'); // ajax撈出要加入庫存之商品

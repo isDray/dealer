@@ -259,7 +259,7 @@ class PurchaseController extends Controller
 
     }
     
-
+ 
 
 
 
@@ -335,6 +335,422 @@ class PurchaseController extends Controller
                                            'purchaseLogs'    => $purchaseLogs,
                                            'useableStatus'   => $useableStatus
                                          ]);
+    }
+
+
+
+
+    /*----------------------------------------------------------------
+     | 進貨單細項編輯
+     |----------------------------------------------------------------
+     |
+     */
+    public function edit( Request $request ){
+        
+        $pageTitle = "進貨單編輯";
+
+        if( !Auth::user()->hasRole('Admin') ){
+
+            return back()->with('errorMsg', "無此操作權限 , 請勿嘗試非法操作" );
+        }
+
+        if( !Auth::user()->can('purchaseList') ){
+
+            return back()->with('errorMsg', '帳號無此操作權限 , 如有需要請切換帳號或聯絡管理員增加權限' );
+        }
+        
+        $isNew = False ; 
+        
+        $orderGoods = PurchaseGoods::select('purchase_goods.*' , 'goods.thumbnail')->leftJoin('goods', function($join) {
+                          $join->on('purchase_goods.goods_id', '=', 'goods.id');
+                      })
+                      ->where('purchase_goods.purchase_id' , $request->id)
+                      ->get();
+            
+        $dealerId = Purchase::find( $request->id );
+            
+        $dealerId = $dealerId->dealer_id;
+
+        return view('purchaseEdit')->with([ 'title'      => $pageTitle,
+                                         'orderId'    => $request->id,
+                                             'orderGoods' => $orderGoods,
+                                             'isNew'      => $isNew,
+                                             'dealerId'   => $dealerId   ]);          
+    }
+
+
+
+
+    /*----------------------------------------------------------------
+     | 新增商品至進貨單
+     |----------------------------------------------------------------
+     |
+     */
+     public function purchaseAddGoods( Request $request ){
+
+        $validator = Validator::make($request->all(), [
+            
+            'goodsId'     => 'required|exists:goods,id',
+            'goodsPrice'  => 'required|numeric',
+            'goodsNumber' => 'required|numeric|min:1'
+
+        ],
+        [ 
+            'goodsId.required'     => '商品Id為必填',
+            'goodsId.exists'       => '商品不存在',
+            'goodsPrice.required'  => '商品價格為必填',
+            'goodsPrice.numeric'   => '商品價格必須為數字',
+            'goodsNumber.required' => '商品數量為必填',
+            'goodsNumber.numeric'  => '商品數量必須為數字',
+            'goodsNumber.min'      => '商品數量至少要1個',
+        ]);
+        
+
+        if ($validator->fails()) {
+
+            $res = ['status' => false ];
+
+            foreach ($validator->errors()->all() as  $errText) {
+
+                array_push($res, $errText);
+            }
+           
+            echo json_encode( $res );
+        
+        }else{
+            
+            /* 寫入明細表
+             *----------------------------------------------------------------
+             * 如果操作者身分為經銷商會員 , 在其新增時需要限制可控制商品及訂單
+             * , 避免不同經銷商之間互相衝突
+             *
+             */
+            if( Auth::user()->hasRole('Admin') ){
+                
+                if( !$this->goodsInOrder( $request->orderId , $request->goodsId ) ){
+                    
+                    if( $this->addGoodsToOrder( $request->orderId , $request->goodsId , $request->goodsPrice , $request->goodsNumber ) ){
+                        
+                        $orderGoods = $this->getOrderGoods( $request->orderId ); 
+
+                        echo json_encode( $orderGoods );
+
+                    }else{
+                        
+                    $res = ['status' => false , 0=>'新增商品至訂單失敗 , 請稍後再試'];
+                    echo json_encode( $res );
+
+                    }
+                }else{
+
+                    $res = ['status' => false , 0=>'該商品已存在 , 不需要另外新增'];
+                    echo json_encode( $res );
+                }
+
+            }/* 目前只開放總管理後台可以進行編輯
+            elseif( Auth::user()->hasRole('Dealer') ){
+                
+                $dealerId = Auth::id();
+                // 檢查訂單是否屬於當下的經銷商會元
+                if( !$this->orderBelong( $request->orderId , $dealerId ) ){
+
+                    $res = ['status' => false , 0=>'訂單非此帳號訂單 , 請勿嘗試非法修改'];
+                    echo json_encode( $res );
+                    exit;
+                }
+                
+                if( !$this->goodsInOrder( $request->orderId , $request->goodsId ) ){
+                    
+                    if( $this->addGoodsToOrder( $request->orderId , $request->goodsId , $request->goodsPrice , $request->goodsNumber ) ){
+                        
+                        $orderGoods = $this->getOrderGoods( $request->orderId ); 
+
+                        echo json_encode( $orderGoods );
+
+                    }else{
+                        
+                    $res = ['status' => false , 0=>'新增商品至訂單失敗 , 請稍後再試'];
+                    echo json_encode( $res );
+
+                    }
+                }else{
+
+                    $res = ['status' => false , 0=>'該商品已存在 , 不需要另外新增'];
+                    echo json_encode( $res );
+                }
+                                
+            }*/
+
+        }
+     }
+
+
+
+
+    /*----------------------------------------------------------------
+     | 移除進貨單中商品細項
+     |----------------------------------------------------------------
+     |
+     */
+     public function purchaseDeleteGoods( Request $request ){
+        
+        // 如果為系統方會員 , 只要有權限就可以讓其移除商品細項 
+        if( Auth::user()->hasRole('Admin') ){
+
+            // 如果沒有訂單編輯權限 , 直接終止程式
+            if( !Auth::user()->can('orderEdit') ){
+
+                return back()->with('errorMsg', '無編輯訂單權限');
+
+            }
+
+            if( !isset($request->oid) || !isset($request->gid) ){
+
+                return back()->with('errorMsg', '缺少必要參數,請重整頁面後再試一次');
+            }
+            
+
+            if( !$this->goodsInOrder( $request->oid , $request->gid ) ){
+                
+                return back()->with('errorMsg', '無對應訂單商品,請重整頁面後再試一次');
+            }
+            
+
+            DB::beginTransaction();
+
+            try {
+                
+                $res = DB::table('purchase_goods')
+                ->where('purchase_id', $request->oid)
+                ->where('goods_id', $request->gid)
+                ->delete();   
+
+                // 重新計算進貨單總價
+                $OrderGoods = PurchaseGoods::where( 'purchase_id' , $request->oid )->get();
+                $OrderGoods = $OrderGoods->toArray();
+                
+                $orderAmount = 0;
+
+                foreach ( $OrderGoods as $OrderGood ) {
+                    
+                    $orderAmount += $OrderGood['subtotal'];
+
+                }
+                
+                // 取出運費門檻
+                $dealerID = Purchase::find( $request->oid );
+                $dealerID = $dealerID->dealer_id;
+                
+                $enableDate = Dealer::where('dealer_id',$dealerID)->first();
+                $enableDate = $enableDate->enable_date;
+                
+                $getSetData = Set::find(1);
+
+                if( $enableDate != NULL ){
+            
+                    $startdate = strtotime('now');
+
+                    $lastDay = strtotime(date("Y-m-d H:i:s", strtotime("+3 month", strtotime($enableDate) ) ) );
+
+            
+                    if( $startdate > $lastDay ){
+
+                        $free_price = $getSetData->free_price;
+
+                    }else{
+                
+                        $free_price = $getSetData->new_free_price;
+                    }
+ 
+                }else{
+
+                    $free_price = $getSetData->free_price;
+                }
+
+                $purchase = Purchase::find( $request->oid );
+
+                $purchase->amount = $orderAmount;
+
+                if( $orderAmount >= $free_price){
+
+                    $tmpShipFee = 0;
+
+                }else{
+
+                    $tmpShipFee = $getSetData->ship_fee;
+                }
+                $purchase->ship_fee = $tmpShipFee;   
+                
+                if( !empty($purchase->ein) ){
+
+                    $tmpTax = round( ($orderAmount + $tmpShipFee) * 0.05 );
+                }   
+                $purchase->tax = $tmpTax;
+                $purchase->final_amount = $orderAmount + $tmpShipFee + $tmpTax ;
+
+                $purchase->save();                               
+
+                DB::commit();
+
+                return redirect("/purchaseEdit/{$request->oid}")->with('successMsg', '訂單商品移除成功');
+
+            }catch(\Exception $e){
+                
+                DB::rollback();
+                //$e->getMessage();
+
+                // 寫入錯誤代碼後轉跳
+            
+                logger("{$e->getMessage()} \n\n-----------------------------------------------\n\n"); 
+            
+                return back()->with('errorMsg', '訂單商品移除失敗');
+            }
+
+
+        }
+     }
+
+
+
+
+    /*----------------------------------------------------------------
+     | 編輯訂單中商品數量及價格
+     |----------------------------------------------------------------
+     |
+     */
+    public function editGoods( Request $request ){
+        
+        // 如果是系統方操作 , 則可以編輯所有訂單
+        if( Auth::user()->hasRole('Admin') ){
+            
+            // 如果是Admin身分 , 則需要確認是否有權限
+            if( !Auth::user()->can('orderEdit') ){
+                
+                return redirect('/home');
+
+            }
+            
+            //var_dump($request->all());
+            // 計算總共有多少細項
+            $itemNum = count( $request->id );
+            
+            DB::beginTransaction();
+
+            try {
+
+                // 迴圈檢測是否有變動
+                for ($i=0; $i < $itemNum ; $i++) { 
+    
+
+                    if( !$this->chkIfUpdate( $request->orderid , $request->id[$i] , $request->num[$i] , $request->price[$i] ) ){
+
+                        $orderDealer = Purchase::find($request->orderid);
+                        $orderDealer = $orderDealer->dealer_id;
+                        
+                        // 針對數量為0商品進行刪除動作 , 不為零的商品則進行更新動作
+                        if( $request->num[$i] <= 0){
+                            
+                            DB::table('purchase_goods')
+                            ->where('purchase_id', $request->orderid)
+                            ->where('goods_id', $request->id[$i])
+                            ->delete();  
+                            
+                        }else{
+                            
+                            DB::table('purchase_goods')
+                            ->where('purchase_id', $request->orderid)
+                            ->where( 'goods_id' , $request->id[$i])
+                            ->update(['w_price' => $request->price[$i],
+                                      'num'   => $request->num[$i], 
+                                      'subtotal' => ($request->price[$i] * $request->num[$i]) ]);
+                        }
+
+
+                    }
+    
+                }
+
+                // 重新計算進貨單總價
+                $OrderGoods = PurchaseGoods::where( 'purchase_id' , $request->orderid )->get();
+                $OrderGoods = $OrderGoods->toArray();
+                
+                $orderAmount = 0;
+
+                foreach ( $OrderGoods as $OrderGood ) {
+                    
+                    $orderAmount += $OrderGood['subtotal'];
+
+                }
+                
+                // 取出運費門檻
+                $dealerID = Purchase::find( $request->orderid );
+                $dealerID = $dealerID->dealer_id;
+                
+                $enableDate = Dealer::where('dealer_id',$dealerID)->first();
+                $enableDate = $enableDate->enable_date;
+                
+                $getSetData = Set::find(1);
+
+                if( $enableDate != NULL ){
+            
+                    $startdate = strtotime('now');
+
+                    $lastDay = strtotime(date("Y-m-d H:i:s", strtotime("+3 month", strtotime($enableDate) ) ) );
+
+            
+                    if( $startdate > $lastDay ){
+
+                        $free_price = $getSetData->free_price;
+
+                    }else{
+                
+                        $free_price = $getSetData->new_free_price;
+                    }
+ 
+                }else{
+
+                    $free_price = $getSetData->free_price;
+                }
+
+                $purchase = Purchase::find( $request->orderid );
+
+                $purchase->amount = $orderAmount;
+
+                if( $orderAmount >= $free_price){
+
+                    $tmpShipFee = 0;
+
+                }else{
+
+                    $tmpShipFee = $getSetData->ship_fee;
+                }
+                $purchase->ship_fee = $tmpShipFee;   
+                
+                if( !empty($purchase->ein) ){
+
+                    $tmpTax = round( ($orderAmount + $tmpShipFee) * 0.05 );
+                }   
+                $purchase->tax = $tmpTax;
+                $purchase->final_amount = $orderAmount + $tmpShipFee + $tmpTax ;
+
+                $purchase->save();                 
+
+                DB::commit();
+                
+                return redirect('/purchaseEdit/'.$request->orderid);
+
+
+            }catch(\Exception $e){
+                
+                DB::rollback();
+
+                logger("{$e->getMessage()} \n\n-----------------------------------------------\n\n"); 
+            
+
+            }
+
+
+        }
     }
 
 
@@ -2286,4 +2702,190 @@ class PurchaseController extends Controller
       }
 
     }
+
+
+
+
+    /*----------------------------------------------------------------
+     | 確認該商品是否已經存在於進貨單內
+     |----------------------------------------------------------------
+     | 參數:
+     |     $_orderID -> 訂單ID
+     |     $_goodsID -> 商品ID
+     |
+     | 回傳值:
+     |     True  -> 已存在    
+     |     False -> 不存在
+     */
+    public function goodsInOrder( $_orderID , $_goodsID ){
+        
+        return PurchaseGoods::where('purchase_id',$_orderID)
+                         ->where('goods_id',$_goodsID)
+                         ->exists();
+
+    }
+
+
+
+
+    /*----------------------------------------------------------------
+     | 新增商品至訂單明細中
+     |----------------------------------------------------------------
+     | 參數:
+     |     $_orderID -> 訂單ID
+     |     $_goodsID -> 商品ID 
+     |
+     |
+     */
+    public function addGoodsToOrder( $_orderID , $_goodsID , $_price , $_number ){
+        
+        $datas = Goods::where( 'id' , $_goodsID )->first();
+        
+        $datas = $datas->toArray();
+        
+        if( $datas ){
+            
+            DB::beginTransaction();
+
+            try {
+
+
+                $purchaseGoods = new PurchaseGoods;
+                
+                $purchaseGoods->goods_id    = $_goodsID;
+                $purchaseGoods->goods_sn    = $datas['goods_sn'];
+                $purchaseGoods->goods_name  = $datas['name'];
+                $purchaseGoods->w_price     = $_price;
+                $purchaseGoods->num         = $_number;
+                $purchaseGoods->subtotal    = ($_price * $_number);
+                $purchaseGoods->purchase_id = $_orderID;
+                $purchaseGoods->created_at  = time();
+                $purchaseGoods->updated_at  = time();             
+                
+                $purchaseGoods->save();
+
+                // 重新計算進貨單總價
+                $OrderGoods = PurchaseGoods::where( 'purchase_id' , $_orderID )->get();
+                $OrderGoods = $OrderGoods->toArray();
+                
+                $orderAmount = 0;
+
+                foreach ( $OrderGoods as $OrderGood ) {
+                    
+                    $orderAmount += $OrderGood['subtotal'];
+
+                }
+                
+                // 取出運費門檻
+                $dealerID = Purchase::find( $_orderID );
+                $dealerID = $dealerID->dealer_id;
+                
+                $enableDate = Dealer::where('dealer_id',$dealerID)->first();
+                $enableDate = $enableDate->enable_date;
+                
+                $getSetData = Set::find(1);
+
+                if( $enableDate != NULL ){
+            
+                    $startdate = strtotime('now');
+
+                    $lastDay = strtotime(date("Y-m-d H:i:s", strtotime("+3 month", strtotime($enableDate) ) ) );
+
+            
+                    if( $startdate > $lastDay ){
+
+                        $free_price = $getSetData->free_price;
+
+                    }else{
+                
+                        $free_price = $getSetData->new_free_price;
+                    }
+ 
+                }else{
+
+                    $free_price = $getSetData->free_price;
+                }
+
+                $purchase = Purchase::find( $_orderID );
+
+                $purchase->amount = $orderAmount;
+
+                if( $orderAmount >= $free_price){
+
+                    $tmpShipFee = 0;
+
+                }else{
+
+                    $tmpShipFee = $getSetData->ship_fee;
+                }
+                $purchase->ship_fee = $tmpShipFee;   
+                
+                if( !empty($purchase->ein) ){
+
+                    $tmpTax = round( ($orderAmount + $tmpShipFee) * 0.05 );
+                }   
+                $purchase->tax = $tmpTax;
+                $purchase->final_amount = $orderAmount + $tmpShipFee + $tmpTax ;
+
+                $purchase->save();
+
+                DB::commit();
+
+                return True;
+
+            }catch(\Exception $e){
+                
+                logger("{$e->getMessage()} \n\n-----------------------------------------------\n\n"); 
+
+                return False;
+
+            }
+            
+        }else{
+            
+            return False;
+        }
+        
+
+    }
+
+
+
+
+    /*----------------------------------------------------------------
+     | 取出訂單所有明細
+     |----------------------------------------------------------------
+     |
+     */
+    public function getOrderGoods( $_orderID ){
+        
+        $orderGoods = purchaseGoods::select('purchase_goods.*' , 'goods.thumbnail')->leftJoin('goods', function($join) {
+                          $join->on('purchase_goods.goods_id', '=', 'goods.id');
+                      })
+                      ->where('purchase_goods.purchase_id' , $_orderID)
+                      ->get();
+        
+        return $orderGoods = $orderGoods->toArray();     
+
+    }
+
+
+
+
+    /*----------------------------------------------------------------
+     | 檢測是否有變動
+     |----------------------------------------------------------------
+     | 將 訂單id + 商品id + 數量 + 售價 + 總價 混合為查詢條件 , 如果
+     | 找不到紀錄 , 則表示表單有變動過需要做修改
+     | 
+     */
+    public function chkIfUpdate( $_orderID , $_goodsID , $_goodNum , $_goodsPrice ){
+        
+        return PurchaseGoods::where( 'purchase_id'   , $_orderID )
+               ->where( 'goods_id'   , $_goodsID )
+               ->where( 'num'   , $_goodNum )
+               ->where( 'w_price' , $_goodsPrice )
+               ->exists();
+                  
+    }        
 }
