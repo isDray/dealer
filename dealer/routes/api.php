@@ -22,3 +22,6 @@ Route::post('/try', 'ApiController@index');
 // 改狀態為已出貨
 Route::post('/toShipped', 'ApiController@toShipped');
 
+// 進貨單修改
+Route::post('/toUpdate', 'ApiController@toUpdate');
+
