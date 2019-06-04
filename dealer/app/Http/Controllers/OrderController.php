@@ -765,7 +765,7 @@ class OrderController extends Controller
 
                     }else{
 
-                        $Order->ship_at = '';
+                        $Order->ship_at = NULL;
                     }
                     
 

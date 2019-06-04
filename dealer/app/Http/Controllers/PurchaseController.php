@@ -2103,6 +2103,10 @@ class PurchaseController extends Controller
 
                 $Purchase->shipdate = date('Y-m-d H:i:s');
             
+            }else{
+
+                $Purchase->shipdate = NULL;
+                 
             }
 
             
