@@ -147,7 +147,13 @@
                     <tr>
                         <td colspan='4' class='align-right'>發票稅額</td>
                         <td>{{$purchaseData['tax']}}</td>
-                    </tr>                    
+                    </tr>
+                    @if( !empty( $purchaseData['discount'] ) )
+                    <tr>
+                        <td colspan='4' class='align-right'>折扣</td>
+                        <td>{{$purchaseData['discount']}}</td>
+                    </tr>                                       
+                    @endif
                     <tr>
 
                         <td colspan='4' class='align-right'>總金額</td>
