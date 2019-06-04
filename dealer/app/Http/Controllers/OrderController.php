@@ -737,6 +737,7 @@ class OrderController extends Controller
                             foreach ($orderGoods as $orderGood) {
 
                                 $goodsStock = GoodsStock::where('dealer_id',$dealerId)->where('goods_id',$orderGood['gid'])->first();
+
                                 if( $goodsStock != NULL ){
 
                                     $originalTotalSales = $goodsStock->total_sales;
@@ -805,6 +806,13 @@ class OrderController extends Controller
     
                                         $originalTotalSales = $goodsStock->total_sales;
                                         $updateTotalSales   = $originalTotalSales - $orderGood['num'];
+
+                                        // 避免扣除後發生總銷售數量小於0的情形
+                                        if( $updateTotalSales <= 0){
+
+                                            $updateTotalSales = 0;
+
+                                        } 
                                         
                                         GoodsStock::where('dealer_id', $dealerId)
                                                     ->where('goods_id', $orderGood['gid'])
