@@ -180,11 +180,15 @@ a{
                         </div>
                     </div>
                 </div>
-
+                
+                @role('Admin')
+                @permission('orderList')
                 <form action="{{url('/orderDeleteDo')}}" method="POST" id='deleteOrderForm'>
                     {{ csrf_field() }}
                     <input type='hidden' id='deleteInput' name='id'>
                 </form>
+                @endpermission
+                @endrole                  
 
 <!-- script -->
 <link href="{{asset('adminbsb-materialdesign/plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css')}}" rel="stylesheet">
@@ -333,12 +337,20 @@ $(function(){
                             '<span>查看</span>'+
                             '</button>'+                            
                             @endrole
-
+                                    
                             '</a>&nbsp;'+
+                            @role('Admin')
+                            @permission('orderList')
                             '<button type="button" class="btn btn-danger waves-effect deleteOrder" orderId="'+full[10]+'" orderName="'+full[0]+'">'+
                             '<i class="material-icons">cancel</i>'+
                             '<span>刪除</span>'+
                             '</button>'
+                            @endpermission
+                            @endrole   
+                            
+                            @role('Dealer')  
+                            ''
+                            @endrole                          
                 }
         
             },                     

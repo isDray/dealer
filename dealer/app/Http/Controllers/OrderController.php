@@ -1155,7 +1155,7 @@ class OrderController extends Controller
         }
         // 如果為經銷商會員 , 需要確定該筆訂單為其訂單後才可以進行刪除動作
         elseif( Auth::user()->hasRole('Dealer') ){
-            
+            exit;
             // 取出當下經銷商id
             $dealerId = Auth::id();
             
