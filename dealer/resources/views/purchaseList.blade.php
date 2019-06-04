@@ -283,23 +283,23 @@ $(function(){
                 "render" : function ( url, type, full) {
                     if( full[7] == 1 ){
 
-                        return '<span class="label bg-grey">待處理</span>';
+                        return '<span class="label bg-teal">待處理</span>';
 
                     }else if( full[7] == 2 ){
                         
-                        return '<span class="label bg-teal">已確認</span>';
+                        return '<span class="label bg-red">已確認</span>';
                     
                     }else if( full[7] == 3 ){
                         
-                        return '<span class="label bg-teal">已出貨</span>';
+                        return '<span class="label bg-indigo">已出貨</span>';
 
                     }else if( full[7] == 4 ){
 
-                        return '<span class="label bg-teal">取消</span>';
+                        return '<span class="label bg-indigo">取消</span>';
                     }
                     else if( full[7] == 5 ){
 
-                        return '<span class="label bg-teal">已出貨且加入庫存</span>';
+                        return '<span class="label bg-indigo">已出貨且加入庫存</span>';
                     }
                 }
         

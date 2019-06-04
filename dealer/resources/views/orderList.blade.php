@@ -287,15 +287,15 @@ $(function(){
                     
                     }else if( full[4] == 3 ){
                         
-                        return '<span class="label bg-teal">已確認</span>';
+                        return '<span class="label bg-red">已確認</span>';
 
                     }else if( full[4] == 4 ){
 
-                        return '<span class="label bg-teal">已出貨</span>';
+                        return '<span class="label bg-indigo">已出貨</span>';
 
                     }else if( full[4] == 5 ){
 
-                        return '<span class="label bg-teal">取消</span>';
+                        return '<span class="label bg-indigo">取消</span>';
                     }
 
                 }
