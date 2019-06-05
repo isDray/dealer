@@ -381,9 +381,43 @@
                                         <img src="{{url('banner')}}/mobile/default3.jpg">
                                     </div>
                                 </div>
-                            </div>                             
-                        </div>                                                                                                                
-                    </div>   
+                            </div>
+                        </div>
+
+                        <!-- 可用分類選項 -->
+                        <div  class="col-md-12 col-sm-12 col-xs-12">
+                            
+                            <!-- 快速選擇 -->
+                            <div class="col-md-3 col-sm-12 col-xs-12" style="margin-bottom:0px;">
+                                <b>使用分類</b>
+                                <div class="form-group" style="margin-bottom:0px;">
+                                    <div>
+
+                                        <input name="quickCategory" type="radio" id="allCategory" class="with-gap" value='1'/>
+                                        <label for="allCategory">全分類</label>
+
+                                        <input name="quickCategory" type="radio" id="underAndNight" class="with-gap" value='2'/>
+                                        <label for="underAndNight">內睡衣</label>        
+                                                                        
+                                    </div>
+                                </div>                                
+                            </div>
+
+                            <div class="col-md-12 col-sm-12 col-xs-12" style="border-top:1px solid grey;padding-top:15px;">
+                                @foreach($categorys as $category)
+                                <div class="col-md-3 col-sm-12 col-xs-12 _np">
+
+                                    <input type="checkbox" class="filled-in" id="category{{$category['id']}}" name='allCategory[]' value="{{$category['id']}}" @if( in_array($category['id'] ,$ablecategorys) ) checked @endif >
+                                    <label for="category{{$category['id']}}">{{$category['name']}}</label>                                    
+
+                                </div>
+                                @endforeach
+                            </div>                           
+                            <!-- /快速選擇 -->
+                        </div>
+                        <!-- /可用分類選項 -->
+                        
+                    </div>
 
                                                       
                     <p>聯絡人資料</p>
@@ -704,6 +738,38 @@ $(function(){
         container : "#enableDateBox",
         language: 'zh-TW',
     }); 
+    
+
+
+
+    /*----------------------------------------------------------------
+     | 快速選擇分類
+     |----------------------------------------------------------------
+     |
+     */
+    $("input[name='quickCategory']").change(function(){
+        
+        var nowchoose = $('input[name=quickCategory]:checked').val();
+        
+        if( nowchoose == 1){
+
+            $("input[name='allCategory[]']").each(function() {
+                $(this).prop("checked", true);
+            });
+        }
+        if( nowchoose == 2){
+
+            $("input[name='allCategory[]']").each(function() {
+                $(this).prop("checked", false);
+            });
+
+            $("#category10").prop("checked", true);
+            $("#category11").prop("checked", true);
+            $("#category12").prop("checked", true);
+            $("#category13").prop("checked", true);
+        }
+
+    });
 
     @endrole  
 });

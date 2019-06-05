@@ -18,6 +18,8 @@ use App\Article;
 use App\Announcement;
 use App\Multiple;
 use App\Dealer;
+use App\Category;
+use App\DealerCategory;
 /*
 use App\Purchase;
 use App\PurchaseGoods;
@@ -182,8 +184,13 @@ class DealerController extends Controller
         $multiple = Multiple::orderBy('multiple', 'asc')->get();
         $multiple = $multiple->toArray();
 
+        // 取出所有分類
+        $categorys = Category::where("status",1)->orderBy('sort','ASC')->get();
+        $categorys = json_decode($categorys,true);
+
     	return view('dealerNew')->with(['title'   => $pageTitle,
     		                            'multiples'=> $multiple,
+                                        'categorys'=>$categorys
     		                           ]);                
     }
 
@@ -423,6 +430,23 @@ class DealerController extends Controller
             
             $dealer->save();
 
+            // 清除會員所有可用分類
+            DealerCategory::where('dealer_id', $user->id )->delete();
+
+            if( isset( $request->allCategory ) ){
+
+                foreach ($request->allCategory as $allCategory) {
+                    
+                    $dealerCategory = new DealerCategory;
+
+                    $dealerCategory->dealer_id = $user->id;
+
+                    $dealerCategory->category_id = $allCategory;
+
+                    $dealerCategory->save();
+                }
+            }            
+
             DB::commit();
 
             return redirect('/newdealer')->with('successMsg', '經銷商新增成功');
@@ -517,11 +541,26 @@ class DealerController extends Controller
 
         }
 
+        // 取出所有分類
+        $categorys = Category::where("status",1)->orderBy('sort','ASC')->get();
+        $categorys = json_decode($categorys,true);
         
+        // 取出所有有選擇的分類
+        $ablecategorys = DealerCategory::where('dealer_id',$request->id)->get();
+        $ablecategorys = json_decode($ablecategorys,true);
+        
+        $tmpAbleCategory = [];
+        foreach ($ablecategorys as $ablecategorys) {
+
+            array_push($tmpAbleCategory, $ablecategorys['category_id']);
+        }
+
     	return view('dealerEdit')->with(['title'     => $pageTitle,
     		                             'multiples' => $multiple,
     		                             'dealer'    => $dealer,
-                                         'accessWay' => $accessWay
+                                         'accessWay' => $accessWay,
+                                         'categorys' => $categorys,
+                                         'ablecategorys' => $tmpAbleCategory
     		                            ]);  
     }
 
@@ -535,7 +574,7 @@ class DealerController extends Controller
      */
     public function dealerEditDo( Request $request ){
         
-        
+
         // 列表功能一定要系統方才能查看
         if( Auth::user()->hasRole('Admin') ){
 
@@ -734,7 +773,7 @@ class DealerController extends Controller
                 $dealer->enable_date   = isset( $request->enable_date)?trim($enableDate):'';
                 $dealer->logo_color1   = isset( $request->logocolor1)?trim($request->logocolor1):'#fff';
                 $dealer->logo_color2   = isset( $request->logocolor2)?trim($request->logocolor2):'#fff';
-    
+               
                 if( $request->file('mainpic') != null){
                     $dealer->logo1         = 'wlogo.'.$mainpicExtension;
                 }/*else{
@@ -775,8 +814,24 @@ class DealerController extends Controller
                 $dealer->banner_type_m = $mobileBanner;
 
                 $dealer->save();
-    
-    
+                
+                // 清除會員所有可用分類
+                DealerCategory::where('dealer_id', $request->dealerId )->delete();
+
+                if( isset( $request->allCategory ) ){
+
+                    foreach ($request->allCategory as $allCategory) {
+                    
+                        $dealerCategory = new DealerCategory;
+
+                        $dealerCategory->dealer_id = $request->dealerId;
+
+                        $dealerCategory->category_id = $allCategory;
+
+                        $dealerCategory->save();
+                    }
+                }
+                 
     
                 DB::commit();
                 if( Auth::user()->hasRole('Admin') ){

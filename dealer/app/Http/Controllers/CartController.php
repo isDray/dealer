@@ -60,7 +60,7 @@ class CartController extends Controller
         if(!$dealerDatas){ exit; }
 
         // 取出所有分類
-        $categorys = $this->getCategory();
+        $categorys = $this->getCategory( $cartUser );
         
         // 取出最新商品
         // 取出代理商有庫存之商品
@@ -241,7 +241,7 @@ class CartController extends Controller
         if(!$dealerDatas){ exit; }
 
         // 取出所有分類
-        $categorys = $this->getCategory();
+        $categorys = $this->getCategory( $cartUser );
         
         //判斷經銷商有無此商品 , 如果沒有直接跳回上一頁
         if( !$this->chkStock( $cartUser , $request->goodsId ) ){
@@ -317,7 +317,7 @@ class CartController extends Controller
         if(!$dealerDatas){ exit; }
 
         // 取出所有分類
-        $categorys = $this->getCategory();
+        $categorys = $this->getCategory( $cartUser );
 
         // 取出商品相關資訊
         $goodsDetail = Goods::find( $request->goodsId);
@@ -509,7 +509,7 @@ class CartController extends Controller
         if(!$dealerDatas){ exit; }
 
         // 取出所有分類
-        $categorys = $this->getCategory();
+        $categorys = $this->getCategory( $cartUser );
 
         // 購物車
         $carts = [];
@@ -590,7 +590,7 @@ class CartController extends Controller
         if(!$dealerDatas){ exit; }
 
         // 取出所有分類
-        $categorys = $this->getCategory();
+        $categorys = $this->getCategory( $cartUser );
         
         // 檢驗資料
         $validator = Validator::make($request->all(), [
@@ -803,7 +803,7 @@ class CartController extends Controller
         if(!$dealerDatas){ exit; }
 
         // 取出所有分類
-        $categorys = $this->getCategory(); 
+        $categorys = $this->getCategory( $cartUser ); 
         
         return view('cartThank')->with([ 'dealerDetect' => $request->name,
                                          'cartUser'     => $cartUser, 
@@ -839,7 +839,7 @@ class CartController extends Controller
         if(!$dealerDatas){ exit; }
 
         // 取出所有分類
-        $categorys = $this->getCategory();         
+        $categorys = $this->getCategory( $cartUser );         
         
         // 確認頁數
         $page = 1;
@@ -1006,7 +1006,7 @@ class CartController extends Controller
         if(!$dealerDatas){ exit; }
 
         // 取出所有分類
-        $categorys = $this->getCategory();         
+        $categorys = $this->getCategory( $cartUser );         
         
         // 確認頁數
         $page = 1;
@@ -1176,7 +1176,7 @@ class CartController extends Controller
         if(!$dealerDatas){ exit; }
 
         // 取出所有分類
-        $categorys = $this->getCategory();
+        $categorys = $this->getCategory( $cartUser );
         
         if( isset($request->aid) && !empty($request->aid) ){
             
@@ -1238,11 +1238,19 @@ class CartController extends Controller
      |----------------------------------------------------------------
      |
      */
-    public function getCategory(){
+    public function getCategory( $_dealerId ){
 
-        $allParents = Category::where('parent',0)->orderBy('sort', 'asc')->get();
+        // $allParents = Category::where('parent',0)
+        //               ->orderBy('sort', 'asc')->get();
+
+        $allParents = Category::leftJoin( DB::raw("(SELECT * from dealer_category WHERE dealer_id = {$_dealerId} )as dc") , function($join) {
+                        $join->on('category.id', '=', 'dc.category_id');
+                    })->whereNotNull('category_id')->get();
+
+
         $allParents = $allParents->toArray();
         
+
         // 將categorySelect重置一次
         self::$categorySelect = [];
         
