@@ -143,17 +143,6 @@
                             </div>
                         </div>                        
 
-                        <div class="col-md-7 col-sm-12 col-xs-12">
-                            
-                            <b>經銷商備註:</b>
-                            <div class="form-group">
-                            <div class="form-line myborder" >
-                                <textarea name='note' class="form-control no-resize" row="2">{!!$dealer['note']!!}</textarea>
-                            </div>
-                            </div>
-                        </div>
-
-
                          
                     </div>
                     @endrole
@@ -416,7 +405,7 @@
                             <!-- /快速選擇 -->
                         </div>
                         <!-- /可用分類選項 -->
-                        
+
                     </div>
 
                                                       
@@ -553,6 +542,17 @@
                             </div>
                             </div>
                         </div>                                                                    
+
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            
+                            <b>經銷商備註:</b>
+                            <div class="form-group">
+                            <div class="form-line myborder" >
+                                <textarea name='note' class="form-control no-resize" row="2">{!!$dealer['note']!!}</textarea>
+                            </div>
+                            </div>
+                        </div>
+
                     </div>  
                     <!-- /收貨資訊 -->                  
 

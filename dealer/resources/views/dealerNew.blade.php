@@ -108,15 +108,7 @@
                             </div>
                             </div>
                         </div>  
-                        <div class="col-md-7 col-sm-12 col-xs-12">
-                            
-                            <b>經銷商備註:</b>
-                            <div class="form-group">
-                            <div class="form-line myborder" >
-                                <textarea name='note' class="form-control no-resize" row="2"></textarea>
-                            </div>
-                            </div>
-                        </div>
+
 <!--                         <div class="col-md-3 col-sm-12 col-xs-12">
                             <b>&nbsp;</b>
                             <div class="form-group">
@@ -518,7 +510,18 @@
                                 <input type="text" class="form-control myborder" name="ship_address" id="ship_address" placeholder="" value="{{ old('ship_address') }}" />
                             </div>
                             </div>
-                        </div>                                                                    
+                        </div>
+
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            
+                            <b>經銷商備註:</b>
+                            <div class="form-group">
+                            <div class="form-line myborder" >
+                                <textarea name='note' class="form-control no-resize" row="2"></textarea>
+                            </div>
+                            </div>
+                        </div>
+
                     </div>  
                     <!-- /收貨資訊 -->                  
 
