@@ -12,6 +12,7 @@
 <script src="{{asset('adminbsb-materialdesign/plugins/multi-select/js/jquery.multi-select.js')}}"></script>
 
 <link href="{{asset('adminbsb-materialdesign/plugins/bootstrap-select/css/bootstrap-select.css')}}" rel="stylesheet" />
+<link href="{{asset('adminbsb-materialdesign/plugins/multi-select/css/multi-select.css')}}" rel="stylesheet" />
 <script>
   var options = {
     filebrowserImageBrowseUrl: '/laravel-filemanager?type=Images',
@@ -378,7 +379,7 @@
                             
                             <!-- 快速選擇 -->
                             <div class="col-md-3 col-sm-12 col-xs-12" style="margin-bottom:0px;">
-                                <b>使用分類</b>
+                                <b>可用分類</b>
                                 <div class="form-group" style="margin-bottom:0px;">
                                     <div>
 
@@ -406,9 +407,30 @@
                         </div>
                         <!-- /可用分類選項 -->
 
-                    </div>
+                        <!-- 可用商品 -->
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="col-md-3 col-sm-12 col-xs-12" style="margin-bottom:0px;">
+                            <b>可用商品</b>
+                            </div>
 
-                                                      
+                            <div class="col-md-12 col-sm-12 col-xs-12" style="padding-top:15px;">
+                            <select id="optgroup" class="ms" multiple="multiple" name='ableGoods[]'>
+                                @foreach( $selectGoods as $selectGoodk => $selectGood)
+                                <optgroup label="{{$selectGoodk}}">
+                                    @foreach($selectGood as $goodsItem)
+                                    <option value="{{$goodsItem['id']}}" @if(in_array($goodsItem['id'],$ableGoods)) SELECTED @endif >{{$goodsItem['name']}}</option>
+                                    @endforeach
+                                </optgroup>
+                                @endforeach
+                            </select>
+                            </div>
+                    
+                        </div>                       
+                        <!-- /可用商品 -->
+
+                    </div>
+                        
+
                     <p>聯絡人資料</p>
                     <div class="row clearfix">
                         <div class="col-md-3 col-sm-12 col-xs-12">
@@ -770,8 +792,10 @@ $(function(){
         }
 
     });
-
+    $('#optgroup').multiSelect({ selectableOptgroup: true });
     @endrole  
+
+
 });
 </script>
 

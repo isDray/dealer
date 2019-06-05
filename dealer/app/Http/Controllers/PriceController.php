@@ -136,6 +136,10 @@ class PriceController extends Controller
         $query->leftJoin(  DB::raw("(SELECT goods_id , goods_num as  allStock FROM goods_stock  WHERE dealer_id = ".Auth::id()." )AS gs"),'gs.goods_id','=','g.id' );
 
         $query->leftJoin(  DB::raw("(SELECT goods_id , price as selfPrice FROM goods_price  WHERE dealer_id = ".Auth::id()." )AS gp"),'gp.goods_id','=','g.id' );
+        
+        $query->leftJoin(  DB::raw("(SELECT goods_id  FROM dealer_goods  WHERE dealer_id = ".Auth::id()." )AS dg ") , 'dg.goods_id','=','g.id' );
+        
+        $query->whereNotNull('dg.goods_id');
 
         $recordsTotal = $query->count();
 

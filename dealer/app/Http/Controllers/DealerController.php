@@ -20,6 +20,7 @@ use App\Multiple;
 use App\Dealer;
 use App\Category;
 use App\DealerCategory;
+use App\DealerGoods;
 /*
 use App\Purchase;
 use App\PurchaseGoods;
@@ -188,9 +189,40 @@ class DealerController extends Controller
         $categorys = Category::where("status",1)->orderBy('sort','ASC')->get();
         $categorys = json_decode($categorys,true);
 
-    	return view('dealerNew')->with(['title'   => $pageTitle,
-    		                            'multiples'=> $multiple,
-                                        'categorys'=>$categorys
+        /*****************************************************************
+         * 取出所有商品 , 以及當前經銷商可用商品 , 整理完格式後傳給前台
+         * 作呈現
+         *
+         */
+
+        // 取出所有商品跟類別資料
+        $goods = Goods::leftJoin('category', function($join) {
+
+            $join->on('goods.cid', '=', 'category.id');
+        })->select('goods.*', 'category.id as categoryId' , 'category.name as categoryName')->get();
+
+        $goods = json_decode($goods,true);
+        
+        // 將商品資料整理 , 方便呈現
+        $selectGoods = [];
+
+        foreach ( $goods as $good ) {
+            
+            // 如果 selectGoods 不包含商品類別名稱的key值 , 則需要新增一個
+            if( !array_key_exists($good['categoryName'], $selectGoods) ){
+                
+                $selectGoods[ $good['categoryName'] ] = [];
+            }
+
+            array_push( $selectGoods[ $good['categoryName'] ] , [ 'name' => $good['name'],
+                                                                  'id'   => $good['id'],
+                                                                ]);
+        }        
+
+    	return view('dealerNew')->with(['title'     => $pageTitle,
+    		                            'multiples' => $multiple,
+                                        'categorys' => $categorys,
+                                        'selectGoods' => $selectGoods,
     		                           ]);                
     }
 
@@ -447,6 +479,29 @@ class DealerController extends Controller
                 }
             }            
 
+            /*****************************************************************
+             * 編輯經銷商可用商品
+             *
+             */
+
+            // 清除會員所有可用商品
+            DealerGoods::where('dealer_id', $user->id )->delete();
+                
+            // 如果有接收到可用商品陣列 , 則將其存入資料庫
+            if( isset( $request->ableGoods ) ){
+                    
+                foreach ($request->ableGoods as $ableGood) {
+                
+                    $dealerGoods = new DealerGoods;
+
+                    $dealerGoods->dealer_id = $user->id;
+
+                    $dealerGoods->goods_id  = $ableGood;
+
+                    $dealerGoods->save();
+                }                    
+            }
+
             DB::commit();
 
             return redirect('/newdealer')->with('successMsg', '經銷商新增成功');
@@ -554,13 +609,55 @@ class DealerController extends Controller
 
             array_push($tmpAbleCategory, $ablecategorys['category_id']);
         }
+        
+        /*****************************************************************
+         * 取出所有商品 , 以及當前經銷商可用商品 , 整理完格式後傳給前台
+         * 作呈現
+         *
+         */
+
+        // 取出所有商品跟類別資料
+        $goods = Goods::leftJoin('category', function($join) {
+
+            $join->on('goods.cid', '=', 'category.id');
+        })->select('goods.*', 'category.id as categoryId' , 'category.name as categoryName')->get();
+
+        $goods = json_decode($goods,true);
+        
+        // 將商品資料整理 , 方便呈現
+        $selectGoods = [];
+
+        foreach ( $goods as $good ) {
+            
+            // 如果 selectGoods 不包含商品類別名稱的key值 , 則需要新增一個
+            if( !array_key_exists($good['categoryName'], $selectGoods) ){
+                
+                $selectGoods[ $good['categoryName'] ] = [];
+            }
+
+            array_push( $selectGoods[ $good['categoryName'] ] , [ 'name' => $good['name'],
+                                                                  'id'   => $good['id'],
+                                                                ]);
+        }
+
+        $getAbleGoods = DealerGoods::where('dealer_id',$request->id)->get();
+        
+        $ableGoods = [];
+
+        foreach ($getAbleGoods as $getAbleGood ) {
+
+            array_push( $ableGoods, $getAbleGood['goods_id'] );
+
+        }
 
     	return view('dealerEdit')->with(['title'     => $pageTitle,
     		                             'multiples' => $multiple,
     		                             'dealer'    => $dealer,
                                          'accessWay' => $accessWay,
                                          'categorys' => $categorys,
-                                         'ablecategorys' => $tmpAbleCategory
+                                         'ablecategorys' => $tmpAbleCategory,
+                                         'selectGoods'   => $selectGoods,
+                                         'ableGoods' => $ableGoods,
     		                            ]);  
     }
 
@@ -574,7 +671,6 @@ class DealerController extends Controller
      */
     public function dealerEditDo( Request $request ){
         
-
         // 列表功能一定要系統方才能查看
         if( Auth::user()->hasRole('Admin') ){
 
@@ -831,8 +927,30 @@ class DealerController extends Controller
                         $dealerCategory->save();
                     }
                 }
-                 
-    
+
+                /*****************************************************************
+                 * 編輯經銷商可用商品
+                 *
+                 */
+
+                // 清除會員所有可用商品
+                DealerGoods::where('dealer_id', $request->dealerId )->delete();
+                
+                // 如果有接收到可用商品陣列 , 則將其存入資料庫
+                if( isset( $request->ableGoods ) ){
+                    
+                    foreach ($request->ableGoods as $ableGood) {
+                    
+                        $dealerGoods = new DealerGoods;
+
+                        $dealerGoods->dealer_id = $request->dealerId;
+
+                        $dealerGoods->goods_id  = $ableGood;
+
+                        $dealerGoods->save();
+                    }                    
+                }
+     
                 DB::commit();
                 if( Auth::user()->hasRole('Admin') ){
     

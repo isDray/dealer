@@ -1346,6 +1346,7 @@ class PurchaseController extends Controller
         
         // 先取出經銷商有庫存的商品
         $haveStocks = GoodsStock::where('dealer_id',$request->dealerId)->where('goods_num','>',0)->get();
+
         $haveStocksArr = [];
         
         if( count($haveStocks) > 0){
@@ -1357,7 +1358,8 @@ class PurchaseController extends Controller
         }
 
         // 取出所有商品 
-        $getAllGoods = Goods::where('status',1)->get();
+        $getAllGoods = Goods::leftJoin(  DB::raw("(SELECT goods_id  FROM dealer_goods  WHERE dealer_id = ".$request->dealerId." )AS dg ") , 'dg.goods_id','=','goods.id' )
+        ->whereNotNull('dg.goods_id')->where('status',1)->get();
 
         $tmpDatas = [];
 
