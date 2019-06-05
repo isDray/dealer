@@ -29,7 +29,7 @@
         <div class="header bg-red">
             <h2>
             {{$title}}表格
-            <small>填寫以下表格以新增經銷商</small>
+            <small>填寫以下表格以編輯經銷商</small>
             </h2>
         </div>
 
@@ -57,16 +57,16 @@
                             <b>&nbsp;</b>
                             <div class="form-group">
                             <div class="">
-                            <button class="btn bg-cyan waves-effect m-b-15" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false"
+<!--                             <button class="btn bg-cyan waves-effect m-b-15" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false"
                                     aria-controls="collapseExample">
                                 修改密碼
-                            </button>
+                            </button> -->
                             </div>
                             </div>                            
                         </div>
 
                     </div>
-
+<!-- 
                     <div class="collapse row clearfix" id="collapseExample">
 
                         <div class="col-md-3 col-sm-12 col-xs-12">
@@ -95,7 +95,7 @@
                             </div>
                         </div>                        
                        
-                    </div>                    
+                    </div>    -->                 
                     
                    
                     <!-- 辨別代碼選擇 -->
@@ -795,9 +795,23 @@ $(function(){
     $('#optgroup').multiSelect({ selectableOptgroup: true });
     @endrole  
 
+    
 
 });
 </script>
+
+@if(session()->has('successMsg') && session('successMsg') =='經銷商密碼修改成功 , 系統即將自動登出 , 請稍後自行登入')
+<script type="text/javascript">
+
+$(function(){
+setTimeout(function(){
+document.getElementById('logout-form').submit();
+},3000);
+
+});
+
+</script>
+@endif
 
 <!-- /上傳圖片用script -->
 

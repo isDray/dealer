@@ -31,7 +31,10 @@
                             </li>                              
                             <li>
                                 <a href="{{url('/category')}}">商品分類管理</a>
-                            </li>                              
+                            </li>  
+                            <li>
+                                <a href="{{url('/goodsNew')}}">新增商品</a>
+                            </li>                                                        
                         </ul>
                     </li>
                     @endrole
@@ -64,7 +67,9 @@
                             <li>
                                 <a href="{{url('/order')}}">訂單管理</a>
                             </li>                              
-                           
+                            <li>
+                                <a href="{{url('/orderNew')}}">新增訂單</a>
+                            </li>                             
                           
                         </ul>
                     </li>
@@ -134,7 +139,10 @@
                             @role('Dealer')
                             <li>
                                <a href="{{url('/newdealerEdit')}}/{{Auth::id()}}">經銷商網站設定</a>
-                            </li>                            
+                            </li>   
+                            <li>
+                               <a href="{{url('/newdealerPassword')}}/{{Auth::id()}}">經銷商密碼修改</a>
+                            </li>                                                       
                             @endrole
                           
                         </ul>

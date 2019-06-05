@@ -178,6 +178,9 @@ Route::group(['middleware' => ['auth','role:Admin|Dealer'] ], function () {
     Route::post('/newdealerEditDo','DealerController@dealerEditDo'); // 編輯經銷商實作
     Route::post('/newdealerDeleteDo','DealerController@dealerDeleteDo'); // 刪除經銷商
     Route::get('/newdealerQr/{id}','DealerController@qrDownload');
+    Route::get('/newdealerPassword/{id}','DealerController@dealerPassword');
+    Route::post('/newdealerPasswordDo','DealerController@dealerPasswordDo');
+    
 
     // 經銷商設定商品價格
     Route::get('/price' , 'PriceController@index');// 商品價格列表

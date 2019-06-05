@@ -1016,6 +1016,132 @@ class DealerController extends Controller
             }
         }        
     }
+    
+
+
+
+    /*----------------------------------------------------------------
+     | 編輯經銷商密碼
+     |----------------------------------------------------------------
+     |
+     */
+    public function dealerPassword( Request $request ){
+        
+        $pageTitle = "經銷商密碼修改";
+
+        $dealer = User::leftJoin('dealer', function($join) {
+            $join->on('users.id', '=', 'dealer.dealer_id');
+        })
+        ->where('users.id',$request->id )
+        ->first([
+            'users.id as uid',
+            'users.name',
+            'users.email',
+            'dealer.*'
+        ]);
+        
+        $dealer = $dealer->toArray();
+
+        return view('dealerPassword')->with(['title'     => $pageTitle,
+                                         'dealer'    => $dealer,
+                                        ]);         
+    }
+
+
+
+
+    /*----------------------------------------------------------------
+     | 編輯經銷商密碼實作
+     |----------------------------------------------------------------
+     |
+     */
+    public function dealerPasswordDo( Request $request ){
+
+        // 列表功能一定要系統方才能查看
+        if( Auth::user()->hasRole('Admin') ){
+
+            // 確認權限
+            if( !Auth::user()->can('dealerNew') ){
+
+                return back()->with('errorMsg', '帳號無此操作權限 , 如有需要請切換帳號或聯絡管理員增加權限' );
+            }
+
+        }elseif( Auth::user()->hasRole('Dealer') ){
+            
+            if( empty( $request->dealerId ) || !$this->chkDealer($request->dealerId) ){
+
+                return back()->with('errorMsg', '要編輯的經銷商非您所擁有 , 請勿嘗試非法操作' );
+            }
+
+        }        
+        // 檢驗資料
+        $validator = Validator::make($request->all(), [
+            'password1'  => 'nullable|same:password2',
+        ],[
+            'account.required' => '帳號為必填',
+            'account.max'      => '帳號最多為64個字元',
+            'password1.required' => '密碼為必填',
+            'password1.same'     => '密碼驗證不一致',
+        ]  );
+
+        $errText = '';
+        
+        if ($validator->fails()) {
+                
+            $errors = $validator->errors();
+                
+            foreach( $errors->all() as $message ){
+                    
+                $errText .= "$message<br>";
+            }
+
+        }
+        if( !empty( $request->oldpassword ) ){
+            
+            $user = User::find($request->dealerId);
+            
+            if( !Hash::check($request->oldpassword, $user->password) ){
+
+                $errText .= '舊密碼輸入錯誤<br>';
+            }
+        }
+        if( !empty( $errText ) ){
+
+            return back()->with('errorMsg', $errText );
+
+        }            
+        DB::beginTransaction();
+        try {
+
+                $user = User::find($request->dealerId);
+                if( !empty( $request->oldpassword ) ){
+                    $user->password = Hash::make( $request->password1 );
+                }
+                $user->save();
+                
+                DB::commit();
+                
+                if( Auth::user()->hasRole('Dealer') ){
+                    
+                    
+                    return redirect('newdealerEdit/'.$user->id)->with('successMsg', '經銷商密碼修改成功 , 系統即將自動登出 , 請稍後自行登入'); 
+                
+                }else{
+                    
+                    return redirect('newdealerEdit/'.$user->id)->with('successMsg', '經銷商密碼修改成功');          
+                }
+
+
+        } catch (Exception $e) {
+
+                DB::rollback();
+                
+                logger("{$e->getMessage()} \n\n-----------------------------------------------\n\n"); 
+    
+                return back()->withInput()->with('errorMsg', '經銷商密碼修改失敗 , 請稍後再試' );                    
+        }
+
+    }
 
 
 
