@@ -274,10 +274,10 @@ $(function(){
                 }else{
                     
                     // 清空下拉選單
-                    $('#goodsNumber').val();
+                    //$('#goodsNumber').val();
 
                     // 還原初始化呈現
-                    $("#goodsres").append("<option value='"+goods['id']+"'>"+goods['name']+'訂單編號:'+goods['goods_sn']+"</option>");
+                    //$("#goodsres").append("<option value='"+goods['id']+"'>"+goods['name']+'訂單編號:'+goods['goods_sn']+"</option>");
                 }
 
             });
