@@ -84,8 +84,13 @@
                             <div class="col-md-3 col-sm-12 col-xs-12" style="margin-bottom:0px;">
                             <b>可用商品</b>
                             </div>
-
+                            
                             <div class="col-md-12 col-sm-12 col-xs-12" style="padding-top:15px;">
+                             
+                            <input name="ableWay" type="radio" id="ableWay1" class="with-gap" value='1' checked />
+                            <label for="ableWay1">選單選取</label>
+                            <br>
+
                             <select id="optgroup" class="ms" multiple="multiple" name='ableGoods[]'>
                                 @foreach( $selectGoods as $selectGoodk => $selectGood)
                                 <optgroup label="{{$selectGoodk}}">
@@ -95,7 +100,18 @@
                                 </optgroup>
                                 @endforeach
                             </select>
+
                             </div>
+
+                            <div class="col-md-12 col-sm-12 col-xs-12" style="padding-top:15px;">
+
+                            <input name="ableWay" type="radio" id="ableWay2" class="with-gap" value='2'/>
+                            <label for="ableWay2">輸入貨號</label>
+                            <br>
+
+                            <textarea rows='8' class="form-control no-resize" name='ableGoodsText' ></textarea>
+                            
+                            </div>                            
                     
                         </div>                       
                         <!-- /可用商品 -->

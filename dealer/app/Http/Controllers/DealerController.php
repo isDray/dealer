@@ -1152,6 +1152,12 @@ class DealerController extends Controller
 
         }
 
+        $validator = Validator::make($request->all(), [
+            'ableWay'    => 'required',
+        ],[
+            'ableWay.required' => '可用商品模式必須選擇"選單選取"或者"輸入貨號"',
+
+        ]  );
         // 檢驗資料
 
         $errText = '';
@@ -1191,23 +1197,53 @@ class DealerController extends Controller
              * 編輯經銷商可用商品
              *
              */
-
-            // 清除會員所有可用商品
-            DealerGoods::where('dealer_id', $request->dealerId )->delete();
+            
+            if( $request->ableWay == 1 ){
+                // 清除會員所有可用商品
+                DealerGoods::where('dealer_id', $request->dealerId )->delete();
                 
-            // 如果有接收到可用商品陣列 , 則將其存入資料庫
-            if( isset( $request->ableGoods ) ){
+                // 如果有接收到可用商品陣列 , 則將其存入資料庫
+                if( isset( $request->ableGoods ) ){
                     
-                foreach ($request->ableGoods as $ableGood) {
+                    foreach ($request->ableGoods as $ableGood) {
                     
-                    $dealerGoods = new DealerGoods;
+                        $dealerGoods = new DealerGoods;
 
-                    $dealerGoods->dealer_id = $request->dealerId;
+                        $dealerGoods->dealer_id = $request->dealerId;
 
-                    $dealerGoods->goods_id  = $ableGood;
+                        $dealerGoods->goods_id  = $ableGood;
 
-                    $dealerGoods->save();
-                }                    
+                        $dealerGoods->save();
+                    }                    
+                }
+            
+            }elseif( $request->ableWay == 2 ){
+                
+                if( isset($request->ableGoodsText) ){
+                    
+                    // 清除會員所有可用商品
+                    DealerGoods::where('dealer_id', $request->dealerId )->delete();
+
+                    $ableWayTexts = explode("\n",$request->ableGoodsText);
+                    
+                    foreach ( $ableWayTexts as $ableWayText ) {
+
+                        if( $this->checkGoodsExist( trim($ableWayText) ) ){
+                            
+                            $tmpAbleGood = $this->goodsSnToId( trim($ableWayText) );
+                            
+                            $dealerGoods = new DealerGoods;
+
+                            $dealerGoods->dealer_id = $request->dealerId;
+
+                            $dealerGoods->goods_id  = trim($tmpAbleGood);
+
+                            $dealerGoods->save();
+                        }
+                    }
+
+                }
+
             }
      
             DB::commit();
@@ -1470,6 +1506,33 @@ class DealerController extends Controller
         return response()->download( public_path(). "/qr/1/qrcode.png")->deleteFileAfterSend(true);
 
     }
+    
+
+
+
+    /*----------------------------------------------------------------
+     | 確認商品存在
+     |----------------------------------------------------------------
+     |
+     */
+    public function checkGoodsExist( $_goodsSn ){
+        
+        return Goods::where("goods_sn",$_goodsSn)->exists();
+
+    }
+
+    /*----------------------------------------------------------------
+     | 商品sn轉換為id
+     |----------------------------------------------------------------
+     |
+     */
+    public function goodsSnToId( $_goodsSn ){
+        
+        $tmpId = Goods::where("goods_sn",$_goodsSn)->first();
+        $tmpId = $tmpId->id;
+        return $tmpId;
+
+    }    
 
 
 }
