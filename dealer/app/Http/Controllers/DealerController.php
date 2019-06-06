@@ -62,7 +62,7 @@ class DealerController extends Controller
                                             'dealers' => $dealers
                                          ]); 
     }
-
+    
 
 
 
@@ -637,6 +637,7 @@ class DealerController extends Controller
 
             array_push( $selectGoods[ $good['categoryName'] ] , [ 'name' => $good['name'],
                                                                   'id'   => $good['id'],
+                                                                  'goods_sn' => $good['goods_sn'],
                                                                 ]);
         }
 
@@ -1017,6 +1018,217 @@ class DealerController extends Controller
         }        
     }
     
+
+
+
+    /*----------------------------------------------------------------
+     | 可用類別及商品編修
+     |----------------------------------------------------------------
+     |
+     */
+    public function newdealerCategoryAndGoods( Request $request ){
+    
+        $pageTitle = "經銷商可用分類及商品";
+
+        if( empty( $request->id ) ){
+
+            return back()->with('errorMsg', '缺少必要參數 , 請重新整理頁面後再試' );
+        }
+
+        // 列表功能一定要系統方才能查看
+        if( Auth::user()->hasRole('Admin') ){
+
+            // 確認權限
+            if( !Auth::user()->can('dealerNew') ){
+
+                return back()->with('errorMsg', '帳號無此操作權限 , 如有需要請切換帳號或聯絡管理員增加權限' );
+            }
+
+        }elseif( Auth::user()->hasRole('Dealer') ){
+
+            return back()->with('errorMsg', '無此操作權限 , 請勿嘗試非法操作' );
+
+        }
+
+        $dealer = User::leftJoin('dealer', function($join) {
+            $join->on('users.id', '=', 'dealer.dealer_id');
+        })
+        ->where('users.id',$request->id )
+        ->first([
+            'users.id as uid',
+            'users.name',
+            'users.email',
+            'dealer.*'
+        ]);
+        
+        $dealer = $dealer->toArray();        
+
+        // 取出所有分類
+        $categorys = Category::where("status",1)->orderBy('sort','ASC')->get();
+        $categorys = json_decode($categorys,true);
+        
+        // 取出所有有選擇的分類
+        $ablecategorys = DealerCategory::where('dealer_id',$request->id)->get();
+        $ablecategorys = json_decode($ablecategorys,true);
+        
+        $tmpAbleCategory = [];
+        foreach ($ablecategorys as $ablecategorys) {
+
+            array_push($tmpAbleCategory, $ablecategorys['category_id']);
+        }
+        
+        /*****************************************************************
+         * 取出所有商品 , 以及當前經銷商可用商品 , 整理完格式後傳給前台
+         * 作呈現
+         *
+         */
+
+        // 取出所有商品跟類別資料
+        $goods = Goods::leftJoin('category', function($join) {
+
+            $join->on('goods.cid', '=', 'category.id');
+        })->select('goods.*', 'category.id as categoryId' , 'category.name as categoryName')->get();
+
+        $goods = json_decode($goods,true);
+        
+        // 將商品資料整理 , 方便呈現
+        $selectGoods = [];
+
+        foreach ( $goods as $good ) {
+            
+            // 如果 selectGoods 不包含商品類別名稱的key值 , 則需要新增一個
+            if( !array_key_exists($good['categoryName'], $selectGoods) ){
+                
+                $selectGoods[ $good['categoryName'] ] = [];
+            }
+
+            array_push( $selectGoods[ $good['categoryName'] ] , [ 'name' => $good['name'],
+                                                                  'id'   => $good['id'],
+                                                                  'goods_sn' => $good['goods_sn'],
+                                                                ]);
+        }
+
+        $getAbleGoods = DealerGoods::where('dealer_id',$request->id)->get();
+        
+        $ableGoods = [];
+
+        foreach ($getAbleGoods as $getAbleGood ) {
+
+            array_push( $ableGoods, $getAbleGood['goods_id'] );
+
+        }
+
+        return view('dealerAble')->with(['title'     => $pageTitle,
+                                         'dealer'    => $dealer,
+                                         'categorys' => $categorys,
+                                         'ablecategorys' => $tmpAbleCategory,
+                                         'selectGoods'   => $selectGoods,
+                                         'ableGoods' => $ableGoods,
+                                        ]);          
+    }
+    
+
+
+
+    /*----------------------------------------------------------------
+     | 經銷商可用商品實作
+     |----------------------------------------------------------------
+     |
+     */
+    public function newdealerCategoryAndGoodsDo( Request $request ){
+
+        // 列表功能一定要系統方才能查看
+        if( Auth::user()->hasRole('Admin') ){
+
+            // 確認權限
+            if( !Auth::user()->can('dealerNew') ){
+
+                return back()->with('errorMsg', '帳號無此操作權限 , 如有需要請切換帳號或聯絡管理員增加權限' );
+            }
+
+        }elseif( Auth::user()->hasRole('Dealer') ){
+
+            return back()->with('errorMsg', '無此操作權限 , 請勿嘗試非法操作' );
+
+        }
+
+        // 檢驗資料
+
+        $errText = '';
+        
+        if( empty( $request->dealerId ) ){
+            
+            $errText = "缺少必要參數 , 無法進行操作";
+        }
+        if( !empty( $errText ) ){
+
+            return back()->with('errorMsg', $errText );
+
+        }    
+
+        DB::beginTransaction();
+        try {
+
+            // 清除會員所有可用分類
+            
+            DealerCategory::where('dealer_id', $request->dealerId )->delete();
+
+            if( isset( $request->allCategory ) ){
+
+                foreach ($request->allCategory as $allCategory) {
+                    
+                    $dealerCategory = new DealerCategory;
+
+                    $dealerCategory->dealer_id = $request->dealerId;
+
+                    $dealerCategory->category_id = $allCategory;
+
+                    $dealerCategory->save();
+                }
+            }
+
+            /*****************************************************************
+             * 編輯經銷商可用商品
+             *
+             */
+
+            // 清除會員所有可用商品
+            DealerGoods::where('dealer_id', $request->dealerId )->delete();
+                
+            // 如果有接收到可用商品陣列 , 則將其存入資料庫
+            if( isset( $request->ableGoods ) ){
+                    
+                foreach ($request->ableGoods as $ableGood) {
+                    
+                    $dealerGoods = new DealerGoods;
+
+                    $dealerGoods->dealer_id = $request->dealerId;
+
+                    $dealerGoods->goods_id  = $ableGood;
+
+                    $dealerGoods->save();
+                }                    
+            }
+     
+            DB::commit();
+            
+           
+            return redirect('/newdealer')->with('successMsg', '經銷商可用分類及商品編輯成功');
+
+    
+        } catch (Exception $e) {
+    
+            DB::rollback();
+            ///$e->getMessage();
+    
+            // 寫入錯誤代碼後轉跳
+                
+            logger("{$e->getMessage()} \n\n-----------------------------------------------\n\n"); 
+    
+            return back()->withInput()->with('errorMsg', '經銷商可用分類及商品編輯失敗 , 請稍後再試' );         
+        }         
+    }
+
 
 
 

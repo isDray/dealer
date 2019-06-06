@@ -328,17 +328,19 @@ $(function(){
                             '<span>管理</span>'+
                             '</button>'+                            
                             @endrole
-
+                            
                             '</a>&nbsp;'+
-                            '<button type="button" class="btn btn-danger waves-effect deleteDealer" dealerId="'+full[0]+'" orderName="'+full[1]+'">'+
-                            '<i class="material-icons">cancel</i>'+
-                            '<span>刪除</span>'+
-                            '</button>&nbsp;'+
-
                             '<a href="{{url('')}}/newdealerPassword/'+full[0]+'">'+
                             '<button type="button" class="btn bg-blue waves-effect">'+
                             '<i class="material-icons">edit</i>'+
                             '<span>修改密碼</span>'+
+                            '</button>'+
+                            '</a>&nbsp;'+                          
+
+                            '<a href="{{url('')}}/newdealerCategoryAndGoods/'+full[0]+'">'+
+                            '<button type="button" class="btn bg-amber waves-effect">'+
+                            '<i class="material-icons">unarchive</i>'+
+                            '<span>分類及商品</span>'+
                             '</button>'+
                             '</a>&nbsp;'+
 
@@ -347,7 +349,13 @@ $(function(){
                             '<i class="material-icons">file_download</i>'+
                             '<span>QR-code</span>'+
                             '</button>'+
-                            '</a>'
+                            '</a>&nbsp;'+
+
+
+                            '<button type="button" class="btn btn-danger waves-effect deleteDealer" dealerId="'+full[0]+'" orderName="'+full[1]+'">'+
+                            '<i class="material-icons">cancel</i>'+
+                            '<span>刪除</span>'+
+                            '</button>'
 
                 }
         

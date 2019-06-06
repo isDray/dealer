@@ -348,65 +348,6 @@
                         </div>                                                                                                                
                     </div>
 
-                    <!-- 可用分類選項 -->
-                    <div  class="col-md-12 col-sm-12 col-xs-12">
-                            
-                        <!-- 快速選擇 -->
-                        <div class="col-md-3 col-sm-12 col-xs-12" style="margin-bottom:0px;">
-                            
-                            <b>使用分類</b>
-                            
-                            <div class="form-group" style="margin-bottom:0px;">
-                                <div>
-
-                                    <input name="quickCategory" type="radio" id="allCategory" class="with-gap" value='1'/>
-                                    <label for="allCategory">全分類</label>
-
-                                    <input name="quickCategory" type="radio" id="underAndNight" class="with-gap" value='2'/>
-                                    <label for="underAndNight">內睡衣</label>        
-                                                                        
-                                </div>
-                            </div>                                
-                        
-                        </div>
-
-                        <div class="col-md-12 col-sm-12 col-xs-12" style="border-top:1px solid grey;padding-top:15px;">
-                            
-                            @foreach($categorys as $category)
-                            <div class="col-md-3 col-sm-12 col-xs-12 _np">
-
-                                <input type="checkbox" class="filled-in" id="category{{$category['id']}}" name='allCategory[]' value="{{$category['id']}}" >
-                                <label for="category{{$category['id']}}">{{$category['name']}}</label>                                    
-
-                            </div>
-                            @endforeach
-                        </div>                           
-                        <!-- /快速選擇 -->
-                    </div>
-                    <!-- /可用分類選項 -->
-
-                    <!-- 可用商品 -->
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                        <div class="col-md-3 col-sm-12 col-xs-12" style="margin-bottom:0px;">
-                            <b>可用商品</b>
-                        </div>
-
-                        <div class="col-md-12 col-sm-12 col-xs-12" style="padding-top:15px;">
-                            
-                            <select id="optgroup" class="ms" multiple="multiple" name='ableGoods[]'>
-                                @foreach( $selectGoods as $selectGoodk => $selectGood)
-                                <optgroup label="{{$selectGoodk}}">
-                                    @foreach($selectGood as $goodsItem)
-                                    <option value="{{$goodsItem['id']}}">{{$goodsItem['name']}}</option>
-                                    @endforeach
-                                </optgroup>
-                                @endforeach
-                            </select>
-                        </div>
-                    
-                    </div>                       
-                    <!-- /可用商品 -->
-
 
                     </div>
 

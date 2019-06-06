@@ -180,6 +180,9 @@ Route::group(['middleware' => ['auth','role:Admin|Dealer'] ], function () {
     Route::get('/newdealerQr/{id}','DealerController@qrDownload');
     Route::get('/newdealerPassword/{id}','DealerController@dealerPassword');
     Route::post('/newdealerPasswordDo','DealerController@dealerPasswordDo');
+    Route::get('/newdealerCategoryAndGoods/{id}','DealerController@newdealerCategoryAndGoods');
+    Route::post('/newdealerCategoryAndGoodsDo','DealerController@newdealerCategoryAndGoodsDo');
+    
     
 
     // 經銷商設定商品價格
