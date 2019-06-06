@@ -239,6 +239,7 @@ $(function(){
                 url: "{{url('/orderSearchGoods')}}",
                 method: "POST",
                 data: { goodsKeyWord : $("#goodsKeyWord").val(),
+                        dealerId:"{{$dealerId}}",
                         _token: "{{ csrf_token() }}",
                       },
                 dataType: "json"

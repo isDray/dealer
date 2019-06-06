@@ -1462,6 +1462,7 @@ class OrderController extends Controller
      */
     public function searchGoods( Request $request ){
         
+
         /* 系統方會員區塊
          *----------------------------------------------------------------
          *
@@ -1470,13 +1471,17 @@ class OrderController extends Controller
         if( Auth::user()->hasRole('Admin') ){
             
             // 
-            if( !empty( $request->goodsKeyWord )){
+            if( !empty( $request->goodsKeyWord ) && !empty( $request->dealerId ) ){
                 
                 //echo json_encode( $request->goodsKeyWord );
 
-                $datas = Goods::where('name','like','%'.$request->goodsKeyWord.'%')
-                              ->orWhere('goods_sn','like','%'.$request->goodsKeyWord.'%')
-                              ->get();
+                // $datas = Goods::where('name','like','%'.$request->goodsKeyWord.'%')
+                //               ->orWhere('goods_sn','like','%'.$request->goodsKeyWord.'%')
+                //               ->get();
+                $datas = Goods::leftJoin( DB::raw("(SELECT * FROM dealer_goods where dealer_id='{$request->dealerId}') as dg") ,'goods.id', '=', 'dg.goods_id' )
+                         ->orWhere('goods_sn','like','%'.$request->goodsKeyWord.'%')
+                         ->whereNotNull('goods_id')
+                         ->get();
 
                 echo json_encode($datas);
             }
@@ -1488,15 +1493,22 @@ class OrderController extends Controller
          *----------------------------------------------------------------
          *
          */    
-            if( !empty( $request->goodsKeyWord )){
+            if( !empty( $request->goodsKeyWord ) && !empty( $request->dealerId ) ){
                 
-                //echo json_encode( $request->goodsKeyWord );
+                if( $request->dealerId == Auth::id() ){
+                
+                    // $datas = Goods::where('name','like','%'.$request->goodsKeyWord.'%')
+                    //               ->orWhere('goods_sn','like','%'.$request->goodsKeyWord.'%')
+                    //               ->get();
 
-                $datas = Goods::where('name','like','%'.$request->goodsKeyWord.'%')
-                              ->orWhere('goods_sn','like','%'.$request->goodsKeyWord.'%')
-                              ->get();
+                    $datas = Goods::leftJoin( DB::raw("(SELECT * FROM dealer_goods where dealer_id='{$request->dealerId}') as dg") ,'goods.id', '=', 'dg.goods_id' )
+                             ->orWhere('goods_sn','like','%'.$request->goodsKeyWord.'%')
+                             ->whereNotNull('goods_id')
+                             ->get();
 
-                echo json_encode($datas);
+
+                    echo json_encode($datas);
+                }
             }              
         }
 
