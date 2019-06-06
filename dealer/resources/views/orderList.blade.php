@@ -182,13 +182,13 @@ a{
                 </div>
                 
                 @role('Admin')
-                @permission('orderList')
+                @permission('orderDelete')
                 <form action="{{url('/orderDeleteDo')}}" method="POST" id='deleteOrderForm'>
                     {{ csrf_field() }}
                     <input type='hidden' id='deleteInput' name='id'>
                 </form>
                 @endpermission
-                @endrole                  
+                @endrole
 
 <!-- script -->
 <link href="{{asset('adminbsb-materialdesign/plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css')}}" rel="stylesheet">
@@ -340,13 +340,13 @@ $(function(){
                                     
                             '</a>&nbsp;'+
                             @role('Admin')
-                            @permission('orderList')
+                            @permission('orderDelete')
                             '<button type="button" class="btn btn-danger waves-effect deleteOrder" orderId="'+full[10]+'" orderName="'+full[0]+'">'+
                             '<i class="material-icons">cancel</i>'+
                             '<span>刪除</span>'+
                             '</button>'
                             @endpermission
-                            @endrole   
+                            @endrole
                             
                             @role('Dealer')  
                             ''
@@ -414,6 +414,8 @@ $(function(){
 
     $('body').on('click', '.deleteOrder', function() {
         
+        var delId =  $(this).attr('orderId') ;
+
         Swal.fire({
 
             title: '刪除確認',
@@ -423,10 +425,11 @@ $(function(){
             confirmButtonText: '確定刪除',
             cancelButtonText: '取消'
 
-        }).then((result) => {
+        }).then(function(result){
             if (result.value) {
-
-                $("#deleteInput").val( $(this).attr('orderId') );
+                
+                
+                $("#deleteInput").val( delId );
                 $("#deleteOrderForm").submit();
             }
         })

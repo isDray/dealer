@@ -237,7 +237,9 @@ $(function(){
     }); 
     
     $('body').on('click', '.categoryDelete', function() {
-        
+
+        var delId = $(this).attr('cid');
+
         Swal.fire({
             title: '刪除確認',
             text: "即將刪除商品分類:"+$(this).attr('cname')+",確定要刪除?",
@@ -245,10 +247,10 @@ $(function(){
             showCancelButton: true,
             confirmButtonText: '確定刪除',
             cancelButtonText: '取消'
-        }).then((result) => {
+        }).then(function(result){
             if (result.value) {
 
-                $("#deleteInput").val($(this).attr('cid'));
+                $("#deleteInput").val(delId);
                 $("#deleteForm").submit();
             }
         })

@@ -39,7 +39,7 @@
     <!--<link href="{{asset('adminbsb-materialdesign/plugins/sweetalert/sweetalert.css')}}" rel="stylesheet" />-->
 
     <link href="{{asset('/sweetalert2/dist/sweetalert2.css')}}" rel="stylesheet" />
-
+    <script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"></script>
 </head>
 
 <body class="theme-red">

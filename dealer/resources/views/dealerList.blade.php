@@ -404,7 +404,9 @@ $(function(){
 
 
     $('body').on('click', '.deleteDealer', function() {
-        
+
+        var delId = $(this).attr('dealerId');
+
         Swal.fire({
 
             title: '刪除確認',
@@ -414,10 +416,10 @@ $(function(){
             confirmButtonText: '確定刪除',
             cancelButtonText: '取消'
 
-        }).then((result) => {
+        }).then(function(result){
             if (result.value) {
 
-                $("#deleteInput").val( $(this).attr('dealerId') );
+                $("#deleteInput").val( delId );
                 $("#deleteDealerForm").submit();
             }
         })

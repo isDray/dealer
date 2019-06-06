@@ -418,6 +418,8 @@ $(function(){
 
 
     $('body').on('click', '.deleteOrder', function() {
+
+        var delId =  $(this).attr('purchaseId') ;
         
         Swal.fire({
 
@@ -428,10 +430,10 @@ $(function(){
             confirmButtonText: '確定刪除',
             cancelButtonText: '取消'
 
-        }).then((result) => {
+        }).then(function(result){
             if (result.value) {
 
-                $("#deleteInput").val( $(this).attr('purchaseId') );
+                $("#deleteInput").val( delId );
                 $("#deleteOrderForm").submit();
             }
         })
