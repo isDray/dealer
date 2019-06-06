@@ -128,7 +128,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='{{$dealerData
 
           <div id='cartBox' class="dropdown">
             
-            <span id="cartLabel" type="button"  aria-haspopup="true" aria-expanded="false">
+            <span id="cartLabel" type="button"  aria-haspopup="true" aria-expanded="false" class="dropdown">
               <!-- data-toggle="dropdown" -->
               <span class="glyphicon glyphicon-shopping-cart"></span>購物車
               @if(Session::has('carts'))
@@ -588,6 +588,20 @@ function refreshItem( _datas ){
 
     $("#cartItem").append(htmlCode);
 }
+
+
+$(document).click(function (e) {
+    console.log(e.target.className);
+
+    if( e.target.className != 'dropdown' && e.target.className != 'glyphicon glyphicon-shopping-cart' && e.target.className !='dropdown-menu dropdown-menu-right cartList'){
+    if( $("#cartBox").hasClass('open') ){
+
+        $("#cartBox").removeClass('open');
+
+    }
+    }
+})
+
 
     </script>
     <!-- /移除購物車項目 -->
